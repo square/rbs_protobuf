@@ -6,3 +6,5 @@
 /pkg/
 /spec/reports/
 /tmp/
+/lib/google/protobuf/descriptor_pb.rb
+/lib/google/protobuf/plugin_pb.rb
