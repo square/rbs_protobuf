@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << File.join(__dir__, "../lib")
+
+require "rbs_protobuf"
+
+input = Google::Protobuf::Compiler::CodeGeneratorRequest.decode(STDIN.read)
+response = RbsProtobufTest::Translator.new(input).response
+print Google::Protobuf::Compiler::CodeGeneratorResponse.encode(response)

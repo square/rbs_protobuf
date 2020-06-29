@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << File.join(__dir__, "../lib")
+
+require "rbs_protobuf"
+
+input = STDIN.read()
+File.write(ENV["PROTOC_DUMPER_OUT"] || "a.pb.out", input)
+
+response = Google::Protobuf::Compiler::CodeGeneratorResponse.new
+print Google::Protobuf::Compiler::CodeGeneratorResponse.encode(response)
