@@ -131,7 +131,7 @@ message ExtensionRangeOptions {
 
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 }
 
 // Describes a field within a message.
@@ -459,7 +459,7 @@ message FileOptions {
 
   // Clients can define custom options in extensions of this message.
   // See the documentation for the "Options" section above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 
   reserved 38;
 }
@@ -527,7 +527,7 @@ message MessageOptions {
   repeated UninterpretedOption uninterpreted_option = 999;
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 }
 
 message FieldOptions {
@@ -618,7 +618,7 @@ message FieldOptions {
   repeated UninterpretedOption uninterpreted_option = 999;
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 
   reserved 4;  // removed jtype
 }
@@ -628,7 +628,7 @@ message OneofOptions {
   repeated UninterpretedOption uninterpreted_option = 999;
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 }
 
 message EnumOptions {
@@ -649,7 +649,7 @@ message EnumOptions {
   repeated UninterpretedOption uninterpreted_option = 999;
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 }
 
 message EnumValueOptions {
@@ -663,7 +663,7 @@ message EnumValueOptions {
   repeated UninterpretedOption uninterpreted_option = 999;
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 }
 
 message ServiceOptions {
@@ -683,7 +683,7 @@ message ServiceOptions {
   repeated UninterpretedOption uninterpreted_option = 999;
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 }
 
 message MethodOptions {
@@ -714,7 +714,7 @@ message MethodOptions {
   repeated UninterpretedOption uninterpreted_option = 999;
 
   // Clients can define custom options in extensions of this message. See above.
-  extensions 1000 to max;
+  // extensions 1000 to max;
 }
 
 
