@@ -1,5 +1,6 @@
 require "rbs_protobuf/version"
 
+require "active_support/inflector"
 require "rbs"
 
 require "google/protobuf/descriptor_pb"

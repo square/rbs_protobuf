@@ -34,8 +34,14 @@ module RbsProtobuf
     def rbs_content(file)
       decls = []
 
+      if file.package
+        prefix = to_type_name(file.package).to_namespace
+      else
+        prefix = RBS::Namespace.empty
+      end
+
       file.message_type.each do |message|
-        decls << message_to_decl(message)
+        decls << message_to_decl(message, prefix: prefix)
       end
 
       StringIO.new.tap do |io|
@@ -141,7 +147,7 @@ module RbsProtobuf
       decl_namespace = prefix.append(name.to_sym)
 
       RBS::AST::Declarations::Class.new(
-        name: RBS::TypeName.new(name: name.to_sym, namespace: RBS::Namespace.empty),
+        name: RBS::TypeName.new(name: name.to_sym, namespace: prefix),
         super_class: nil,
         type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
         location: nil,
@@ -206,14 +212,25 @@ module RbsProtobuf
             )
           when field.type == :TYPE_MESSAGE
             type = field_type(field)
-            class_decl.members << RBS::AST::Members::AttrReader.new(
-              name: field.name.to_sym,
-              type: type,
-              ivar_name: false,
-              location: nil,
-              comment: nil,
-              annotations: []
-            )
+            if field.label == :LABEL_REPEATED
+              class_decl.members << RBS::AST::Members::AttrReader.new(
+                name: field.name.to_sym,
+                type: type,
+                ivar_name: false,
+                location: nil,
+                comment: nil,
+                annotations: []
+              )
+            else
+              class_decl.members << RBS::AST::Members::AttrAccessor.new(
+                name: field.name.to_sym,
+                type: type,
+                ivar_name: false,
+                location: nil,
+                comment: nil,
+                annotations: []
+              )
+            end
           else
             # Scalar values
             type = field_type(field)
@@ -288,12 +305,12 @@ module RbsProtobuf
     def field_type(field)
       type = case field.type
              when :TYPE_ENUM
-               enum_name = field.type_name.split('.').last
+               enum_name = to_type_name(field.type_name).to_namespace
 
                RBS::Types::Alias.new(
                  name: RBS::TypeName.new(
                    name: :symbols,
-                   namespace: RBS::Namespace.new(path: [enum_name.to_sym], absolute: false)
+                   namespace: enum_name
                  ),
                  location: nil
                )
@@ -347,7 +364,7 @@ module RbsProtobuf
     def to_type_name(type_name)
       absolute = type_name.start_with?(".")
 
-      *path, basename = type_name.split(".").drop_while {|x| x.size == 0 }
+      *path, basename = type_name.split(".").map {|name| ActiveSupport::Inflector.camelize(name) }.drop_while {|x| x.size == 0 }
 
       RBS::TypeName.new(
         name: basename.to_sym,

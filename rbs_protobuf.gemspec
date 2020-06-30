@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "rbs", "~>0.4.0"
   spec.add_runtime_dependency "google-protobuf", "~> 3.12"
+  spec.add_runtime_dependency "activesupport", ">=4.0"
 end

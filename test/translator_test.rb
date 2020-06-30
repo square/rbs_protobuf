@@ -144,11 +144,11 @@ class SearchRequest
     def self.resolve: (::Symbol symbol) -> ::Integer?
   end
 
-  attr_reader corpus(): Corpus::symbols
+  attr_reader corpus(): ::SearchRequest::Corpus::symbols
 
-  attr_writer corpus(): Corpus::symbols | ::Integer
+  attr_writer corpus(): ::SearchRequest::Corpus::symbols | ::Integer
 
-  def initialize: (?corpus: Corpus::symbols | ::Integer) -> void
+  def initialize: (?corpus: ::SearchRequest::Corpus::symbols | ::Integer) -> void
 end
 RBS
   end
@@ -295,6 +295,33 @@ class Project
   attr_accessor name(): ::String
 
   def initialize: (?name: ::String) -> void
+end
+RBS
+  end
+
+  def test_package
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+package foo.bar_baz;
+
+message Open {
+  required string timestamp = 1;
+  optional Open next_open = 2;
+}
+EOP
+
+    translator = RbsProtobuf::Translator.new(input)
+    content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
+
+    assert_equal <<RBS, content
+# Open
+class Foo::BarBaz::Open
+  attr_accessor timestamp(): ::String
+
+  attr_accessor next_open(): ::Foo::BarBaz::Open?
+
+  def initialize: (?timestamp: ::String, ?next_open: ::Foo::BarBaz::Open?) -> void
 end
 RBS
   end
