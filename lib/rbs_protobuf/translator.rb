@@ -167,7 +167,7 @@ module RbsProtobuf
             key_field, value_field = nested_type.field.to_a
             maps["." + decl_namespace.to_s.gsub(/::/, ".") + nested_type.name] = [key_field, value_field]
           else
-            class_decl.members << message_to_decl(nested_type, prefix: decl_namespace, maps: maps)
+            class_decl.members << message_to_decl(nested_type, prefix: RBS::Namespace.empty, maps: maps)
           end
         end
 
