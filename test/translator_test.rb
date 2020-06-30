@@ -153,6 +153,52 @@ end
 RBS
   end
 
+  def test_toplevel_enum
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+package foo;
+
+enum Corpus {
+  UNIVERSAL = 0;
+  WEB = 1;
+  IMAGES = 2;
+  LOCAL = 3;
+  NEWS = 4;
+  PRODUCTS = 5;
+  VIDEO = 6;
+}
+EOP
+
+    translator = RbsProtobuf::Translator.new(input)
+
+    content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
+
+    assert_equal <<RBS, content
+module Foo::Corpus
+  type symbols = :UNIVERSAL | :WEB | :IMAGES | :LOCAL | :NEWS | :PRODUCTS | :VIDEO
+
+  UNIVERSAL: ::Integer
+
+  WEB: ::Integer
+
+  IMAGES: ::Integer
+
+  LOCAL: ::Integer
+
+  NEWS: ::Integer
+
+  PRODUCTS: ::Integer
+
+  VIDEO: ::Integer
+
+  def self.lookup: (::Integer number) -> symbols?
+
+  def self.resolve: (::Symbol symbol) -> ::Integer?
+end
+RBS
+  end
+
   def test_message_toplevel
     input = read_proto(<<EOP)
 syntax = "proto2";

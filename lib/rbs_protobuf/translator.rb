@@ -34,10 +34,14 @@ module RbsProtobuf
     def rbs_content(file)
       decls = []
 
-      if file.package
+      if file.package && !file.package.empty?
         prefix = to_type_name(file.package).to_namespace
       else
         prefix = RBS::Namespace.empty
+      end
+
+      file.enum_type.each do |enum|
+        decls << enum_type_to_decl(enum, prefix: prefix)
       end
 
       file.message_type.each do |message|
@@ -49,9 +53,9 @@ module RbsProtobuf
       end.string
     end
 
-    def enum_type_to_decl(enum_type)
+    def enum_type_to_decl(enum_type, prefix:)
       RBS::AST::Declarations::Module.new(
-        name: RBS::TypeName.new(name: enum_type.name.to_sym, namespace: RBS::Namespace.empty),
+        name: RBS::TypeName.new(name: enum_type.name.to_sym, namespace: prefix),
         self_type: nil,
         type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
         members: [],
@@ -159,7 +163,7 @@ module RbsProtobuf
         oneof_fields = message.oneof_decl.map { [] }
 
         message.enum_type.each do |enum|
-          class_decl.members << enum_type_to_decl(enum)
+          class_decl.members << enum_type_to_decl(enum, prefix: RBS::Namespace.empty)
         end
 
         message.nested_type.each do |nested_type|
