@@ -156,14 +156,12 @@ syntax = "proto2";
 
 package foo;
 
-enum Corpus {
-  UNIVERSAL = 0;
-  WEB = 1;
-  IMAGES = 2;
-  LOCAL = 3;
-  NEWS = 4;
-  PRODUCTS = 5;
-  VIDEO = 6;
+enum payment_method {
+  card = 0;
+  CASH = 1;
+  e_money = 2;
+  DebitCard = 3;
+  Other = 4;
 }
 EOP
 
@@ -172,22 +170,18 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-module Foo::Corpus
-  type symbols = :UNIVERSAL | :WEB | :IMAGES | :LOCAL | :NEWS | :PRODUCTS | :VIDEO
+module Foo::Payment_method
+  type symbols = :CARD | :CASH | :E_MONEY | :DEBITCARD | :OTHER
 
-  UNIVERSAL: ::Integer
+  CARD: ::Integer
 
-  WEB: ::Integer
+  CASH: ::Integer
 
-  IMAGES: ::Integer
+  E_MONEY: ::Integer
 
-  LOCAL: ::Integer
+  DEBITCARD: ::Integer
 
-  NEWS: ::Integer
-
-  PRODUCTS: ::Integer
-
-  VIDEO: ::Integer
+  OTHER: ::Integer
 
   def self.lookup: (::Integer number) -> symbols?
 
@@ -238,7 +232,7 @@ RBS
     input = read_proto(<<EOP)
 syntax = "proto2";
 
-message SearchResponse {
+message search_response {
   repeated Result result = 1;
 
   message Result {
@@ -254,7 +248,7 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-class SearchResponse
+class Search_response
   class Result
     attr_accessor url(): ::String
 
@@ -265,9 +259,9 @@ class SearchResponse
     def initialize: (?url: ::String, ?title: ::String, ?snippets: ::Array[::String]) -> void
   end
 
-  attr_accessor result(): ::Array[::SearchResponse::Result]
+  attr_accessor result(): ::Array[::Search_response::Result]
 
-  def initialize: (?result: ::Array[::SearchResponse::Result]) -> void
+  def initialize: (?result: ::Array[::Search_response::Result]) -> void
 end
 RBS
   end
@@ -351,12 +345,12 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-class Foo::BarBaz::Open
+class Foo::Bar_baz::Open
   attr_accessor timestamp(): ::String
 
-  attr_accessor next_open(): ::Foo::BarBaz::Open?
+  attr_accessor next_open(): ::Foo::Bar_baz::Open?
 
-  def initialize: (?timestamp: ::String, ?next_open: ::Foo::BarBaz::Open?) -> void
+  def initialize: (?timestamp: ::String, ?next_open: ::Foo::Bar_baz::Open?) -> void
 end
 RBS
   end

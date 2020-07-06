@@ -83,7 +83,7 @@ module RbsProtobuf
 
     def enum_type_to_decl(enum_type, prefix:, source_code_info:, path:)
       RBS::AST::Declarations::Module.new(
-        name: RBS::TypeName.new(name: enum_type.name.to_sym, namespace: prefix),
+        name: RBS::TypeName.new(name: ActiveSupport::Inflector.upcase_first(enum_type.name).to_sym, namespace: prefix),
         self_type: nil,
         type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
         members: [],
@@ -95,7 +95,7 @@ module RbsProtobuf
           name: RBS::TypeName.new(name: :symbols, namespace: RBS::Namespace.empty),
           type: RBS::Types::Union.new(
             types: enum_type.value.map do |v|
-              RBS::Types::Literal.new(literal: v.name.to_sym, location: nil)
+              RBS::Types::Literal.new(literal: v.name.upcase.to_sym, location: nil)
             end,
             location: nil
           ),
@@ -107,7 +107,7 @@ module RbsProtobuf
         enum_type.value.each_with_index do |value, index|
           comment = comment_for_path(source_code_info: source_code_info, path: path + [2, index])
           enum_decl.members << RBS::AST::Declarations::Constant.new(
-            name: RBS::TypeName.new(name: value.name.to_sym, namespace: RBS::Namespace.empty),
+            name: RBS::TypeName.new(name: value.name.upcase.to_sym, namespace: RBS::Namespace.empty),
             type: RBS::BuiltinNames::Integer.instance_type,
             location: nil,
             comment: comment
@@ -176,7 +176,7 @@ module RbsProtobuf
     end
 
     def message_to_decl(message, prefix: RBS::Namespace.empty, maps: {}, source_code_info:, path:)
-      name = message.name
+      name = ActiveSupport::Inflector.upcase_first(message.name)
       decl_namespace = prefix.append(name.to_sym)
 
       RBS::AST::Declarations::Class.new(
@@ -409,7 +409,7 @@ module RbsProtobuf
     def to_type_name(type_name)
       absolute = type_name.start_with?(".")
 
-      *path, basename = type_name.split(".").map {|name| ActiveSupport::Inflector.camelize(name) }.drop_while {|x| x.size == 0 }
+      *path, basename = type_name.split(".").map {|name| ActiveSupport::Inflector.upcase_first(name) }.drop_while {|x| x.size == 0 }
 
       RBS::TypeName.new(
         name: basename.to_sym,
