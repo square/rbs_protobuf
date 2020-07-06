@@ -34,18 +34,26 @@ module RbsProtobuf
     def rbs_content(file)
       decls = []
 
+      source_code_info = file.source_code_info
+
       if file.package && !file.package.empty?
         prefix = to_type_name(file.package).to_namespace
       else
         prefix = RBS::Namespace.empty
       end
 
-      file.enum_type.each do |enum|
-        decls << enum_type_to_decl(enum, prefix: prefix)
+      file.enum_type.each_with_index do |enum, index|
+        decls << enum_type_to_decl(enum,
+                                   prefix: prefix,
+                                   source_code_info: source_code_info,
+                                   path: [5, index])
       end
 
-      file.message_type.each do |message|
-        decls << message_to_decl(message, prefix: prefix)
+      file.message_type.each_with_index do |message, index|
+        decls << message_to_decl(message,
+                                 prefix: prefix,
+                                 source_code_info: source_code_info,
+                                 path: [4, index])
       end
 
       StringIO.new.tap do |io|
@@ -53,13 +61,33 @@ module RbsProtobuf
       end.string
     end
 
-    def enum_type_to_decl(enum_type, prefix:)
+    def comment_for_path(source_code_info:, path:)
+      loc = source_code_info.location.find {|loc| loc.path == path }
+      if loc
+        comments = []
+        if loc.leading_comments.length > 0
+          comments << loc.leading_comments.strip
+        end
+        if loc.trailing_comments.length > 0
+          comments << loc.trailing_comments.strip
+        end
+        if comments.empty? && !loc.leading_detached_comments.empty?
+          comments << loc.leading_detached_comments.join("\n\n").strip
+        end
+        RBS::AST::Comment.new(
+          location: nil,
+          string: comments.join("\n\n")
+        )
+      end
+    end
+
+    def enum_type_to_decl(enum_type, prefix:, source_code_info:, path:)
       RBS::AST::Declarations::Module.new(
         name: RBS::TypeName.new(name: enum_type.name.to_sym, namespace: prefix),
         self_type: nil,
         type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
         members: [],
-        comment: nil,
+        comment: comment_for_path(source_code_info: source_code_info, path: path),
         location: nil,
         annotations: []
       ).tap do |enum_decl|
@@ -76,12 +104,13 @@ module RbsProtobuf
           annotations: []
         )
 
-        enum_type.value.each do |value|
+        enum_type.value.each_with_index do |value, index|
+          comment = comment_for_path(source_code_info: source_code_info, path: path + [2, index])
           enum_decl.members << RBS::AST::Declarations::Constant.new(
             name: RBS::TypeName.new(name: value.name.to_sym, namespace: RBS::Namespace.empty),
             type: RBS::BuiltinNames::Integer.instance_type,
             location: nil,
-            comment: nil
+            comment: comment
           )
         end
 
@@ -146,7 +175,7 @@ module RbsProtobuf
       end
     end
 
-    def message_to_decl(message, prefix: RBS::Namespace.empty, maps: {})
+    def message_to_decl(message, prefix: RBS::Namespace.empty, maps: {}, source_code_info:, path:)
       name = message.name
       decl_namespace = prefix.append(name.to_sym)
 
@@ -155,27 +184,39 @@ module RbsProtobuf
         super_class: nil,
         type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
         location: nil,
-        comment: RBS::AST::Comment.new(location: nil, string: "#{message.name}"),
+        comment: comment_for_path(source_code_info: source_code_info, path: path),
         members: [],
         annotations: []
       ).tap do |class_decl|
         keywords = {}
         oneof_fields = message.oneof_decl.map { [] }
 
-        message.enum_type.each do |enum|
-          class_decl.members << enum_type_to_decl(enum, prefix: RBS::Namespace.empty)
+        message.enum_type.each_with_index do |enum, index|
+          class_decl.members << enum_type_to_decl(
+            enum,
+            prefix: RBS::Namespace.empty,
+            source_code_info: source_code_info,
+            path: path + [4, index]
+          )
         end
 
-        message.nested_type.each do |nested_type|
+        message.nested_type.each_with_index do |nested_type, index|
           if nested_type.options&.map_entry
             key_field, value_field = nested_type.field.to_a
             maps["." + decl_namespace.to_s.gsub(/::/, ".") + nested_type.name] = [key_field, value_field]
           else
-            class_decl.members << message_to_decl(nested_type, prefix: RBS::Namespace.empty, maps: maps)
+            class_decl.members << message_to_decl(
+              nested_type,
+              prefix: RBS::Namespace.empty,
+              maps: maps,
+              source_code_info: source_code_info,
+              path: path + [3, index]
+            )
           end
         end
 
-        message.field.each do |field|
+        message.field.each_with_index do |field, index|
+          comment = comment_for_path(source_code_info: source_code_info, path: path + [2, index])
           case
           when field.type == :TYPE_MESSAGE && field.label == :LABEL_REPEATED && maps.key?(field.type_name)
             # Map!
@@ -185,12 +226,12 @@ module RbsProtobuf
 
             type = RBS::BuiltinNames::Hash.instance_type(key_type, value_type)
 
-            class_decl.members << RBS::AST::Members::AttrReader.new(
+            class_decl.members << RBS::AST::Members::AttrAccessor.new(
               name: field.name.to_sym,
               type: type,
               ivar_name: false,
               location: nil,
-              comment: nil,
+              comment: comment,
               annotations: []
             )
 
@@ -203,7 +244,7 @@ module RbsProtobuf
               type: symbols,
               ivar_name: false,
               location: nil,
-              comment: nil,
+              comment: comment,
               annotations: []
             )
             class_decl.members << RBS::AST::Members::AttrWriter.new(
@@ -211,18 +252,18 @@ module RbsProtobuf
               type: type,
               ivar_name: false,
               location: nil,
-              comment: nil,
+              comment: comment,
               annotations: []
             )
           when field.type == :TYPE_MESSAGE
             type = field_type(field)
             if field.label == :LABEL_REPEATED
-              class_decl.members << RBS::AST::Members::AttrReader.new(
+              class_decl.members << RBS::AST::Members::AttrAccessor.new(
                 name: field.name.to_sym,
                 type: type,
                 ivar_name: false,
                 location: nil,
-                comment: nil,
+                comment: comment,
                 annotations: []
               )
             else
@@ -231,7 +272,7 @@ module RbsProtobuf
                 type: type,
                 ivar_name: false,
                 location: nil,
-                comment: nil,
+                comment: comment,
                 annotations: []
               )
             end
@@ -243,7 +284,7 @@ module RbsProtobuf
               type: type,
               ivar_name: false,
               location: nil,
-              comment: nil,
+              comment: comment,
               annotations: []
             )
           end

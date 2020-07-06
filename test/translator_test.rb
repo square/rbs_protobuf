@@ -19,7 +19,6 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# Message1
 class Message1
   attr_accessor name(): ::String
 
@@ -60,7 +59,6 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# Message1
 class Message1
   attr_accessor double_field(): ::Float
 
@@ -120,7 +118,6 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# SearchRequest
 class SearchRequest
   module Corpus
     type symbols = :UNIVERSAL | :WEB | :IMAGES | :LOCAL | :NEWS | :PRODUCTS | :VIDEO
@@ -219,7 +216,6 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# Result
 class Result
   attr_accessor url(): ::String
 
@@ -230,9 +226,8 @@ class Result
   def initialize: (?url: ::String, ?title: ::String, ?snippets: ::Array[::String]) -> void
 end
 
-# SearchResponse
 class SearchResponse
-  attr_reader result(): ::Array[::Result]
+  attr_accessor result(): ::Array[::Result]
 
   def initialize: (?result: ::Array[::Result]) -> void
 end
@@ -259,9 +254,7 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# SearchResponse
 class SearchResponse
-  # Result
   class Result
     attr_accessor url(): ::String
 
@@ -272,7 +265,7 @@ class SearchResponse
     def initialize: (?url: ::String, ?title: ::String, ?snippets: ::Array[::String]) -> void
   end
 
-  attr_reader result(): ::Array[::SearchResponse::Result]
+  attr_accessor result(): ::Array[::SearchResponse::Result]
 
   def initialize: (?result: ::Array[::SearchResponse::Result]) -> void
 end
@@ -297,7 +290,6 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# SampleMessage
 class SampleMessage
   attr_accessor hoge(): ::String
 
@@ -329,14 +321,12 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# SampleMessage
 class SampleMessage
-  attr_reader projects(): ::Hash[::String, ::Project?]
+  attr_accessor projects(): ::Hash[::String, ::Project?]
 
   def initialize: (?projects: ::Hash[::String, ::Project?]) -> void
 end
 
-# Project
 class Project
   attr_accessor name(): ::String
 
@@ -361,7 +351,6 @@ EOP
     content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
 
     assert_equal <<RBS, content
-# Open
 class Foo::BarBaz::Open
   attr_accessor timestamp(): ::String
 
@@ -370,5 +359,91 @@ class Foo::BarBaz::Open
   def initialize: (?timestamp: ::String, ?next_open: ::Foo::BarBaz::Open?) -> void
 end
 RBS
+  end
+
+  def test_comment
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+/*
+  Comment before E.
+*/
+enum E {
+  /* Comment before E.FOO. */
+  FOO = 1;
+  BAR = 2;  /* Comment after E.BAR. */
+}
+
+/* Comment before M */
+message M {
+  optional string a = 1;   /* Comment after M.a */
+
+  optional string b = 2;
+
+  /* Comment before M.c */
+  repeated int64 c = 3;
+
+  /* Comment before M.F */
+  enum F {
+    X = 1;
+  }
+
+  /* Comment before M.N */
+  message N {
+    required string x = 1;
+  }
+}
+EOP
+
+    translator = RbsProtobuf::Translator.new(input)
+    content = translator.response.file.find {|file| file.name == "./a_pb.rbs" }.content
+
+    assert_equal <<EOF, content
+# Comment before E.
+module E
+  type symbols = :FOO | :BAR
+
+  # Comment before E.FOO.
+  FOO: ::Integer
+
+  # Comment after E.BAR.
+  BAR: ::Integer
+
+  def self.lookup: (::Integer number) -> symbols?
+
+  def self.resolve: (::Symbol symbol) -> ::Integer?
+end
+
+# Comment before M
+class M
+  # Comment before M.F
+  module F
+    type symbols = :X
+
+    X: ::Integer
+
+    def self.lookup: (::Integer number) -> symbols?
+
+    def self.resolve: (::Symbol symbol) -> ::Integer?
+  end
+
+  # Comment before M.N
+  class N
+    attr_accessor x(): ::String
+
+    def initialize: (?x: ::String) -> void
+  end
+
+  # Comment after M.a
+  attr_accessor a(): ::String
+
+  attr_accessor b(): ::String
+
+  # Comment before M.c
+  attr_accessor c(): ::Array[::Integer]
+
+  def initialize: (?a: ::String, ?b: ::String, ?c: ::Array[::Integer]) -> void
+end
+EOF
   end
 end
