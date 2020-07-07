@@ -6,5 +6,9 @@ set -vx
 bundle install
 
 mkdir -p lib/google/protobuf
-protoc -Iprotos --ruby_out=lib/google/protobuf protos/descriptor.proto
-protoc -Iprotos --ruby_out=lib/google/protobuf protos/plugin.proto
+
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+protoc --plugin=protoc-gen-ruby-protobuf=${SCRIPT_DIR}/protoc-gen-ruby \
+       --ruby-protobuf_out=lib \
+       -I vendor/protobuf/src \
+       vendor/protobuf/src/google/protobuf/compiler/plugin.proto
