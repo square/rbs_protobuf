@@ -14,5 +14,6 @@ module RBSProtobuf
   @logger = Logger.new(STDERR)
 end
 
+require "rbs_protobuf/rbs_factory"
 require "rbs_protobuf/translator/base"
 require "rbs_protobuf/translator/protobuf_gem"

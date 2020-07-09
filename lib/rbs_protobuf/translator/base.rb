@@ -10,7 +10,7 @@ module RBSProtobuf
       end
 
       def factory
-        @factory ||= RBS::Factory.new()
+        @factory ||= RBSFactory.new()
       end
 
       def response

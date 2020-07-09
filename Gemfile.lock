@@ -1,9 +1,4 @@
 PATH
-  remote: ../rbs
-  specs:
-    rbs (0.5.0)
-
-PATH
   remote: .
   specs:
     rbs_protobuf (0.1.0)
@@ -21,7 +16,7 @@ GEM
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2, >= 2.2.2)
     concurrent-ruby (1.1.6)
-    google-protobuf (3.12.2-universal-darwin)
+    google-protobuf (3.12.2)
     i18n (1.8.3)
       concurrent-ruby (~> 1.0)
     middleware (0.1.0)
@@ -32,6 +27,7 @@ GEM
       thor
       thread_safe
     rake (12.3.3)
+    rbs (0.5.0)
     thor (1.0.1)
     thread_safe (0.3.6)
     tzinfo (1.2.7)
@@ -45,7 +41,6 @@ DEPENDENCIES
   google-protobuf
   minitest (~> 5.0)
   rake (~> 12.0)
-  rbs!
   rbs_protobuf!
 
 BUNDLED WITH
