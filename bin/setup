@@ -4,11 +4,3 @@ IFS=$'\n\t'
 set -vx
 
 bundle install
-
-mkdir -p lib/google/protobuf
-
-SCRIPT_DIR=$(cd $(dirname $0); pwd)
-protoc --plugin=protoc-gen-ruby-protobuf=${SCRIPT_DIR}/protoc-gen-ruby \
-       --ruby-protobuf_out=lib \
-       -I vendor/protobuf/src \
-       vendor/protobuf/src/google/protobuf/compiler/plugin.proto

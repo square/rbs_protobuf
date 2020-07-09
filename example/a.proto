@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+enum type {
+  foo = 1;
+  BAR = 2;
+  bA_z = 3;
+}
+
+message Message {
+  optional string name = 1;
+  required string Email = 2;
+  repeated string postAddress = 3;
+  optional type t1 = 10;
+  required type t2 = 11;
+  repeated type t3 = 12;
+}

@@ -2,7 +2,7 @@ require "test_helper"
 
 class RbsProtobufTest < Minitest::Test
   def test_that_it_has_a_version_number
-    refute_nil ::RbsProtobuf::VERSION
+    refute_nil ::RBSProtobuf::VERSION
   end
 
   def test_it_does_something_useful

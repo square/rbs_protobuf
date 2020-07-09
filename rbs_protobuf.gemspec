@@ -2,7 +2,7 @@ require_relative 'lib/rbs_protobuf/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "rbs_protobuf"
-  spec.version       = RbsProtobuf::VERSION
+  spec.version       = RBSProtobuf::VERSION
   spec.authors       = ["Soutaro Matsumoto"]
   spec.email         = ["matsumoto@soutaro.com"]
 
@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "rbs", "~>0.4.0"
+  spec.add_runtime_dependency "rbs", "~> 0.5.0"
   spec.add_runtime_dependency "protobuf", "~> 3.10.3"
   spec.add_runtime_dependency "activesupport", ">=4.0"
 end

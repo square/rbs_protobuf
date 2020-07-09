@@ -8,3 +8,15 @@ Rake::TestTask.new(:test) do |t|
 end
 
 task :default => :test
+
+namespace :example do
+  desc "Generate Ruby code with protobuf-gem"
+  task :protobufgem do
+    sh("mkdir", "-p", "example/protobuf-gem")
+    sh("protoc",
+       "--plugin=protoc-gen-ruby-protobuf=#{__dir__}/bin/protoc-gen-ruby",
+       "--ruby-protobuf_out=example/protobuf-gem",
+       "-Iexample",
+       "example/a.proto")
+  end
+end

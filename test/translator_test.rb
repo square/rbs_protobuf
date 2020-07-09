@@ -1,7 +1,21 @@
 require "test_helper"
 
-class TranslatorTest < Minitest::Test
+class GoogleProtobufTest < Minitest::Test
   include TestHelper
+
+  def test_protobuf
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message1 {
+  optional string name = 1;
+  required string login = 2;
+  repeated string phone_number = 3;
+}
+EOP
+
+    pp input.proto_file[0].message_type[0].field[0]
+  end
 
   def test_scalar_field
     input = read_proto(<<EOP)

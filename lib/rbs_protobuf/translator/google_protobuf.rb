@@ -1,4 +1,4 @@
-module RbsProtobuf
+module RBSProtobuf
   class Translator
     attr_reader :input
 
