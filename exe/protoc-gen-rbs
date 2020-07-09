@@ -4,6 +4,28 @@ $LOAD_PATH << File.join(__dir__, "../lib")
 
 require "rbs_protobuf"
 
+backend = ENV["RBS_PROTOBUF_BACKEND"]
+unless backend
+  STDERR.puts "🚨🚨🚨 protoc-gen-rbs requires RBS_PROTOBUF_BACKEND environment variable. 🚨🚨🚨"
+  STDERR.puts "  Possible options:"
+  STDERR.puts "    RBS_PROTOBUF_BACKEND=protobuf         (for protobuf gem)"
+  STDERR.puts "    RBS_PROTOBUF_BACKEND=google-protobuf  (for google-protobuf gem)"
+  exit 1
+end
+
 input = Google::Protobuf::Compiler::CodeGeneratorRequest.decode(STDIN.read)
-response = RBSProtobuf::Translator.new(input).response
+
+translator = case backend
+             when "protobuf"
+               upcase_enum = ENV.key?("PB_UPCASE_ENUMS")
+
+               RBSProtobuf::Translator::ProtobufGem.new(
+                 input,
+                 upcase_enum: upcase_enum
+               )
+             when "google-protobuf"
+               raise NotImplementedError
+             end
+
+response = translator.response
 print Google::Protobuf::Compiler::CodeGeneratorResponse.encode(response)
