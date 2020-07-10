@@ -18,10 +18,12 @@ input = Google::Protobuf::Compiler::CodeGeneratorRequest.decode(STDIN.read)
 translator = case backend
              when "protobuf"
                upcase_enum = ENV.key?("PB_UPCASE_ENUMS")
+               no_nested_namespace = ENV.key?("RBS_PROTOBUF_NO_NESTED_NAMESPACE")
 
                RBSProtobuf::Translator::ProtobufGem.new(
                  input,
-                 upcase_enum: upcase_enum
+                 upcase_enum: upcase_enum,
+                 nested_namespace: !no_nested_namespace
                )
              when "google-protobuf"
                raise NotImplementedError

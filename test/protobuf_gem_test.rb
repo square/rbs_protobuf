@@ -16,7 +16,8 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -58,7 +59,8 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -95,7 +97,11 @@ message foo {
 }
 EOP
 
-    translator = RBSProtobuf::Translator::ProtobufGem.new(input, upcase_enum: false)
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true
+    )
     content = translator.rbs_content(input.proto_file[0])
 
     assert_equal <<RBS, content
@@ -137,7 +143,11 @@ enum type {
 }
 EOP
 
-    translator = RBSProtobuf::Translator::ProtobufGem.new(input, upcase_enum: false)
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true
+    )
     content = translator.rbs_content(input.proto_file[0])
 
     assert_equal <<RBS, content
@@ -172,7 +182,11 @@ enum type {
 }
 EOP
 
-    translator = RBSProtobuf::Translator::ProtobufGem.new(input, upcase_enum: false)
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true
+    )
     content = translator.rbs_content(input.proto_file[0])
 
     assert_equal <<RBS, content
@@ -211,7 +225,11 @@ message M {
 }
 EOP
 
-    translator = RBSProtobuf::Translator::ProtobufGem.new(input, upcase_enum: true)
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true
+    )
     content = translator.rbs_content(input.proto_file[0])
 
     assert_equal <<RBS, content
@@ -271,27 +289,56 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+module Foo
+  module Ba_r
+    class Message < ::Protobuf::Message
+      attr_reader name(): ::String
+
+      attr_writer name(): ::String?
+
+      attr_accessor replyTo(): ::Foo::Ba_r::Message?
+
+      def initialize: (?name: ::String?, ?replyTo: ::Foo::Ba_r::Message?) -> void
+
+      def []: (:name) -> ::String
+            | (:replyTo) -> ::Foo::Ba_r::Message?
+            | (::Symbol) -> untyped
+
+      def []=: (:name, ::String?) -> ::String?
+             | (:replyTo, ::Foo::Ba_r::Message?) -> ::Foo::Ba_r::Message?
+             | (::Symbol, untyped) -> untyped
+    end
+  end
+end
+RBS
+  end
+
+  def test_message_with_package_flat_namespace
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+package foo.ba_r;
+
+message Message {
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
     assert_equal <<RBS, content
 class Foo::Ba_r::Message < ::Protobuf::Message
-  attr_reader name(): ::String
-
-  attr_writer name(): ::String?
-
-  attr_accessor replyTo(): ::Foo::Ba_r::Message?
-
-  def initialize: (?name: ::String?, ?replyTo: ::Foo::Ba_r::Message?) -> void
-
-  def []: (:name) -> ::String
-        | (:replyTo) -> ::Foo::Ba_r::Message?
-        | (::Symbol) -> untyped
-
-  def []=: (:name, ::String?) -> ::String?
-         | (:replyTo, ::Foo::Ba_r::Message?) -> ::Foo::Ba_r::Message?
-         | (::Symbol, untyped) -> untyped
+  def initialize: () -> void
 end
 RBS
   end
@@ -312,7 +359,8 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -353,7 +401,8 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -394,7 +443,8 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -444,7 +494,8 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -483,7 +534,8 @@ EOP
 
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
-      upcase_enum: true
+      upcase_enum: true,
+      nested_namespace: true
     )
     content = translator.rbs_content(input.proto_file[0])
 

@@ -1,13 +1,18 @@
 module RBSProtobuf
   module Translator
     class ProtobufGem < Base
-      def initialize(input, upcase_enum:)
+      def initialize(input, upcase_enum:, nested_namespace:)
         super(input)
         @upcase_enum = upcase_enum
+        @nested_namespace = nested_namespace
       end
 
       def upcase_enum?
         @upcase_enum
+      end
+
+      def nested_namespace?
+        @nested_namespace
       end
 
       def rbs_content(file)
@@ -16,10 +21,16 @@ module RBSProtobuf
         source_code_info = file.source_code_info
 
         if file.package && !file.package.empty?
-          prefix = message_type(file.package).name.to_namespace
+          package_namespace = message_type(file.package).name.to_namespace
         else
-          prefix = RBS::Namespace.empty
+          package_namespace = RBS::Namespace.empty
         end
+
+        prefix = if nested_namespace?
+                   RBS::Namespace.empty
+                 else
+                   package_namespace
+                 end
 
         file.enum_type.each_with_index do |enum, index|
           decls << enum_type_to_decl(enum,
@@ -33,6 +44,22 @@ module RBSProtobuf
                                    prefix: prefix,
                                    source_code_info: source_code_info,
                                    path: [4, index])
+        end
+
+        if nested_namespace?
+          package_namespace.path.reverse_each do |name|
+            decls = [
+              RBS::AST::Declarations::Module.new(
+                name: factory.type_name(name.to_s),
+                self_type: nil,
+                type_params: factory.module_type_params,
+                location: nil,
+                comment: nil,
+                annotations: [],
+                members: decls
+              )
+            ]
+          end
         end
 
         StringIO.new.tap do |io|
@@ -408,7 +435,7 @@ module RBSProtobuf
 
             enum_decl.members << RBS::AST::Declarations::Constant.new(
               name: factory.type_name(enum_name(v.name).to_s),
-              type: enum_name,
+              type: RBS::TypeName.new(name: enum_name.to_sym, namespace: prefix),
               comment: comment,
               location: nil
             )
