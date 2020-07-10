@@ -77,7 +77,23 @@ module RBSProtobuf
             if nested_type.options&.map_entry
               key_field, value_field = nested_type.field.to_a
               maps["." + decl_namespace.to_s.gsub(/::/, ".") + nested_type.name] = [key_field, value_field]
+            else
+              class_decl.members << message_to_decl(
+                nested_type,
+                prefix: RBS::Namespace.empty,
+                source_code_info: source_code_info,
+                path: path + [3, index]
+              )
             end
+          end
+
+          message.enum_type.each_with_index do |enum, index|
+            class_decl.members << enum_type_to_decl(
+              enum,
+              prefix: RBS::Namespace.empty,
+              source_code_info: source_code_info,
+              path: path + [4, index]
+            )
           end
 
           field_read_types = {}

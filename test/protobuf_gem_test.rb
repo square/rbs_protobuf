@@ -395,4 +395,95 @@ class Message < ::Protobuf::Message
 end
 RBS
   end
+
+  def test_nested_message
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message M1 {
+  optional M2 m = 1;
+
+  message M2 { }
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class M1 < ::Protobuf::Message
+  class M2 < ::Protobuf::Message
+    def initialize: () -> void
+  end
+
+  attr_accessor m(): ::M1::M2?
+
+  def initialize: (?m: ::M1::M2?) -> void
+
+  def []: (:m) -> ::M1::M2?
+        | (::Symbol) -> untyped
+
+  def []=: (:m, ::M1::M2?) -> ::M1::M2?
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_nested_enum
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Account {
+  required Type type = 1;
+
+  enum Type {
+    Human = 0;
+    Bot = 1;
+  }
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Account < ::Protobuf::Message
+  class Type < ::Protobuf::Enum
+    type names = :HUMAN | :BOT
+
+    type strings = \"HUMAN\" | \"BOT\"
+
+    type tags = 0 | 1
+
+    type values = names | strings | tags
+
+    attr_reader name(): names
+
+    attr_reader tag(): tags
+
+    HUMAN: Type
+
+    BOT: Type
+  end
+
+  attr_reader type(): ::Account::Type
+
+  attr_writer type(): (::Account::Type | ::Account::Type::values)?
+
+  def initialize: (?type: (::Account::Type | ::Account::Type::values)?) -> void
+
+  def []: (:type) -> ::Account::Type
+        | (::Symbol) -> untyped
+
+  def []=: (:type, (::Account::Type | ::Account::Type::values)?) -> (::Account::Type | ::Account::Type::values)?
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
 end
