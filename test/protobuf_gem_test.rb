@@ -263,7 +263,7 @@ RBS
 
   def test_message_with_one_of
     # `oneof` is not supported yet in protobuf gem
-    
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -299,6 +299,98 @@ class Message < ::Protobuf::Message
 
   def []=: (:name, ::String?) -> ::String?
          | (:size, ::Integer?) -> ::Integer?
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_map_to_base_and_message
+    # `oneof` is not supported yet in protobuf gem
+
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+  map<string, int32> numbers = 1;
+  map<int32, Message> messages = 2;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  attr_accessor numbers(): ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
+
+  attr_accessor messages(): ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
+
+  def initialize: (?numbers: ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer], ?messages: ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]) -> void
+
+  def []: (:numbers) -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
+        | (:messages) -> ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
+        | (::Symbol) -> untyped
+
+  def []=: (:numbers, ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]) -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
+         | (:messages, ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]) -> ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_map_to_enum
+    # `oneof` is not supported yet in protobuf gem
+
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+enum Foo {
+  bar = 0;
+  baz = 1;
+}
+
+message Message {
+  map<string, Foo> foos = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Foo < ::Protobuf::Enum
+  type names = :BAR | :BAZ
+
+  type strings = "BAR" | "BAZ"
+
+  type tags = 0 | 1
+
+  type values = names | strings | tags
+
+  attr_reader name(): names
+
+  attr_reader tag(): tags
+
+  BAR: Foo
+
+  BAZ: Foo
+end
+
+class Message < ::Protobuf::Message
+  attr_accessor foos(): ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
+
+  def initialize: (?foos: ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]) -> void
+
+  def []: (:foos) -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
+        | (::Symbol) -> untyped
+
+  def []=: (:foos, ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]) -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
          | (::Symbol, untyped) -> untyped
 end
 RBS

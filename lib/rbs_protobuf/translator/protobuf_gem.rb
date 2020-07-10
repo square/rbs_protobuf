@@ -71,6 +71,14 @@ module RBSProtobuf
           members: [],
           annotations: []
         ).tap do |class_decl|
+          maps = {}
+
+          message.nested_type.each_with_index do |nested_type, index|
+            if nested_type.options&.map_entry
+              key_field, value_field = nested_type.field.to_a
+              maps["." + decl_namespace.to_s.gsub(/::/, ".") + nested_type.name] = [key_field, value_field]
+            end
+          end
 
           field_read_types = {}
           field_write_types = {}
@@ -79,53 +87,7 @@ module RBSProtobuf
             field_name = field.name.to_sym
             comment = comment_for_path(source_code_info, path + [2, index])
 
-            read_type, write_type =
-              case
-              when field.type == FieldDescriptorProto::Type::TYPE_MESSAGE
-                type = message_type(field.type_name)
-
-                case field.label
-                when FieldDescriptorProto::Label::LABEL_OPTIONAL
-                  type = factory.optional_type(type)
-                  [type, type]
-                when FieldDescriptorProto::Label::LABEL_REPEATED
-                  type = repeated_field_type(type)
-                  [type, type]
-                else
-                  [type, factory.optional_type(type)]
-                end
-              when field.type == FieldDescriptorProto::Type::TYPE_ENUM
-                type = message_type(field.type_name)
-                enum_namespace = type.name.to_namespace
-
-                wtype = factory.union_type(
-                  type,
-                  factory.alias_type(RBS::TypeName.new(name: :values, namespace: enum_namespace))
-                )
-
-                if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
-                  type = repeated_field_type(type, wtype)
-
-                  [
-                    type,
-                    type
-                  ]
-                else
-                  [
-                    type,
-                    factory.optional_type(wtype)
-                  ]
-                end
-              else
-                type = base_type(field.type)
-
-                if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
-                  type = repeated_field_type(type)
-                  [type, type]
-                else
-                  [type, factory.optional_type(type)]
-                end
-              end
+            read_type, write_type = field_type(field, maps)
 
             field_read_types[field_name] = read_type
             field_write_types[field_name] = write_type
@@ -260,6 +222,74 @@ module RBSProtobuf
                 kind: :instance
               )
             end
+          end
+        end
+      end
+
+      def field_type(field, maps)
+        case
+        when field.type == FieldDescriptorProto::Type::TYPE_MESSAGE
+          if maps.key?(field.type_name)
+            key_field, value_field = maps[field.type_name]
+
+            key_type_r, _ = field_type(key_field, maps)
+            value_type_r, value_type_w = field_type(value_field, maps)
+
+            hash_type = factory.instance_type(
+              factory.type_name("::Protobuf::Field::FieldHash"),
+              key_type_r,
+              factory.unwrap_optional(value_type_r),
+              factory.unwrap_optional(value_type_w)
+            )
+
+            [
+              hash_type,
+              hash_type
+            ]
+          else
+            type = message_type(field.type_name)
+
+            case field.label
+            when FieldDescriptorProto::Label::LABEL_OPTIONAL
+              type = factory.optional_type(type)
+              [type, type]
+            when FieldDescriptorProto::Label::LABEL_REPEATED
+              type = repeated_field_type(type)
+              [type, type]
+            else
+              [type, factory.optional_type(type)]
+            end
+          end
+        when field.type == FieldDescriptorProto::Type::TYPE_ENUM
+          type = message_type(field.type_name)
+          enum_namespace = type.name.to_namespace
+
+          wtype = factory.union_type(
+            type,
+            factory.alias_type(RBS::TypeName.new(name: :values, namespace: enum_namespace))
+          )
+
+          if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
+            type = repeated_field_type(type, wtype)
+
+            [
+              type,
+              type
+            ]
+          else
+            [
+              type,
+              factory.optional_type(wtype)
+            ]
+          end
+        else
+          type = base_type(field.type)
+
+          if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
+            type = repeated_field_type(type)
+            [type, type]
+          else
+            [type, factory.optional_type(type)]
           end
         end
       end

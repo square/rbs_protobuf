@@ -136,5 +136,14 @@ module RBSProtobuf
         ))
       end
     end
+
+    def unwrap_optional(type)
+      case type
+      when RBS::Types::Optional
+        unwrap_optional(type.type)
+      else
+        type
+      end
+    end
   end
 end
