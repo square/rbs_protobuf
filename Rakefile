@@ -12,11 +12,23 @@ task :default => :test
 namespace :example do
   desc "Generate Ruby code with protobuf-gem"
   task :protobufgem do
+    sh("rm -rf example/protobuf-gem")
     sh("mkdir", "-p", "example/protobuf-gem")
-    sh("protoc",
-       "--plugin=protoc-gen-ruby-protobuf=#{__dir__}/bin/protoc-gen-ruby",
-       "--ruby-protobuf_out=example/protobuf-gem",
-       "-Iexample",
-       "example/a.proto")
+    sh(
+      { "PB_NO_TAG_WARNINGS" => "1" },
+      "protoc",
+      "--plugin=protoc-gen-ruby-protobuf=#{__dir__}/bin/protoc-gen-ruby",
+      "--ruby-protobuf_out=example/protobuf-gem",
+      "-Iexample",
+      "example/a.proto"
+    )
+    sh(
+      { "RBS_PROTOBUF_BACKEND" => "protobuf" },
+      "protoc",
+      "--plugin=protoc-gen-rbs=#{__dir__}/exe/protoc-gen-rbs",
+      "--rbs_out=example/protobuf-gem",
+      "-Iexample",
+      "example/a.proto"
+    )
   end
 end
