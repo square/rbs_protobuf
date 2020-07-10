@@ -260,4 +260,47 @@ class Foo::Ba_r::Message < ::Protobuf::Message
 end
 RBS
   end
+
+  def test_message_with_one_of
+    # `oneof` is not supported yet in protobuf gem
+    
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+  oneof test_one_of {
+    string name = 1;
+    int32 size = 2;
+  }
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  attr_reader name(): ::String
+
+  attr_writer name(): ::String?
+
+  attr_reader size(): ::Integer
+
+  attr_writer size(): ::Integer?
+
+  def initialize: (?name: ::String?, ?size: ::Integer?) -> void
+
+  def []: (:name) -> ::String
+        | (:size) -> ::Integer
+        | (::Symbol) -> untyped
+
+  def []=: (:name, ::String?) -> ::String?
+         | (:size, ::Integer?) -> ::Integer?
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
 end
