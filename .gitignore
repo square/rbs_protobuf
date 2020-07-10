@@ -6,6 +6,4 @@
 /pkg/
 /spec/reports/
 /tmp/
-/lib/google/protobuf/descriptor.pb.rb
-/lib/google/protobuf/compiler/plugin.pb.rb
 /example/protobuf-gem/
