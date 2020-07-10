@@ -161,6 +161,41 @@ end
 RBS
   end
 
+  def test_enum_with_alias
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+enum type {
+  option allow_alias = true;
+  Foo = 1;
+  BAR = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(input, upcase_enum: false)
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Type < ::Protobuf::Enum
+  type names = :Foo | :BAR
+
+  type strings = "Foo" | "BAR"
+
+  type tags = 1
+
+  type values = names | strings | tags
+
+  attr_reader name(): names
+
+  attr_reader tag(): tags
+
+  Foo: Type
+
+  BAR: Type
+end
+RBS
+  end
+
   def test_message_with_enum
     input = read_proto(<<EOP)
 syntax = "proto2";

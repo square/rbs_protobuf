@@ -347,7 +347,7 @@ module RBSProtobuf
 
           tags = enum_type.value.map do |v|
             factory.literal_type(v.number)
-          end
+          end.uniq
 
           enum_decl.members << RBS::AST::Declarations::Alias.new(
             name: factory.type_name("names"),
