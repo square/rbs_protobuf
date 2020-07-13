@@ -14,20 +14,20 @@ module RBSProtobuf
       end
 
       def response
-        @response ||= generate_response()
+        @response ||= Google::Protobuf::Compiler::CodeGeneratorResponse.new
       end
 
-      def generate_response
-        response = Google::Protobuf::Compiler::CodeGeneratorResponse.new
-
+      def generate_rbs!
         input.proto_file.each do |file|
           response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
             name: rbs_name(file.name),
             content: rbs_content(file)
           )
         end
+      end
 
-        response
+      def vendor_gem_rbs!
+        raise NotImplementedError
       end
 
       def rbs_name(proto_name)

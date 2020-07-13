@@ -3,6 +3,25 @@ require "test_helper"
 class ProtobufGemTest < Minitest::Test
   include TestHelper
 
+  def test_vendor_gem_rbs!
+    input = read_proto(<<EOP)
+syntax = "proto2";
+message Foo {}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true
+    )
+
+    translator.vendor_gem_rbs!
+
+    translator.response.file.each do |file|
+      assert_match(/^rbs_protobuf\/protobuf\/.*\.rbs$/, file.name)
+    end
+  end
+
   def test_message_with_base_type
     input = read_proto(<<EOP)
 syntax = "proto2";

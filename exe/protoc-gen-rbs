@@ -29,5 +29,8 @@ translator = case backend
                raise NotImplementedError
              end
 
+translator.generate_rbs!
+translator.vendor_gem_rbs!
+
 response = translator.response
 print Google::Protobuf::Compiler::CodeGeneratorResponse.encode(response)
