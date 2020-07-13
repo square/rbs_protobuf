@@ -1,6 +1,6 @@
 require "test_helper"
 
-class GoogleProtobufTest < Minitest::Test
+class ProtobufGemTest < Minitest::Test
   include TestHelper
 
   def test_message_with_base_type

@@ -17,3 +17,4 @@ end
 require "rbs_protobuf/rbs_factory"
 require "rbs_protobuf/translator/base"
 require "rbs_protobuf/translator/protobuf_gem"
+require "rbs_protobuf/translator/google_protobuf"

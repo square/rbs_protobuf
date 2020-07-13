@@ -4,6 +4,8 @@ class GoogleProtobufTest < Minitest::Test
   include TestHelper
 
   def test_protobuf
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -18,6 +20,8 @@ EOP
   end
 
   def test_scalar_field
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -46,6 +50,8 @@ RBS
   end
 
   def test_all_scalar_field
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -110,6 +116,8 @@ RBS
   end
 
   def test_enum
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -165,6 +173,8 @@ RBS
   end
 
   def test_toplevel_enum
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -205,6 +215,8 @@ RBS
   end
 
   def test_message_toplevel
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -243,6 +255,8 @@ RBS
   end
 
   def test_message_nested
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -281,6 +295,8 @@ RBS
   end
 
   def test_oneof
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -313,6 +329,8 @@ RBS
   end
 
   def test_map
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -344,6 +362,8 @@ RBS
   end
 
   def test_package
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -370,6 +390,8 @@ RBS
   end
 
   def test_comment
+    skip
+
     input = read_proto(<<EOP)
 syntax = "proto2";
 
