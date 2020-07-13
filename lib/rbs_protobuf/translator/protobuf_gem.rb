@@ -51,7 +51,7 @@ module RBSProtobuf
             decls = [
               RBS::AST::Declarations::Module.new(
                 name: factory.type_name(name.to_s),
-                self_type: nil,
+                self_types: [],
                 type_params: factory.module_type_params,
                 location: nil,
                 comment: nil,

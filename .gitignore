@@ -7,3 +7,4 @@
 /spec/reports/
 /tmp/
 /example/protobuf-gem/
+/Gemfile.lock
