@@ -46,6 +46,13 @@ module RBSProtobuf
                                    path: [4, index])
         end
 
+        file.service.each_with_index do |service, index|
+          decls << service_to_decl(service,
+                                   prefix: prefix,
+                                   source_code_info: source_code_info,
+                                   path: [6, index])
+        end
+
         if nested_namespace?
           package_namespace.path.reverse_each do |name|
             decls = [
@@ -440,6 +447,84 @@ module RBSProtobuf
               location: nil
             )
           end
+        end
+      end
+
+      def service_base_class
+        RBS::AST::Declarations::Class::Super.new(
+          name: factory.type_name("::Protobuf::Rpc::Service"),
+          args: []
+        )
+      end
+
+      def service_to_decl(service, prefix:, source_code_info:, path:)
+        service_name = ActiveSupport::Inflector.camelize(service.name)
+
+        RBS::AST::Declarations::Class.new(
+          name: RBS::TypeName.new(name: service_name.to_sym, namespace: prefix),
+          super_class: service_base_class,
+          type_params: factory.module_type_params(),
+          members: [],
+          comment: comment_for_path(source_code_info, path),
+          location: nil,
+          annotations: []
+        ).tap do |service_decl|
+          requests = []
+          responses = []
+
+          service.method.each.with_index do |method, index|
+            requests << message_type(method.input_type)
+            responses << message_type(method.output_type)
+
+            service_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: ActiveSupport::Inflector.underscore(method.name).to_sym,
+              kind: :instance,
+              types: [factory.method_type(type: factory.function())],
+              annotations: [],
+              location: nil,
+              comment: comment_for_path(source_code_info, path + [2, index]),
+              attributes: [],
+              overload: false
+            )
+          end
+
+          service_decl.members << RBS::AST::Members::MethodDefinition.new(
+            name: :request,
+            kind: :instance,
+            types: [
+              factory.method_type(
+                type: factory.function(
+                  factory.union_type(*requests)
+                )
+              )
+            ],
+            annotations: [],
+            location: nil,
+            comment: nil,
+            attributes: [],
+            overload: false
+          )
+
+          service_decl.members << RBS::AST::Members::MethodDefinition.new(
+            name: :response,
+            kind: :instance,
+            types: [
+              factory.method_type(
+                type: factory.function().update(
+                  required_positionals: [
+                    factory.param(
+                      factory.union_type(*responses)
+                    )
+                  ]
+                )
+              )
+            ],
+            annotations: [],
+            location: nil,
+            comment: nil,
+            attributes: [],
+            overload: false
+          )
         end
       end
     end

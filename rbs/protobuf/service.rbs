@@ -1,0 +1,7 @@
+module Protobuf
+  module Rpc
+    module Service
+      # TBD...
+    end
+  end
+end

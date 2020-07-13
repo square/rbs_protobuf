@@ -573,4 +573,55 @@ class Account < ::Protobuf::Message
 end
 RBS
   end
+
+  def test_service
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message SearchRequest {
+}
+
+message SearchResponse {
+}
+
+message Message {
+}
+
+service SearchService {
+  rpc Search(SearchRequest) returns (SearchResponse);
+  rpc SendMessage(Message) returns (Message);
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class SearchRequest < ::Protobuf::Message
+  def initialize: () -> void
+end
+
+class SearchResponse < ::Protobuf::Message
+  def initialize: () -> void
+end
+
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+end
+
+class SearchService < ::Protobuf::Rpc::Service
+  def search: () -> void
+
+  def send_message: () -> void
+
+  def request: () -> (::SearchRequest | ::Message)
+
+  def response: (::SearchResponse | ::Message) -> void
+end
+RBS
+  end
 end

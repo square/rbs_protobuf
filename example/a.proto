@@ -45,3 +45,7 @@ message SubMessage {
 message Project {
   map<string, Project> projects = 3;
 }
+
+service SearchService {
+  rpc SearchUser(SearchRequest) returns (SearchResponse);
+}
