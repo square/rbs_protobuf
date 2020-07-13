@@ -488,43 +488,49 @@ module RBSProtobuf
             )
           end
 
-          service_decl.members << RBS::AST::Members::MethodDefinition.new(
-            name: :request,
-            kind: :instance,
-            types: [
-              factory.method_type(
-                type: factory.function(
-                  factory.union_type(*requests)
+          unless requests.empty?
+            service_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: :request,
+              kind: :instance,
+              types: [
+                factory.method_type(
+                  type: factory.function(
+                    factory.union_type(*requests)
+                  )
                 )
-              )
-            ],
-            annotations: [],
-            location: nil,
-            comment: nil,
-            attributes: [],
-            overload: false
-          )
+              ],
+              annotations: [],
+              location: nil,
+              comment: nil,
+              attributes: [],
+              overload: false
+            )
+          end
 
-          service_decl.members << RBS::AST::Members::MethodDefinition.new(
-            name: :response,
-            kind: :instance,
-            types: [
-              factory.method_type(
-                type: factory.function().update(
-                  required_positionals: [
-                    factory.param(
-                      factory.union_type(*responses)
-                    )
-                  ]
+          unless responses.empty?
+            service_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: :response,
+              kind: :instance,
+              types: [
+                factory.method_type(
+                  type: factory.function().update(
+                    required_positionals: [
+                      factory.param(
+                        factory.union_type(*responses)
+                      )
+                    ]
+                  )
                 )
-              )
-            ],
-            annotations: [],
-            location: nil,
-            comment: nil,
-            attributes: [],
-            overload: false
-          )
+              ],
+              annotations: [],
+              location: nil,
+              comment: nil,
+              attributes: [],
+              overload: false
+            )
+          end
+        end
+      end
 
       def vendor_gem_rbs!
         dir = Pathname(__dir__) + "../../../rbs/protobuf"
