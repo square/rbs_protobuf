@@ -407,8 +407,6 @@ RBS
   end
 
   def test_message_with_map_to_base_and_message
-    # `oneof` is not supported yet in protobuf gem
-
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -681,6 +679,62 @@ class SearchService < ::Protobuf::Rpc::Service
   def request: () -> (::SearchRequest | ::Message)
 
   def response: (::SearchResponse | ::Message) -> void
+end
+RBS
+  end
+
+  def test_extension
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+package test;
+
+message M1 {
+  extensions 100 to max;
+}
+
+extend M1 {
+  optional string name = 100;
+}
+
+extend M1 {
+  optional M1 parent = 101;
+}
+EOP
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+module Test
+  class M1 < ::Protobuf::Message
+    def initialize: () -> void
+  end
+end
+
+class ::Test::M1
+  attr_reader name(): ::String
+
+  attr_writer name(): ::String?
+
+  def []: (:name) -> ::String
+        | ...
+
+  def []=: (:name, ::String?) -> ::String?
+         | ...
+end
+
+class ::Test::M1
+  attr_accessor parent(): ::Test::M1?
+
+  def []: (:parent) -> ::Test::M1?
+        | ...
+
+  def []=: (:parent, ::Test::M1?) -> ::Test::M1?
+         | ...
 end
 RBS
   end

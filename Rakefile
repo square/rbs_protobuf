@@ -20,7 +20,8 @@ namespace :example do
       "--plugin=protoc-gen-ruby-protobuf=#{__dir__}/bin/protoc-gen-ruby",
       "--ruby-protobuf_out=example/protobuf-gem",
       "-Iexample",
-      "example/a.proto"
+      "example/a.proto",
+      "example/b.proto"
     )
     sh(
       { "RBS_PROTOBUF_BACKEND" => "protobuf" },
@@ -28,7 +29,8 @@ namespace :example do
       "--plugin=protoc-gen-rbs=#{__dir__}/exe/protoc-gen-rbs",
       "--rbs_out=example/protobuf-gem",
       "-Iexample",
-      "example/a.proto"
+      "example/a.proto",
+      "example/b.proto"
     )
   end
 

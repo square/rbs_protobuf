@@ -74,6 +74,14 @@ module RBSProtobuf
           end
         end
 
+        file.extension.group_by(&:extendee).each.with_index do |(name, extensions), index|
+          decls.push(*extension_to_decl(name,
+                                        extensions,
+                                        prefix: RBS::Namespace.root,
+                                        source_code_info: source_code_info,
+                                        path: [7, index]))
+        end
+
         StringIO.new.tap do |io|
           RBS::Writer.new(out: io).write(decls)
         end.string
@@ -452,6 +460,94 @@ module RBSProtobuf
               type: RBS::TypeName.new(name: enum_name.to_sym, namespace: prefix),
               comment: comment,
               location: nil
+            )
+          end
+        end
+      end
+
+      def extension_to_decl(extendee_name, extensions, prefix:, source_code_info:, path:)
+        class_name = message_type(extendee_name).name
+
+        extensions.map do |field|
+          field_name = field.name.to_sym
+
+          RBS::AST::Declarations::Class.new(
+            name: class_name,
+            super_class: nil,
+            type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
+            location: nil,
+            comment: nil,
+            members: [],
+            annotations: []
+          ).tap do |class_decl|
+            read_type, write_type = field_type(field, {})
+
+            if read_type == write_type
+              class_decl.members << RBS::AST::Members::AttrAccessor.new(
+                name: field_name,
+                type: read_type,
+                comment: nil,
+                location: nil,
+                annotations: [],
+                ivar_name: false
+              )
+            else
+              class_decl.members << RBS::AST::Members::AttrReader.new(
+                name: field_name,
+                type: read_type,
+                comment: nil,
+                location: nil,
+                annotations: [],
+                ivar_name: false
+              )
+
+              class_decl.members << RBS::AST::Members::AttrWriter.new(
+                name: field_name,
+                type: write_type,
+                comment: nil,
+                location: nil,
+                annotations: [],
+                ivar_name: false
+              )
+            end
+
+            class_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: :[],
+              types: [
+                factory.method_type(
+                  type: factory.function(read_type).update(
+                    required_positionals: [
+                      factory.param(factory.literal_type(field_name))
+                    ]
+                  )
+                )
+              ],
+              annotations: [],
+              comment: nil,
+              attributes: [],
+              location: nil,
+              overload: true,
+              kind: :instance
+            )
+
+            class_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: :[]=,
+              types: [
+                factory.method_type(
+                  type: factory.function(write_type).update(
+                    required_positionals: [
+                      factory.param(factory.literal_type(field_name)),
+                      factory.param(write_type)
+                    ]
+                  )
+                )
+              ],
+              annotations: [],
+              comment: nil,
+              attributes: [],
+              location: nil,
+              overload: true,
+              kind: :instance
             )
           end
         end

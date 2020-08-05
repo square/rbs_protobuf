@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+package rbs_protobuf.example;
+
+import 'a.proto';
+
+extend rbs_protobuf.example.Project {
+  optional string new_name = 100;
+}
+

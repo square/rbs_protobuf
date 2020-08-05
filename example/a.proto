@@ -1,5 +1,7 @@
 syntax = "proto2";
 
+package rbs_protobuf.example;
+
 message SearchRequest {
   required string query = 1;
   optional int32 page_number = 2;
@@ -44,6 +46,7 @@ message SubMessage {
 
 message Project {
   map<string, Project> projects = 3;
+  extensions 100 to max;
 }
 
 service SearchService {

@@ -1,20 +1,21 @@
 require "protobuf"
 require_relative "protobuf-gem/a.pb.rb"
+require_relative "protobuf-gem/b.pb.rb"
 
-request = SearchRequest.decode("")
+request = Rbs_protobuf::Example::SearchRequest.decode("")
 request.corpus = :VIDEO
 
-request.corpus = SearchRequest::Corpus::WEB
+request.corpus = Rbs_protobuf::Example::SearchRequest::Corpus::WEB
 
 corpus = request.corpus
 
 query = request[:query]
 
 
-req = SearchRequest.new(corpus: :VIDEO, query: "Hello world")
+req = Rbs_protobuf::Example::SearchRequest.new(corpus: :VIDEO, query: "Hello world")
 
 
-response = SearchResponse.new()
+response = Rbs_protobuf::Example::SearchResponse.new()
 
 response.result.each do |result|
 
@@ -23,5 +24,9 @@ end
 response.result.clear
 response.result[0] = nil
 
-project = Project.new
-project.projects["sub project 1"] = Project.new
+project = Rbs_protobuf::Example::Project.new
+project.projects["sub project 1"] = Rbs_protobuf::Example::Project.new
+
+project = Rbs_protobuf::Example::Project.new
+s = project.new_name
+project.new_name = "Hello world"
