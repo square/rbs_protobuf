@@ -7,7 +7,7 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList["test/**/*_test.rb"]
 end
 
-task :default => :test
+task :default => [:test, "example:typecheck"]
 
 namespace :example do
   desc "Generate Ruby code with protobuf-gem"
@@ -30,5 +30,12 @@ namespace :example do
       "-Iexample",
       "example/a.proto"
     )
+  end
+
+  desc "Type check generated code"
+  task :typecheck => ["example:protobufgem"] do
+    Dir.chdir "example" do
+      sh(*%w(bundle exec steep check))
+    end
   end
 end

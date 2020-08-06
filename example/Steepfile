@@ -1,0 +1,10 @@
+target :protobuf_gem_example do
+  check "protobuf_gem_example.rb"
+  signature "protobuf-gem"
+  typing_options :strict
+end
+
+target :protobuf_gem_protos do
+  check "protobuf-gem"
+  signature "protobuf-gem"
+end
