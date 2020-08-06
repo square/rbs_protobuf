@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "rbs", "~> 0.6.0"
+  spec.add_runtime_dependency "rbs", "~> 0.9.1"
   spec.add_runtime_dependency "protobuf", "~> 3.10"
   spec.add_runtime_dependency "activesupport", ">=4.0"
 end
