@@ -1,7 +1,9 @@
 module Protobuf
   module Rpc
     module Service
-      # TBD...
+      # TBD
+      
+      def self.rpc: (Symbol, singleton(Message), singleton(Message)) -> void
     end
   end
 end

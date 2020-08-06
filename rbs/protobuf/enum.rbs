@@ -2,6 +2,9 @@ module Protobuf
   class Enum
     def self.aliases_allowed?: () -> bool
 
+    include Optionable
+    extend Optionable::ClassMethods
+
     # Public: Get all integer tags defined by this enum.
     #
     # Examples
