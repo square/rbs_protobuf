@@ -22,3 +22,6 @@ end
 
 response.result.clear
 response.result[0] = nil
+
+project = Project.new
+project.projects["sub project 1"] = Project.new
