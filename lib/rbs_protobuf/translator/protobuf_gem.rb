@@ -42,6 +42,11 @@ module RBSProtobuf
         file.message_type.each_with_index do |message, index|
           decls << message_to_decl(message,
                                    prefix: prefix,
+                                   message_path: if package_namespace.empty?
+                                                   [message.name.to_sym]
+                                                 else
+                                                   [file.package.to_sym, message.name.to_sym]
+                                                 end,
                                    source_code_info: source_code_info,
                                    path: [4, index])
         end
@@ -92,7 +97,7 @@ module RBSProtobuf
         )
       end
 
-      def message_to_decl(message, prefix:, source_code_info:, path:)
+      def message_to_decl(message, prefix:, message_path:, source_code_info:, path:)
         class_name = ActiveSupport::Inflector.upcase_first(message.name)
         decl_namespace = prefix.append(class_name.to_sym)
 
@@ -110,11 +115,13 @@ module RBSProtobuf
           message.nested_type.each_with_index do |nested_type, index|
             if nested_type.options&.map_entry
               key_field, value_field = nested_type.field.to_a
-              maps["." + decl_namespace.to_s.gsub(/::/, ".") + nested_type.name] = [key_field, value_field]
+              map_type_name = ".#{(message_path + [nested_type.name]).join(".")}"
+              maps[map_type_name] = [key_field, value_field]
             else
               class_decl.members << message_to_decl(
                 nested_type,
                 prefix: RBS::Namespace.empty,
+                message_path: message_path + [nested_type.name.to_sym],
                 source_code_info: source_code_info,
                 path: path + [3, index]
               )

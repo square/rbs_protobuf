@@ -500,6 +500,47 @@ end
 RBS
   end
 
+  def test_message_with_map_with_package
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+package test1;
+
+message Message {
+  message Message2 {
+    map<string, string> foo = 1;
+  }
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+module Test1
+  class Message < ::Protobuf::Message
+    class Message2 < ::Protobuf::Message
+      attr_accessor foo(): ::Protobuf::Field::FieldHash[::String, ::String, ::String]
+
+      def initialize: (?foo: ::Protobuf::Field::FieldHash[::String, ::String, ::String]) -> void
+
+      def []: (:foo) -> ::Protobuf::Field::FieldHash[::String, ::String, ::String]
+            | (::Symbol) -> untyped
+
+      def []=: (:foo, ::Protobuf::Field::FieldHash[::String, ::String, ::String]) -> ::Protobuf::Field::FieldHash[::String, ::String, ::String]
+             | (::Symbol, untyped) -> untyped
+    end
+
+    def initialize: () -> void
+  end
+end
+RBS
+  end
+
   def test_nested_message
     input = read_proto(<<EOP)
 syntax = "proto2";
