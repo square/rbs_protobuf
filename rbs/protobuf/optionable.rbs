@@ -18,6 +18,6 @@ module Protobuf
 
     def get_option!: (untyped name) -> untyped
 
-    def self.inject: (Class base_class, ?bool extend_class) { () -> Class } -> void
+    def self.inject: (Module base_class, ?bool extend_class) { () -> Class } -> void
   end
 end
