@@ -26,7 +26,6 @@ namespace :example do
     sh(
       { "RBS_PROTOBUF_BACKEND" => "protobuf" },
       "protoc",
-      "--plugin=protoc-gen-rbs=#{__dir__}/exe/protoc-gen-rbs",
       "--rbs_out=example/protobuf-gem",
       "-Iexample",
       "example/a.proto",
@@ -37,7 +36,7 @@ namespace :example do
   desc "Type check generated code"
   task :typecheck => ["example:protobufgem"] do
     Dir.chdir "example" do
-      sh(*%w(bundle exec steep check))
+      sh(*%w(steep check))
     end
   end
 end
