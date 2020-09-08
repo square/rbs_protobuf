@@ -200,7 +200,6 @@ module RBSProtobuf
             ],
             annotations: [],
             comment: nil,
-            attributes: [],
             location: nil,
             overload: false,
             kind: :instance
@@ -230,7 +229,6 @@ module RBSProtobuf
                   ],
               annotations: [],
               comment: nil,
-              attributes: [],
               location: nil,
               overload: false,
               kind: :instance
@@ -263,7 +261,6 @@ module RBSProtobuf
                   ],
               annotations: [],
               comment: nil,
-              attributes: [],
               location: nil,
               overload: false,
               kind: :instance
@@ -281,7 +278,6 @@ module RBSProtobuf
                 ],
                 annotations: [],
                 comment: nil,
-                attributes: [],
                 location: nil,
                 overload: false,
                 kind: :instance
@@ -524,7 +520,6 @@ module RBSProtobuf
               ],
               annotations: [],
               comment: nil,
-              attributes: [],
               location: nil,
               overload: true,
               kind: :instance
@@ -544,7 +539,6 @@ module RBSProtobuf
               ],
               annotations: [],
               comment: nil,
-              attributes: [],
               location: nil,
               overload: true,
               kind: :instance
@@ -586,7 +580,6 @@ module RBSProtobuf
               annotations: [],
               location: nil,
               comment: comment_for_path(source_code_info, path + [2, index]),
-              attributes: [],
               overload: false
             )
           end
@@ -605,7 +598,6 @@ module RBSProtobuf
               annotations: [],
               location: nil,
               comment: nil,
-              attributes: [],
               overload: false
             )
           end
@@ -628,7 +620,6 @@ module RBSProtobuf
               annotations: [],
               location: nil,
               comment: nil,
-              attributes: [],
               overload: false
             )
           end
