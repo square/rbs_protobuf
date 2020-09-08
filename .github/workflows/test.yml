@@ -1,0 +1,35 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        container_tag:
+          - 2.6-bionic
+          - 2.7-bionic
+    container:
+      image: rubylang/ruby:${{ matrix.container_tag }}
+    steps:
+      - name: Install protoc
+        run: |
+          cd /tmp
+          apt-get update
+          apt-get -y install curl unzip
+          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
+          unzip protoc-3.13.0-linux-x86_64.zip
+          mv bin/protoc /usr/local/bin/protoc
+          protoc --version
+      - uses: actions/checkout@v1
+      - name: Run test
+        run: |
+          ruby -v
+          gem install bundler
+          bin/setup
+          bundle exec rake
