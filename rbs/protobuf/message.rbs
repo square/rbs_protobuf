@@ -106,7 +106,7 @@ module Protobuf
     # Iterate over every field, invoking the given block
     #
     def each_field: () { (Symbol, untyped) -> void } -> void
-                  | () -> Enumerable[[Symbol, untyped], void]
+                  | () -> Enumerable[[Symbol, untyped]]
 
     def each_field_for_serialization: () { (Symbol, untyped) -> void } -> void
 

@@ -93,7 +93,8 @@ module RBSProtobuf
             name: :Message,
             namespace: RBS::Namespace.parse("::Protobuf")
           ),
-          args: []
+          args: [],
+          location: nil
         )
       end
 
@@ -164,7 +165,8 @@ module RBSProtobuf
                 comment: comment,
                 location: nil,
                 annotations: [],
-                ivar_name: false
+                ivar_name: false,
+                kind: :instance
               )
             else
               class_decl.members << RBS::AST::Members::AttrReader.new(
@@ -173,7 +175,8 @@ module RBSProtobuf
                 comment: comment,
                 location: nil,
                 annotations: [],
-                ivar_name: false
+                ivar_name: false,
+                kind: :instance
               )
 
               class_decl.members << RBS::AST::Members::AttrWriter.new(
@@ -182,7 +185,8 @@ module RBSProtobuf
                 comment: comment,
                 location: nil,
                 annotations: [],
-                ivar_name: false
+                ivar_name: false,
+                kind: :instance
               )
             end
           end
@@ -358,7 +362,8 @@ module RBSProtobuf
       def enum_base_class
         RBS::AST::Declarations::Class::Super.new(
           name: factory.type_name("::Protobuf::Enum"),
-          args: []
+          args: [],
+          location: nil
         )
       end
 
@@ -436,7 +441,8 @@ module RBSProtobuf
             ivar_name: false,
             annotations: [],
             comment: nil,
-            location: nil
+            location: nil,
+            kind: :instance
           )
 
           enum_decl.members << RBS::AST::Members::AttrReader.new(
@@ -445,7 +451,8 @@ module RBSProtobuf
             ivar_name: false,
             annotations: [],
             comment: nil,
-            location: nil
+            location: nil,
+            kind: :instance
           )
 
           enum_type.value.each.with_index do |v, index|
@@ -485,7 +492,8 @@ module RBSProtobuf
                 comment: nil,
                 location: nil,
                 annotations: [],
-                ivar_name: false
+                ivar_name: false,
+                kind: :instance
               )
             else
               class_decl.members << RBS::AST::Members::AttrReader.new(
@@ -494,7 +502,8 @@ module RBSProtobuf
                 comment: nil,
                 location: nil,
                 annotations: [],
-                ivar_name: false
+                ivar_name: false,
+                kind: :instance
               )
 
               class_decl.members << RBS::AST::Members::AttrWriter.new(
@@ -503,7 +512,8 @@ module RBSProtobuf
                 comment: nil,
                 location: nil,
                 annotations: [],
-                ivar_name: false
+                ivar_name: false,
+                kind: :instance
               )
             end
 
@@ -550,7 +560,8 @@ module RBSProtobuf
       def service_base_class
         RBS::AST::Declarations::Class::Super.new(
           name: factory.type_name("::Protobuf::Rpc::Service"),
-          args: []
+          args: [],
+          location: nil
         )
       end
 
