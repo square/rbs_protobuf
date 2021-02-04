@@ -15,6 +15,9 @@ jobs:
           - 2.6-bionic
           - 2.7-bionic
           - 3.0-focal
+        protoc_version:
+          - 3.13.0
+          - 3.14.0
     container:
       image: rubylang/ruby:${{ matrix.container_tag }}
     steps:
@@ -23,8 +26,8 @@ jobs:
           cd /tmp
           apt-get update
           apt-get -y install curl unzip
-          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
-          unzip protoc-3.13.0-linux-x86_64.zip
+          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v${{ matrix.protoc_version }}/protoc-${{ matrix.protoc_version }}-linux-x86_64.zip
+          unzip protoc-${{ matrix.protoc_version }}-linux-x86_64.zip
           mv bin/protoc /usr/local/bin/protoc
           protoc --version
       - uses: actions/checkout@v1
