@@ -14,6 +14,7 @@ jobs:
         container_tag:
           - 2.6-bionic
           - 2.7-bionic
+          - 3.0-focal
     container:
       image: rubylang/ruby:${{ matrix.container_tag }}
     steps:
