@@ -6,6 +6,8 @@ It works as a `protoc` plugin and generates RBSs for `protobuf` gem. (We plan to
 
 ## Example
 
+This is an example .proto file.
+
 ```proto
 syntax = "proto2";
 
@@ -18,10 +20,9 @@ message SearchRequest {
 }
 ```
 
-```rbs
-# RBS for protobuf gem
-# RBS_PROTOBUF_BACKEND=protobuf bundle exec protoc --rbs_out=out example/SearchRequest.proto
+rbs_protobuf will generate the following RBS file including method definitions for each attribute with correct types. 
 
+```rbs
 module Protobuf
   module Example
     class SearchRequest < ::Protobuf::Message
@@ -53,12 +54,16 @@ module Protobuf
 end
 ```
 
+And you can type check your Ruby program using the classes with RBS above. 💪
+
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rbs_protobuf'
+group :development do
+  gem 'rbs_protobuf', require: false
+end
 ```
 
 And then execute:
@@ -71,9 +76,30 @@ Or install it yourself as:
 
 ## Usage
 
-Start `protoc` with `--rbs_out` option.
+Run `protoc` with `--rbs_out` option.
 
-    $ RBS_PROTOBUF_BACKEND=protobuf bundle exec protoc --rbs_out=output -Iprotos protos/a.proto
+    $ RBS_PROTOBUF_BACKEND=protobuf protoc --rbs_out=sig/protos protos/a.proto
+
+You may need `bundle exec protoc ...` to let bundler set up PATH.
+
+## Type checking
+
+To type check the output, you need to configure your tools to import [gem_rbs_collection](https://github.com/ruby/gem_rbs_collection).
+
+    $ git submodule add https://github.com/ruby/gem_rbs_collection.git vendor/rbs/gem_rbs_collection
+
+If you want to validate your RBS files with `rbs validate`, specify `--repo` option.
+
+    $ rbs --repo=vendor/rbs/gem_rbs_collection/gems -rprotobuf validate
+
+If you want to type check your Ruby program using Steep, add `repo_path` and `library` calls in your `Steepfile`.
+
+```ruby
+target :app do
+  repo_path "vendor/rbs/gem_rbs_collection/gems"
+  library "protobuf"
+end
+```
 
 ### Options
 
@@ -96,7 +122,7 @@ Start `protoc` with `--rbs_out` option.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test example:typecheck` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 The gem works as a plugin of `protoc` command, so `protoc` command should be available for development.
 
@@ -104,7 +130,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rbs_protobuf.
+Bug reports and pull requests are welcome on GitHub at https://github.com/square/rbs_protobuf.
 
 
 ## License
