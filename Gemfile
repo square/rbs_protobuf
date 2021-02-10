@@ -5,5 +5,6 @@ gemspec
 
 gem "rake", "~> 12.0"
 gem "minitest", "~> 5.0"
-gem "google-protobuf"
 gem "steep"
+
+gem "protobuf", "~> 3.10"

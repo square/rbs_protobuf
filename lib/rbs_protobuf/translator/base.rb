@@ -26,10 +26,6 @@ module RBSProtobuf
         end
       end
 
-      def vendor_gem_rbs!
-        raise NotImplementedError
-      end
-
       def rbs_name(proto_name)
         dirname = File.dirname(proto_name)
         basename = File.basename(proto_name, File.extname(proto_name))
