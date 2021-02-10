@@ -653,13 +653,6 @@ class Message < ::Protobuf::Message
 end
 
 class SearchService < ::Protobuf::Rpc::Service
-  def search: () -> void
-
-  def send_message: () -> void
-
-  def request: () -> (::SearchRequest | ::Message)
-
-  def response: (::SearchResponse | ::Message) -> void
 end
 RBS
   end

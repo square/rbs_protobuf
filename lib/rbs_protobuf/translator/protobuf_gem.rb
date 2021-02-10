@@ -576,65 +576,7 @@ module RBSProtobuf
           comment: comment_for_path(source_code_info, path),
           location: nil,
           annotations: []
-        ).tap do |service_decl|
-          requests = []
-          responses = []
-
-          service.method.each.with_index do |method, index|
-            requests << message_type(method.input_type)
-            responses << message_type(method.output_type)
-
-            service_decl.members << RBS::AST::Members::MethodDefinition.new(
-              name: ActiveSupport::Inflector.underscore(method.name).to_sym,
-              kind: :instance,
-              types: [factory.method_type(type: factory.function())],
-              annotations: [],
-              location: nil,
-              comment: comment_for_path(source_code_info, path + [2, index]),
-              overload: false
-            )
-          end
-
-          unless requests.empty?
-            service_decl.members << RBS::AST::Members::MethodDefinition.new(
-              name: :request,
-              kind: :instance,
-              types: [
-                factory.method_type(
-                  type: factory.function(
-                    factory.union_type(*requests)
-                  )
-                )
-              ],
-              annotations: [],
-              location: nil,
-              comment: nil,
-              overload: false
-            )
-          end
-
-          unless responses.empty?
-            service_decl.members << RBS::AST::Members::MethodDefinition.new(
-              name: :response,
-              kind: :instance,
-              types: [
-                factory.method_type(
-                  type: factory.function().update(
-                    required_positionals: [
-                      factory.param(
-                        factory.union_type(*responses)
-                      )
-                    ]
-                  )
-                )
-              ],
-              annotations: [],
-              location: nil,
-              comment: nil,
-              overload: false
-            )
-          end
-        end
+        )
       end
     end
   end
