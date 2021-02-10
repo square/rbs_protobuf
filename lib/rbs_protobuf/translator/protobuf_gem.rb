@@ -636,18 +636,6 @@ module RBSProtobuf
           end
         end
       end
-
-      def vendor_gem_rbs!
-        dir = Pathname(__dir__) + "../../../rbs/protobuf"
-        dir.each_child do |child|
-          if child.extname == ".rbs"
-            response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
-              name: (Pathname("rbs_protobuf/protobuf") + child.basename).to_s,
-              content: child.read
-            )
-          end
-        end
-      end
     end
   end
 end

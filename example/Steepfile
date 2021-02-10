@@ -1,10 +1,9 @@
-target :protobuf_gem_example do
-  check "protobuf_gem_example.rb"
-  signature "protobuf-gem"
-  typing_options :strict
-end
+repo = (Pathname(__dir__) + "../tmp/rbs/gem_rbs_collection/gems").to_s
 
-target :protobuf_gem_protos do
-  check "protobuf-gem"
+target :protobuf_gem do
+  check "protobuf_gem_example.rb", "protobuf-gem"
   signature "protobuf-gem"
+
+  repo_path repo
+  library "protobuf"
 end
