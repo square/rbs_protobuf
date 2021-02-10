@@ -26,6 +26,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "rbs", ">=1.0.4"
-  spec.add_runtime_dependency "protobuf", "~> 3.10"
   spec.add_runtime_dependency "activesupport", ">=4.0"
 end
