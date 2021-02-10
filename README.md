@@ -117,7 +117,7 @@ end
 | Nested messages         | ✓                          |
 | Maps                    | ✓                          |
 | Extensions              | ✓                          |
-| Services                | Generates stubs            |
+| Services                | Only generates classes     |
 | Oneof                   | No support in `protobuf` gem |
 
 ## Development
