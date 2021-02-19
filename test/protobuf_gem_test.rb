@@ -66,16 +66,16 @@ EOP
 
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
-  attr_reader name(): true | false
+  attr_reader name(): bool
 
-  attr_writer name(): (true | false)?
+  attr_writer name(): bool?
 
-  def initialize: (?name: (true | false)?) -> void
+  def initialize: (?name: bool?) -> void
 
-  def []: (:name) -> (true | false)
+  def []: (:name) -> bool
         | (::Symbol) -> untyped
 
-  def []=: (:name, (true | false)?) -> (true | false)?
+  def []=: (:name, bool?) -> bool?
          | (::Symbol, untyped) -> untyped
 
   def name?: () -> bool
