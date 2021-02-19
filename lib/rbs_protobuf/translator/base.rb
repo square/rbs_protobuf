@@ -76,8 +76,7 @@ module RBSProtobuf
         when FieldDescriptorProto::Type::TYPE_DOUBLE, FieldDescriptorProto::Type::TYPE_FLOAT
           RBS::BuiltinNames::Float.instance_type
         when FieldDescriptorProto::Type::TYPE_BOOL
-          factory.union_type(factory.literal_type(true),
-                             factory.literal_type(false))
+          factory.bool_type()
         else
           raise "Unknown base type: #{type}"
         end
