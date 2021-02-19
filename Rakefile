@@ -25,7 +25,7 @@ namespace :example do
       "example/b.proto"
     )
     sh(
-      { "RBS_PROTOBUF_BACKEND" => "protobuf" },
+      { "RBS_PROTOBUF_BACKEND" => "protobuf", "RBS_PROTOBUF_EXTENSION" => "true" },
       "protoc",
       "--rbs_out=example/protobuf-gem",
       "-Iexample",

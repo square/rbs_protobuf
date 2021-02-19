@@ -1,10 +1,26 @@
 module RBSProtobuf
   module Translator
     class ProtobufGem < Base
-      def initialize(input, upcase_enum:, nested_namespace:)
+      attr_reader :stderr
+
+      def initialize(input, upcase_enum:, nested_namespace:, extension:, stderr: STDERR)
         super(input)
         @upcase_enum = upcase_enum
         @nested_namespace = nested_namespace
+        @extension = extension
+        @stderr = stderr
+      end
+
+      def ignore_extension?
+        !@extension
+      end
+
+      def print_extension_message?
+        @extension == nil
+      end
+
+      def print_extension?
+        @extension == :print
       end
 
       def upcase_enum?
@@ -75,11 +91,27 @@ module RBSProtobuf
         end
 
         file.extension.group_by(&:extendee).each.with_index do |(name, extensions), index|
-          decls.push(*extension_to_decl(name,
-                                        extensions,
-                                        prefix: RBS::Namespace.root,
-                                        source_code_info: source_code_info,
-                                        path: [7, index]))
+          if ignore_extension?
+            if print_extension_message?
+              stderr.puts "Extension for `#{name}` ignored in `#{file.name}`; Set RBS_PROTOBUF_EXTENSION env var to generate RBS for extensions."
+            end
+          else
+            exts = extension_to_decl(name,
+                                     extensions,
+                                     prefix: RBS::Namespace.root,
+                                     source_code_info: source_code_info,
+                                     path: [7, index])
+
+            if print_extension?
+              stderr.puts "#=========================================================="
+              stderr.puts "# Printing RBS for extensions from #{file.name}"
+              stderr.puts "#"
+              RBS::Writer.new(out: stderr).write(exts)
+              stderr.puts
+            else
+              decls.push(*exts)
+            end
+          end
         end
 
         StringIO.new.tap do |io|

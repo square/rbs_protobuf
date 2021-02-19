@@ -17,7 +17,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -60,7 +61,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -100,7 +102,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: false,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -146,7 +149,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: false,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -185,7 +189,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: false,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -228,7 +233,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -290,7 +296,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -332,7 +339,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: false
+      nested_namespace: false,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -360,7 +368,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -400,7 +409,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -442,7 +452,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -495,7 +506,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -534,7 +546,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -574,7 +587,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -635,7 +649,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -678,7 +693,8 @@ EOP
     translator = RBSProtobuf::Translator::ProtobufGem.new(
       input,
       upcase_enum: true,
-      nested_namespace: true
+      nested_namespace: true,
+      extension: true
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -710,6 +726,95 @@ class ::Test::M1
   def []=: (:parent, ::Test::M1?) -> ::Test::M1?
          | ...
 end
+RBS
+  end
+
+  def test_extension_ignore
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+package test;
+
+message M1 {
+  extensions 100 to max;
+}
+
+extend M1 {
+  optional string name = 100;
+}
+EOP
+    stderr = StringIO.new
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: nil,
+      stderr: stderr
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+module Test
+  class M1 < ::Protobuf::Message
+    def initialize: () -> void
+  end
+end
+RBS
+    assert_equal <<RBS, stderr.string
+Extension for `.test.M1` ignored in `a.proto`; Set RBS_PROTOBUF_EXTENSION env var to generate RBS for extensions.
+RBS
+  end
+
+  def test_extension_print
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+package test;
+
+message M1 {
+  extensions 100 to max;
+}
+
+extend M1 {
+  optional string name = 100;
+}
+EOP
+    stderr = StringIO.new
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: :print,
+      stderr: stderr
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+module Test
+  class M1 < ::Protobuf::Message
+    def initialize: () -> void
+  end
+end
+RBS
+
+    assert_equal <<RBS, stderr.string
+#==========================================================
+# Printing RBS for extensions from a.proto
+#
+class ::Test::M1
+  attr_reader name(): ::String
+
+  attr_writer name(): ::String?
+
+  def []: (:name) -> ::String
+        | ...
+
+  def []=: (:name, ::String?) -> ::String?
+         | ...
+end
+
 RBS
   end
 end
