@@ -108,7 +108,6 @@ module RBSProtobuf
 
       def message_to_decl(message, prefix:, message_path:, source_code_info:, path:)
         class_name = ActiveSupport::Inflector.upcase_first(message.name)
-        decl_namespace = prefix.append(class_name.to_sym)
 
         RBS::AST::Declarations::Class.new(
           name: RBS::TypeName.new(name: class_name.to_sym, namespace: prefix),
