@@ -19,11 +19,22 @@ translator = case backend
              when "protobuf"
                upcase_enum = ENV.key?("PB_UPCASE_ENUMS")
                no_nested_namespace = ENV.key?("RBS_PROTOBUF_NO_NESTED_NAMESPACE")
+               extension = case ENV["RBS_PROTOBUF_EXTENSION"]
+                           when "false"
+                             false
+                           when nil
+                             nil
+                           when "print"
+                             :print
+                           else
+                             true
+                           end
 
                RBSProtobuf::Translator::ProtobufGem.new(
                  input,
                  upcase_enum: upcase_enum,
-                 nested_namespace: !no_nested_namespace
+                 nested_namespace: !no_nested_namespace,
+                 extension: extension
                )
              when "google-protobuf"
                raise NotImplementedError

@@ -106,6 +106,7 @@ end
 * `RBS_PROTOBUF_BACKEND` specifies the Ruby code generator gem. Supported value is `protobuf`. (We will add `google-protobuf` for `google-protobuf` gem.)
 * `PB_UPCASE_ENUMS` is for `protobuf` gem support. Specify the environment variable to make enum value constants upper case.
 * `RBS_PROTOBUF_NO_NESTED_NAMESPACE` is to make the RBS declarations flat.
+* `RBS_PROTOBUF_EXTENSION` specifies what to do for extensions.
 
 ## Supported features
 
@@ -116,9 +117,35 @@ end
 | Packages                | ✓                          |
 | Nested messages         | ✓                          |
 | Maps                    | ✓                          |
-| Extensions              | ✓                          |
+| Extensions              | Read next section          |
 | Services                | Only generates classes     |
 | Oneof                   | No support in `protobuf` gem |
+
+### Extensions
+
+Adding extensions may cause problems if the name of new attribute conflicts.
+
+```proto
+extend SearchRequest {
+  // This extension defines an attribute.
+  optional string option = 100;
+}
+
+extend SearchRequest {
+  // Another extension defines another attribute with same name.
+  optional string option = 101;
+}
+```
+
+In this case, defining two `option` attributes in RBS causes an error.
+So, rbs_protobuf allows ignoring extensions for this case.
+
+You can control the behaviour with `RBS_PROTOBUF_EXTENSION` environment variable.
+
+* `false`: Ignores extensions.
+* `print`: Prints RBS for extensions instead of writing them to files. You can copy or modify the printed RBS, and put them in some RBS files.
+* Any value else: Generates RBS for extensions.
+* undefined: Ignores extensions but print messages to ask you to specify a value.
 
 ## Development
 
