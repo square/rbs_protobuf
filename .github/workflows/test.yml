@@ -16,8 +16,8 @@ jobs:
           - 3.0-focal
           - 3.1-focal
         protoc_version:
-          - 3.13.0
-          - 3.14.0
+          - 3.18.2
+          - 3.19.4
     container:
       image: rubylang/ruby:${{ matrix.container_tag }}
     steps:
