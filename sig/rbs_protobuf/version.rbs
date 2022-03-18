@@ -1,0 +1,3 @@
+module RBSProtobuf
+  VERSION: String
+end

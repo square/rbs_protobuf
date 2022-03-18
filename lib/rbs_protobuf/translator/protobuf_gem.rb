@@ -144,7 +144,7 @@ module RBSProtobuf
         RBS::AST::Declarations::Class.new(
           name: RBS::TypeName.new(name: class_name.to_sym, namespace: prefix),
           super_class: message_base_class,
-          type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
+          type_params: [],
           location: nil,
           comment: comment_for_path(source_code_info, path),
           members: [],
@@ -432,6 +432,7 @@ module RBSProtobuf
 
           enum_decl.members << RBS::AST::Declarations::Alias.new(
             name: factory.type_name("names"),
+            type_params: [],
             type: factory.union_type(*names),
             location: nil,
             comment: nil,
@@ -440,6 +441,7 @@ module RBSProtobuf
 
           enum_decl.members << RBS::AST::Declarations::Alias.new(
             name: factory.type_name("strings"),
+            type_params: [],
             type: factory.union_type(*strings),
             location: nil,
             comment: nil,
@@ -448,6 +450,7 @@ module RBSProtobuf
 
           enum_decl.members << RBS::AST::Declarations::Alias.new(
             name: factory.type_name("tags"),
+            type_params: [],
             type: factory.union_type(*tags),
             location: nil,
             comment: nil,
@@ -456,6 +459,7 @@ module RBSProtobuf
 
           enum_decl.members << RBS::AST::Declarations::Alias.new(
             name: factory.type_name("values"),
+            type_params: [],
             type: factory.union_type(
               factory.alias_type("names"),
               factory.alias_type("strings"),
@@ -491,7 +495,7 @@ module RBSProtobuf
 
             enum_decl.members << RBS::AST::Declarations::Constant.new(
               name: factory.type_name(enum_name(v.name).to_s),
-              type: RBS::TypeName.new(name: enum_name.to_sym, namespace: prefix),
+              type: factory.instance_type(RBS::TypeName.new(name: enum_name.to_sym, namespace: prefix)),
               comment: comment,
               location: nil
             )
@@ -508,7 +512,7 @@ module RBSProtobuf
           RBS::AST::Declarations::Class.new(
             name: class_name,
             super_class: nil,
-            type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
+            type_params: [],
             location: nil,
             comment: nil,
             members: [],

@@ -1,0 +1,7 @@
+module ActiveSupport
+  module Inflector
+    def self?.upcase_first: (String) -> String
+
+    def self?.camelize: (String) -> String
+  end
+end

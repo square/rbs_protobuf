@@ -12,9 +12,9 @@ jobs:
     strategy:
       matrix:
         container_tag:
-          - 2.6-bionic
           - 2.7-bionic
           - 3.0-focal
+          - 3.1-focal
         protoc_version:
           - 3.13.0
           - 3.14.0

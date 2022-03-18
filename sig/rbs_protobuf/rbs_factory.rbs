@@ -1,0 +1,41 @@
+module RBSProtobuf
+  class RBSFactory
+    include RBS
+
+    def type_name: (String) -> RBS::TypeName
+
+    def namespace: (String) -> RBS::Namespace
+
+    def instance_type: (String | RBS::TypeName name, *RBS::Types::t args) -> RBS::Types::ClassInstance
+
+    def singleton_type: (String | RBS::TypeName name) -> RBS::Types::ClassSingleton
+
+    def union_type: (RBS::Types::t `type`, *RBS::Types::t types) -> RBS::Types::t
+
+    def nil_type: (?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Bases::Nil
+
+    def bool_type: (?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Bases::Bool
+
+    def alias_type: (String | RBS::TypeName name, ?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Alias
+
+    def function: (?RBS::Types::t return_type) -> RBS::Types::Function
+
+    def param: (RBS::Types::t type, ?name: Symbol?) -> RBS::Types::Function::Param
+
+    def block: (RBS::Types::Function function, ?required: bool) -> RBS::Types::Block
+
+    def untyped: (?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Bases::Any
+
+    def method_type: (?params: Array[Symbol], type: RBS::Types::Function, ?block: RBS::Types::Block?, ?location: RBS::Location[untyped, untyped]?) -> RBS::MethodType
+
+    def literal_type: (RBS::Types::Literal::literal) -> RBS::Types::Literal
+
+    def optional_type: (RBS::Types::t, ?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Optional
+
+    def type_var: (Symbol name, ?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Variable
+
+    def module_type_params: (*Symbol params) -> Array[RBS::AST::TypeParam]
+
+    def unwrap_optional: (RBS::Types::t) -> RBS::Types::t
+  end
+end

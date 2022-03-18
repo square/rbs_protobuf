@@ -1,0 +1,53 @@
+module RBSProtobuf
+  module Translator
+    class ProtobufGem < Base
+      attr_reader stderr: IO
+
+      def initialize: (
+        untyped input,
+        upcase_enum: bool,
+        nested_namespace: bool,
+        extension: bool | :print | nil,
+        ?stderr: IO
+      ) -> void
+
+      @upcase_enum: bool
+
+      @pnested_namespace: bool
+
+      @extension: bool | :print | nil
+
+      def ignore_extension?: () -> bool
+
+      def print_extension_message?: () -> bool
+
+      def print_extension?: () -> bool
+
+      def upcase_enum?: () -> bool
+
+      def nested_namespace?: () -> bool
+
+      def rbs_content: (untyped file) -> String
+
+      def message_base_class: () -> RBS::AST::Declarations::Class::Super
+
+      def repeated_field_type: (RBS::Types::t `type`, ?RBS::Types::t wtype) -> RBS::Types::ClassInstance
+
+      def message_to_decl: (untyped message, prefix: RBS::Namespace, message_path: untyped, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
+
+      def field_type: (untyped field, Hash[String, [RBS::Types::t, RBS::Types::t]] maps) -> [RBS::Types::t, RBS::Types::t]
+
+      def enum_base_class: () -> RBS::AST::Declarations::Class::Super
+
+      def enum_name: (String name) -> Symbol
+
+      def enum_type_to_decl: (untyped enum_type, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
+
+      def extension_to_decl: (String extendee_name, Array[untyped] extensions, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> Array[RBS::AST::Declarations::Class]
+
+      def service_base_class: () -> RBS::AST::Declarations::Class::Super
+
+      def service_to_decl: (untyped service, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
+    end
+  end
+end
