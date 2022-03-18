@@ -1,0 +1,33 @@
+module RBSProtobuf
+  module Translator
+    class Base
+      FieldDescriptorProto: untyped
+
+      attr_reader input: untyped
+
+      def initialize: (untyped input) -> void
+
+      @factory: RBSFactory
+
+      def factory: () -> RBSFactory
+
+      @response: untyped
+
+      def response: () -> untyped
+
+      def generate_rbs!: () -> void
+
+      def rbs_name: (String proto_name) -> String
+
+      def rbs_suffix: () -> ::String
+
+      def rbs_content: (String file) -> String
+
+      def comment_for_path: (untyped source_code_info, Array[Integer] path) -> RBS::AST::Comment?
+
+      def base_type: (untyped `type`) -> RBS::Types::t
+
+      def message_type: (String) -> RBS::Types::ClassInstance
+    end
+  end
+end

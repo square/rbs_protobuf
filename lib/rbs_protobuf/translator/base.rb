@@ -87,6 +87,8 @@ module RBSProtobuf
 
         *path, name = string.delete_prefix(".").split(".").map {|s| ActiveSupport::Inflector.upcase_first(s).to_sym }
 
+        name or raise
+
         factory.instance_type(
           RBS::TypeName.new(
             name: name,

@@ -1,0 +1,5 @@
+module RBSProtobuf
+  attr_reader self.logger: Logger
+
+  self.@logger: Logger
+end

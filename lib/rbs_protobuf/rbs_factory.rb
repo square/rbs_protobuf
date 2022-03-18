@@ -8,7 +8,7 @@ module RBSProtobuf
       *path, name = string.delete_prefix("::").split("::").map(&:to_sym)
 
       TypeName.new(
-        name: name,
+        name: name || raise,
         namespace: Namespace.new(path: path, absolute: absolute)
       )
     end
@@ -72,7 +72,7 @@ module RBSProtobuf
                     type_name(name)
                   end
 
-      Types::Alias.new(name: type_name, location: nil)
+      Types::Alias.new(name: type_name, args: [], location: nil)
     end
 
     def function(return_type = Types::Bases::Void.new(location: nil))
@@ -87,7 +87,7 @@ module RBSProtobuf
     end
 
     def block(function, required: true)
-      MethodType::Block.new(
+      Types::Block.new(
         type: function,
         required: required
       )
@@ -98,8 +98,12 @@ module RBSProtobuf
     end
 
     def method_type(params: [], type:, block: nil, location: nil)
+      type_params = params.map do |name|
+        AST::TypeParam.new(name: name, variance: :invariant, upper_bound: nil, location: nil)
+      end
+
       MethodType.new(
-        type_params: params,
+        type_params: type_params,
         type: type,
         block: block,
         location: location
@@ -128,12 +132,8 @@ module RBSProtobuf
     end
 
     def module_type_params(*params)
-      params.each.with_object(AST::Declarations::ModuleTypeParams.empty) do |param, type_params|
-        type_params.add(AST::Declarations::ModuleTypeParams::TypeParam.new(
-          name: param,
-          variance: :invariant,
-          skip_validation: false
-        ))
+      params.map do |name|
+        AST::TypeParam.new(name: name, variance: :invariant, upper_bound: nil, location: nil)
       end
     end
 
