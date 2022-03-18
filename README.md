@@ -20,7 +20,7 @@ message SearchRequest {
 }
 ```
 
-rbs_protobuf will generate the following RBS file including method definitions for each attribute with correct types. 
+rbs_protobuf will generate the following RBS file including method definitions for each attribute with correct types.
 
 ```rbs
 module Protobuf
@@ -84,22 +84,16 @@ You may need `bundle exec protoc ...` to let bundler set up PATH.
 
 ## Type checking
 
-To type check the output, you need to configure your tools to import [gem_rbs_collection](https://github.com/ruby/gem_rbs_collection).
+To type check the output, you need to configure your tools to import [gem_rbs_collection](https://github.com/ruby/gem_rbs_collection) with `rbs collection` command.
 
-    $ git submodule add https://github.com/ruby/gem_rbs_collection.git vendor/rbs/gem_rbs_collection
-
-If you want to validate your RBS files with `rbs validate`, specify `--repo` option.
-
-    $ rbs --repo=vendor/rbs/gem_rbs_collection/gems -rprotobuf validate
-
-If you want to type check your Ruby program using Steep, add `repo_path` and `library` calls in your `Steepfile`.
-
-```ruby
-target :app do
-  repo_path "vendor/rbs/gem_rbs_collection/gems"
-  library "protobuf"
-end
+```yaml
+# Add the dependency in rbs_collection.yaml
+gems:
+  - name: rbs_protobuf
 ```
+
+We assume that you don't type check the generated `.pb.rb` code.
+If you want to type check them, you need the definition of `Google::Protobuf`, which can be generated from [`descriptor.proto`](https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/descriptor.proto).
 
 ### Options
 
@@ -140,7 +134,7 @@ extend SearchRequest {
 In this case, defining two `option` attributes in RBS causes an error.
 So, rbs_protobuf allows ignoring extensions for this case.
 
-You can control the behaviour with `RBS_PROTOBUF_EXTENSION` environment variable.
+You can control the behavior with `RBS_PROTOBUF_EXTENSION` environment variable.
 
 * `false`: Ignores extensions.
 * `print`: Prints RBS for extensions instead of writing them to files. You can copy or modify the printed RBS, and put them in some RBS files.
