@@ -1,9 +1,14 @@
-repo = (Pathname(__dir__) + "../tmp/rbs/gem_rbs_collection/gems").to_s
+D = Steep::Diagnostic
 
-target :protobuf_gem do
-  check "protobuf_gem_example.rb", "protobuf-gem"
+target :lib do
+  collection_config "../rbs_collection.yaml"
+  
   signature "protobuf-gem"
+  check "protobuf_gem_example.rb", "protobuf-gem"
 
-  repo_path repo
-  library "protobuf"
+  configure_code_diagnostics do |hash|
+    hash[D::Ruby::FallbackAny] = :hint
+    hash[D::Ruby::MethodDefinitionMissing] = :hint
+    hash[D::Ruby::UnknownConstant] = :information
+  end
 end
