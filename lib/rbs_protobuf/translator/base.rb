@@ -42,10 +42,12 @@ module RBSProtobuf
         raise NotImplementedError
       end
 
-      def comment_for_path(source_code_info, path)
+      def comment_for_path(source_code_info, path, options:)
         loc = source_code_info.location.find {|loc| loc.path == path }
+
+        comments = []
+
         if loc
-          comments = []
           if loc.leading_comments.length > 0
             comments << loc.leading_comments.strip
           end
@@ -55,9 +57,31 @@ module RBSProtobuf
           if comments.empty? && !loc.leading_detached_comments.empty?
             comments << loc.leading_detached_comments.join("\n\n").strip
           end
+        end
+
+        if options
+          # @type var opts: Array[[Symbol, untyped]]
+          opts = []
+          options.each_field do |key, value|
+            if options.field?(key.fully_qualified_name)
+              opts << [key.fully_qualified_name, value]
+            end
+          end
+
+          unless opts.empty?
+            unless comments.empty?
+              comments << "----"
+            end
+            comments << "Protobuf options:"
+            list = opts.map {|key, value| "- `#{key} = #{value.inspect}`" }
+            comments << list.join("\n")
+          end
+        end
+
+        unless comments.empty?
           RBS::AST::Comment.new(
             location: nil,
-            string: comments.join("\n\n")
+            string: comments.join("\n\n") + "\n\n"
           )
         end
       end

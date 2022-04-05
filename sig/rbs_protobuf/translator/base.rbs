@@ -23,7 +23,9 @@ module RBSProtobuf
 
       def rbs_content: (String file) -> String
 
-      def comment_for_path: (untyped source_code_info, Array[Integer] path) -> RBS::AST::Comment?
+      def comment_for_path: (untyped source_code_info, Array[Integer] path, options: untyped) -> RBS::AST::Comment?
+
+      def each_options_field: (untyped) { (Symbol, untyped) -> void } -> void
 
       def base_type: (untyped `type`) -> RBS::Types::t
 

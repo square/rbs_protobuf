@@ -38,5 +38,3 @@ jobs:
           bin/setup
           bundle exec rake
           bundle exec rake install
-          mkdir -p tmp/out
-          RBS_PROTOBUF_BACKEND=protobuf protoc --rbs_out=tmp/out -Iexample example/*.proto

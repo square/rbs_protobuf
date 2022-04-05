@@ -146,7 +146,7 @@ module RBSProtobuf
           super_class: message_base_class,
           type_params: [],
           location: nil,
-          comment: comment_for_path(source_code_info, path),
+          comment: comment_for_path(source_code_info, path, options: message.options),
           members: [],
           annotations: []
         ).tap do |class_decl|
@@ -182,7 +182,7 @@ module RBSProtobuf
 
           message.field.each_with_index do |field, index|
             field_name = field.name.to_sym
-            comment = comment_for_path(source_code_info, path + [2, index])
+            comment = comment_for_path(source_code_info, path + [2, index], options: field.options)
 
             read_type, write_type = field_type(field, maps)
 
@@ -428,7 +428,7 @@ module RBSProtobuf
           super_class: enum_base_class(),
           type_params: factory.module_type_params(),
           members: [],
-          comment: comment_for_path(source_code_info, path),
+          comment: comment_for_path(source_code_info, path, options: enum_type.options),
           location: nil,
           annotations: []
         ).tap do |enum_decl|
@@ -505,7 +505,7 @@ module RBSProtobuf
           )
 
           enum_type.value.each.with_index do |v, index|
-            comment = comment_for_path(source_code_info, path + [2, index])
+            comment = comment_for_path(source_code_info, path + [2, index], options: v.options)
 
             enum_decl.members << RBS::AST::Declarations::Constant.new(
               name: factory.type_name(enum_name(v.name).to_s),
@@ -622,7 +622,7 @@ module RBSProtobuf
           super_class: service_base_class,
           type_params: factory.module_type_params(),
           members: [],
-          comment: comment_for_path(source_code_info, path),
+          comment: comment_for_path(source_code_info, path, options: nil),
           location: nil,
           annotations: []
         )

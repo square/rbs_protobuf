@@ -13,6 +13,9 @@ task :default => [:test, "example:typecheck"]
 namespace :example do
   desc "Generate Ruby code with protobuf-gem"
   task :protobufgem do
+    spec = Gem::Specification.find_by_name("protobuf")
+    proto_path = File.join(spec.gem_dir, "proto")
+
     sh("rm -rf example/protobuf-gem")
     sh("mkdir", "-p", "example/protobuf-gem")
     sh(
@@ -21,8 +24,10 @@ namespace :example do
       "--plugin=protoc-gen-ruby-protobuf=#{__dir__}/bin/protoc-gen-ruby",
       "--ruby-protobuf_out=example/protobuf-gem",
       "-Iexample",
+      "-I#{proto_path}",
       "example/a.proto",
-      "example/b.proto"
+      "example/b.proto",
+      "example/c.proto"
     )
     sh(
       { "RBS_PROTOBUF_BACKEND" => "protobuf", "RBS_PROTOBUF_EXTENSION" => "true" },
@@ -31,6 +36,14 @@ namespace :example do
       "-Iexample",
       "example/a.proto",
       "example/b.proto"
+    )
+    sh(
+      { "RBS_PROTOBUF_BACKEND" => "protobuf", "RBS_PROTOBUF_EXTENSION" => "true", "RUBYOPT" => "-rbundler/setup -Iexample/protobuf-gem -rc.pb" },
+      "protoc",
+      "--rbs_out=example/protobuf-gem",
+      "-Iexample",
+      "-I#{proto_path}",
+      "example/c.proto"
     )
   end
 

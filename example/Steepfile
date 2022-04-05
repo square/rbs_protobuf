@@ -2,9 +2,9 @@ D = Steep::Diagnostic
 
 target :lib do
   collection_config "../rbs_collection.yaml"
-  
+
   signature "protobuf-gem"
-  check "protobuf_gem_example.rb", "protobuf-gem"
+  check "protobuf_gem_example.rb"
 
   configure_code_diagnostics do |hash|
     hash[D::Ruby::FallbackAny] = :hint
