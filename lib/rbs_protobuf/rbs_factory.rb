@@ -118,10 +118,14 @@ module RBSProtobuf
     end
 
     def optional_type(type, location: nil)
-      Types::Optional.new(
-        type: type,
-        location: location
-      )
+      if type.is_a?(Types::Optional)
+        type
+      else
+        Types::Optional.new(
+          type: type,
+          location: location
+        )
+      end
     end
 
     def type_var(name, location: nil)

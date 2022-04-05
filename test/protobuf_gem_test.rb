@@ -28,11 +28,17 @@ class Message < ::Protobuf::Message
 
   attr_writer name(): ::String?
 
+  def name!: () -> ::String?
+
   attr_reader Email(): ::String
 
   attr_writer Email(): ::String?
 
+  def Email!: () -> ::String?
+
   attr_accessor postAddress(): ::Protobuf::Field::FieldArray[::String, ::String]
+
+  def postAddress!: () -> ::Protobuf::Field::FieldArray[::String, ::String]?
 
   def initialize: (?name: ::String?, ?Email: ::String?, ?postAddress: ::Protobuf::Field::FieldArray[::String, ::String]) -> void
 
@@ -71,6 +77,8 @@ class Message < ::Protobuf::Message
   attr_reader name(): bool
 
   attr_writer name(): bool?
+
+  def name!: () -> bool?
 
   def initialize: (?name: bool?) -> void
 
@@ -115,11 +123,17 @@ end
 class Foo < ::Protobuf::Message
   attr_accessor m1(): ::Message?
 
+  def m1!: () -> ::Message?
+
   attr_reader m2(): ::Message
 
   attr_writer m2(): ::Message?
 
+  def m2!: () -> ::Message?
+
   attr_accessor m3(): ::Protobuf::Field::FieldArray[::Message, ::Message]
+
+  def m3!: () -> ::Protobuf::Field::FieldArray[::Message, ::Message]?
 
   def initialize: (?m1: ::Message?, ?m2: ::Message?, ?m3: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
 
@@ -260,11 +274,17 @@ class M < ::Protobuf::Message
 
   attr_writer t1(): (::TyPE | ::TyPE::values)?
 
+  def t1!: () -> ::TyPE?
+
   attr_reader t2(): ::TyPE
 
   attr_writer t2(): (::TyPE | ::TyPE::values)?
 
+  def t2!: () -> ::TyPE?
+
   attr_accessor t3(): ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]
+
+  def t3!: () -> ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]?
 
   def initialize: (?t1: (::TyPE | ::TyPE::values)?, ?t2: (::TyPE | ::TyPE::values)?, ?t3: ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]) -> void
 
@@ -309,7 +329,11 @@ module Foo
 
       attr_writer name(): ::String?
 
+      def name!: () -> ::String?
+
       attr_accessor replyTo(): ::Foo::Ba_r::Message?
+
+      def replyTo!: () -> ::Foo::Ba_r::Message?
 
       def initialize: (?name: ::String?, ?replyTo: ::Foo::Ba_r::Message?) -> void
 
@@ -379,9 +403,13 @@ class Message < ::Protobuf::Message
 
   attr_writer name(): ::String?
 
+  def name!: () -> ::String?
+
   attr_reader size(): ::Integer
 
   attr_writer size(): ::Integer?
+
+  def size!: () -> ::Integer?
 
   def initialize: (?name: ::String?, ?size: ::Integer?) -> void
 
@@ -418,7 +446,11 @@ EOP
 class Message < ::Protobuf::Message
   attr_accessor numbers(): ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
 
+  def numbers!: () -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]?
+
   attr_accessor messages(): ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
+
+  def messages!: () -> ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]?
 
   def initialize: (?numbers: ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer], ?messages: ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]) -> void
 
@@ -479,6 +511,8 @@ end
 class Message < ::Protobuf::Message
   attr_accessor foos(): ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
 
+  def foos!: () -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]?
+
   def initialize: (?foos: ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]) -> void
 
   def []: (:foos) -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
@@ -516,6 +550,8 @@ module Test1
   class Message < ::Protobuf::Message
     class Message2 < ::Protobuf::Message
       attr_accessor foo(): ::Protobuf::Field::FieldHash[::String, ::String, ::String]
+
+      def foo!: () -> ::Protobuf::Field::FieldHash[::String, ::String, ::String]?
 
       def initialize: (?foo: ::Protobuf::Field::FieldHash[::String, ::String, ::String]) -> void
 
@@ -559,6 +595,8 @@ class M1 < ::Protobuf::Message
 
   attr_accessor m(): ::M1::M2?
 
+  def m!: () -> ::M1::M2?
+
   def initialize: (?m: ::M1::M2?) -> void
 
   def []: (:m) -> ::M1::M2?
@@ -592,12 +630,12 @@ EOP
     )
     content = translator.rbs_content(input.proto_file[0])
 
-    assert_equal <<RBS, content
+    assert_equal <<'RBS', content
 class Account < ::Protobuf::Message
   class Type < ::Protobuf::Enum
     type names = :HUMAN | :BOT
 
-    type strings = \"HUMAN\" | \"BOT\"
+    type strings = "HUMAN" | "BOT"
 
     type tags = 0 | 1
 
@@ -615,6 +653,8 @@ class Account < ::Protobuf::Message
   attr_reader type(): ::Account::Type
 
   attr_writer type(): (::Account::Type | ::Account::Type::values)?
+
+  def type!: () -> ::Account::Type?
 
   def initialize: (?type: (::Account::Type | ::Account::Type::values)?) -> void
 
