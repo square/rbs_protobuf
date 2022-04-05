@@ -209,6 +209,10 @@ EOP
     content = translator.rbs_content(input.proto_file[0])
 
     assert_equal <<RBS, content
+# Protobuf options:
+#
+# - `allow_alias = true`
+#
 class Type < ::Protobuf::Enum
   type names = :Foo | :BAR
 
@@ -855,6 +859,55 @@ class ::Test::M1
          | ...
 end
 
+RBS
+  end
+
+  def test_message_with_options
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+  option deprecated = true;
+  optional string name = 1 [deprecated = true];
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+# Protobuf options:
+#
+# - `deprecated = true`
+#
+class Message < ::Protobuf::Message
+  # Protobuf options:
+  #
+  # - `deprecated = true`
+  #
+  attr_reader name(): ::String
+
+  # Protobuf options:
+  #
+  # - `deprecated = true`
+  #
+  attr_writer name(): ::String?
+
+  def name!: () -> ::String?
+
+  def initialize: (?name: ::String?) -> void
+
+  def []: (:name) -> ::String
+        | (::Symbol) -> untyped
+
+  def []=: (:name, ::String?) -> ::String?
+         | (::Symbol, untyped) -> untyped
+end
 RBS
   end
 end
