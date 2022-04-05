@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rbs_protobuf (0.2.0)
+    rbs_protobuf (0.3.0)
       activesupport (>= 4.0)
       rbs (>= 2.2.0)
 
