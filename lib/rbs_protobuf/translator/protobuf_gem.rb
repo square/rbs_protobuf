@@ -220,6 +220,20 @@ module RBSProtobuf
                 kind: :instance
               )
             end
+
+            class_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: :"#{field_name}!",
+              types: [
+                factory.method_type(
+                  type: factory.function(factory.optional_type(read_type))
+                )
+              ],
+              annotations: [],
+              comment: nil,
+              location: nil,
+              overload: false,
+              kind: :instance
+            )
           end
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
