@@ -3,6 +3,29 @@ require "test_helper"
 class ProtobufGemTest < Minitest::Test
   include TestHelper
 
+  def test_empty_message
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+end
+RBS
+  end
+
   def test_message_with_base_type
     input = read_proto(<<EOP)
 syntax = "proto2";
