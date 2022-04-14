@@ -367,7 +367,7 @@ module RBSProtobuf
               type = repeated_field_type(type)
               [type, type]
             else
-              [type, factory.optional_type(type)]
+              [type, type]
             end
           end
         when field.type == FieldDescriptorProto::Type::TYPE_ENUM
@@ -389,7 +389,7 @@ module RBSProtobuf
           else
             [
               type,
-              factory.optional_type(wtype)
+              wtype
             ]
           end
         else
@@ -399,7 +399,7 @@ module RBSProtobuf
             type = repeated_field_type(type)
             [type, type]
           else
-            [type, factory.optional_type(type)]
+            [type, type]
           end
         end
       end

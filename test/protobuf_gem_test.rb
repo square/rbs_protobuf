@@ -24,15 +24,11 @@ EOP
 
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
-  attr_reader name(): ::String
-
-  attr_writer name(): ::String?
+  attr_accessor name(): ::String
 
   def name!: () -> ::String?
 
-  attr_reader Email(): ::String
-
-  attr_writer Email(): ::String?
+  attr_accessor Email(): ::String
 
   def Email!: () -> ::String?
 
@@ -40,15 +36,15 @@ class Message < ::Protobuf::Message
 
   def postAddress!: () -> ::Protobuf::Field::FieldArray[::String, ::String]?
 
-  def initialize: (?name: ::String?, ?Email: ::String?, ?postAddress: ::Protobuf::Field::FieldArray[::String, ::String]) -> void
+  def initialize: (?name: ::String, ?Email: ::String, ?postAddress: ::Protobuf::Field::FieldArray[::String, ::String]) -> void
 
   def []: (:name) -> ::String
         | (:Email) -> ::String
         | (:postAddress) -> ::Protobuf::Field::FieldArray[::String, ::String]
         | (::Symbol) -> untyped
 
-  def []=: (:name, ::String?) -> ::String?
-         | (:Email, ::String?) -> ::String?
+  def []=: (:name, ::String) -> ::String
+         | (:Email, ::String) -> ::String
          | (:postAddress, ::Protobuf::Field::FieldArray[::String, ::String]) -> ::Protobuf::Field::FieldArray[::String, ::String]
          | (::Symbol, untyped) -> untyped
 end
@@ -74,18 +70,16 @@ EOP
 
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
-  attr_reader name(): bool
-
-  attr_writer name(): bool?
+  attr_accessor name(): bool
 
   def name!: () -> bool?
 
-  def initialize: (?name: bool?) -> void
+  def initialize: (?name: bool) -> void
 
   def []: (:name) -> bool
         | (::Symbol) -> untyped
 
-  def []=: (:name, bool?) -> bool?
+  def []=: (:name, bool) -> bool
          | (::Symbol, untyped) -> untyped
 
   def name?: () -> bool
@@ -125,9 +119,7 @@ class Foo < ::Protobuf::Message
 
   def m1!: () -> ::Message?
 
-  attr_reader m2(): ::Message
-
-  attr_writer m2(): ::Message?
+  attr_accessor m2(): ::Message
 
   def m2!: () -> ::Message?
 
@@ -135,7 +127,7 @@ class Foo < ::Protobuf::Message
 
   def m3!: () -> ::Protobuf::Field::FieldArray[::Message, ::Message]?
 
-  def initialize: (?m1: ::Message?, ?m2: ::Message?, ?m3: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
+  def initialize: (?m1: ::Message?, ?m2: ::Message, ?m3: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
 
   def []: (:m1) -> ::Message?
         | (:m2) -> ::Message
@@ -143,7 +135,7 @@ class Foo < ::Protobuf::Message
         | (::Symbol) -> untyped
 
   def []=: (:m1, ::Message?) -> ::Message?
-         | (:m2, ::Message?) -> ::Message?
+         | (:m2, ::Message) -> ::Message
          | (:m3, ::Protobuf::Field::FieldArray[::Message, ::Message]) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
          | (::Symbol, untyped) -> untyped
 end
@@ -276,13 +268,13 @@ end
 class M < ::Protobuf::Message
   attr_reader t1(): ::TyPE
 
-  attr_writer t1(): (::TyPE | ::TyPE::values)?
+  attr_writer t1(): ::TyPE | ::TyPE::values
 
   def t1!: () -> ::TyPE?
 
   attr_reader t2(): ::TyPE
 
-  attr_writer t2(): (::TyPE | ::TyPE::values)?
+  attr_writer t2(): ::TyPE | ::TyPE::values
 
   def t2!: () -> ::TyPE?
 
@@ -290,15 +282,15 @@ class M < ::Protobuf::Message
 
   def t3!: () -> ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]?
 
-  def initialize: (?t1: (::TyPE | ::TyPE::values)?, ?t2: (::TyPE | ::TyPE::values)?, ?t3: ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]) -> void
+  def initialize: (?t1: ::TyPE | ::TyPE::values, ?t2: ::TyPE | ::TyPE::values, ?t3: ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]) -> void
 
   def []: (:t1) -> ::TyPE
         | (:t2) -> ::TyPE
         | (:t3) -> ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]
         | (::Symbol) -> untyped
 
-  def []=: (:t1, (::TyPE | ::TyPE::values)?) -> (::TyPE | ::TyPE::values)?
-         | (:t2, (::TyPE | ::TyPE::values)?) -> (::TyPE | ::TyPE::values)?
+  def []=: (:t1, ::TyPE | ::TyPE::values) -> (::TyPE | ::TyPE::values)
+         | (:t2, ::TyPE | ::TyPE::values) -> (::TyPE | ::TyPE::values)
          | (:t3, ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]) -> ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]
          | (::Symbol, untyped) -> untyped
 end
@@ -329,9 +321,7 @@ EOP
 module Foo
   module Ba_r
     class Message < ::Protobuf::Message
-      attr_reader name(): ::String
-
-      attr_writer name(): ::String?
+      attr_accessor name(): ::String
 
       def name!: () -> ::String?
 
@@ -339,13 +329,13 @@ module Foo
 
       def replyTo!: () -> ::Foo::Ba_r::Message?
 
-      def initialize: (?name: ::String?, ?replyTo: ::Foo::Ba_r::Message?) -> void
+      def initialize: (?name: ::String, ?replyTo: ::Foo::Ba_r::Message?) -> void
 
       def []: (:name) -> ::String
             | (:replyTo) -> ::Foo::Ba_r::Message?
             | (::Symbol) -> untyped
 
-      def []=: (:name, ::String?) -> ::String?
+      def []=: (:name, ::String) -> ::String
              | (:replyTo, ::Foo::Ba_r::Message?) -> ::Foo::Ba_r::Message?
              | (::Symbol, untyped) -> untyped
     end
@@ -403,26 +393,22 @@ EOP
 
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
-  attr_reader name(): ::String
-
-  attr_writer name(): ::String?
+  attr_accessor name(): ::String
 
   def name!: () -> ::String?
 
-  attr_reader size(): ::Integer
-
-  attr_writer size(): ::Integer?
+  attr_accessor size(): ::Integer
 
   def size!: () -> ::Integer?
 
-  def initialize: (?name: ::String?, ?size: ::Integer?) -> void
+  def initialize: (?name: ::String, ?size: ::Integer) -> void
 
   def []: (:name) -> ::String
         | (:size) -> ::Integer
         | (::Symbol) -> untyped
 
-  def []=: (:name, ::String?) -> ::String?
-         | (:size, ::Integer?) -> ::Integer?
+  def []=: (:name, ::String) -> ::String
+         | (:size, ::Integer) -> ::Integer
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -656,16 +642,16 @@ class Account < ::Protobuf::Message
 
   attr_reader type(): ::Account::Type
 
-  attr_writer type(): (::Account::Type | ::Account::Type::values)?
+  attr_writer type(): ::Account::Type | ::Account::Type::values
 
   def type!: () -> ::Account::Type?
 
-  def initialize: (?type: (::Account::Type | ::Account::Type::values)?) -> void
+  def initialize: (?type: ::Account::Type | ::Account::Type::values) -> void
 
   def []: (:type) -> ::Account::Type
         | (::Symbol) -> untyped
 
-  def []=: (:type, (::Account::Type | ::Account::Type::values)?) -> (::Account::Type | ::Account::Type::values)?
+  def []=: (:type, ::Account::Type | ::Account::Type::values) -> (::Account::Type | ::Account::Type::values)
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -750,14 +736,12 @@ module Test
 end
 
 class ::Test::M1
-  attr_reader name(): ::String
-
-  attr_writer name(): ::String?
+  attr_accessor name(): ::String
 
   def []: (:name) -> ::String
         | ...
 
-  def []=: (:name, ::String?) -> ::String?
+  def []=: (:name, ::String) -> ::String
          | ...
 end
 
@@ -848,14 +832,12 @@ RBS
 # Printing RBS for extensions from a.proto
 #
 class ::Test::M1
-  attr_reader name(): ::String
-
-  attr_writer name(): ::String?
+  attr_accessor name(): ::String
 
   def []: (:name) -> ::String
         | ...
 
-  def []=: (:name, ::String?) -> ::String?
+  def []=: (:name, ::String) -> ::String
          | ...
 end
 
@@ -890,22 +872,16 @@ class Message < ::Protobuf::Message
   #
   # - `deprecated = true`
   #
-  attr_reader name(): ::String
-
-  # Protobuf options:
-  #
-  # - `deprecated = true`
-  #
-  attr_writer name(): ::String?
+  attr_accessor name(): ::String
 
   def name!: () -> ::String?
 
-  def initialize: (?name: ::String?) -> void
+  def initialize: (?name: ::String) -> void
 
   def []: (:name) -> ::String
         | (::Symbol) -> untyped
 
-  def []=: (:name, ::String?) -> ::String?
+  def []=: (:name, ::String) -> ::String
          | (::Symbol, untyped) -> untyped
 end
 RBS
