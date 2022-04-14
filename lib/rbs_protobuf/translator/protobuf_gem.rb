@@ -170,17 +170,17 @@ module RBSProtobuf
             )
           end
 
-          # @type var field_types: Hash[Symbol, [RBS::Types::t, RBS::Types::t]]
+          # @type var field_types: Hash[Symbol, [RBS::Types::t, Array[RBS::Types::t]]]
           field_types = {}
 
           message.field.each_with_index do |field, index|
             field_name = field.name.to_sym
             comment = comment_for_path(source_code_info, path + [2, index], options: field.options)
 
-            read_type, write_type = field_type(field, maps)
-            field_types[field_name] = [read_type, write_type]
+            read_type, write_types = field_type(field, maps)
+            field_types[field_name] = [read_type, write_types]
 
-            add_field(class_decl.members, name: field_name, read_type: read_type, write_type: write_type, comment: comment)
+            add_field(class_decl.members, name: field_name, read_type: read_type, write_types: write_types, comment: comment)
           end
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
@@ -189,8 +189,8 @@ module RBSProtobuf
               factory.method_type(
                 type: factory.function().update(
                   optional_keywords: field_types.transform_values {|pair|
-                    _, write_type = pair
-                    factory.param(write_type)
+                    read_type, write_types = pair
+                    factory.param(factory.union_type(read_type, *write_types))
                   }
                 )
               )
@@ -236,8 +236,9 @@ module RBSProtobuf
             class_decl.members << RBS::AST::Members::MethodDefinition.new(
               name: :[]=,
               types:
-                field_types.map do |field_name, pair|
-                  _, write_type = pair
+                field_types.flat_map do |field_name, pair|
+                  read_type, write_types = pair
+                  write_type = factory.union_type(read_type, *write_types)
 
                   factory.method_type(
                     type: factory.function(write_type).update(
@@ -293,17 +294,20 @@ module RBSProtobuf
             key_field, value_field = maps[field.type_name]
 
             key_type_r, _ = field_type(key_field, maps)
-            value_type_r, value_type_w = field_type(value_field, maps)
+            value_type_r, value_write_types = field_type(value_field, maps)
+
+            value_type_r = factory.unwrap_optional(value_type_r)
+            value_write_types = value_write_types.map {|type| factory.unwrap_optional(type) }
 
             hash_type = FIELD_HASH[
               key_type_r,
-              factory.unwrap_optional(value_type_r),
-              factory.unwrap_optional(value_type_w)
+              value_type_r,
+              factory.union_type(value_type_r, *value_write_types)
             ]
 
             [
               hash_type,
-              hash_type
+              []
             ]
           else
             type = message_type(field.type_name)
@@ -311,34 +315,32 @@ module RBSProtobuf
             case field.label
             when FieldDescriptorProto::Label::LABEL_OPTIONAL
               type = factory.optional_type(type)
-              [type, type]
+              [type, []]
             when FieldDescriptorProto::Label::LABEL_REPEATED
               type = repeated_field_type(type)
-              [type, type]
+              [type, []]
             else
-              [type, type]
+              [type, []]
             end
           end
         when field.type == FieldDescriptorProto::Type::TYPE_ENUM
           type = message_type(field.type_name)
           enum_namespace = type.name.to_namespace
 
-          wtype = factory.union_type(
-            type,
-            factory.alias_type(RBS::TypeName.new(name: :values, namespace: enum_namespace))
-          )
+          values = factory.alias_type(RBS::TypeName.new(name: :values, namespace: enum_namespace))
+          wtype = factory.union_type(type, values)
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
             type = repeated_field_type(type, wtype)
 
             [
               type,
-              type
+              []
             ]
           else
             [
               type,
-              wtype
+              [values]
             ]
           end
         else
@@ -346,15 +348,15 @@ module RBSProtobuf
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
             type = repeated_field_type(type)
-            [type, type]
+            [type, []]
           else
-            [type, type]
+            [type, []]
           end
         end
       end
 
-      def add_field(members, name:, read_type:, write_type:, comment:)
-        if read_type == write_type
+      def add_field(members, name:, read_type:, write_types:, comment:)
+        if write_types.empty?
           members << RBS::AST::Members::AttrAccessor.new(
             name: name,
             type: read_type,
@@ -377,7 +379,7 @@ module RBSProtobuf
 
           members << RBS::AST::Members::AttrWriter.new(
             name: name,
-            type: write_type,
+            type: factory.union_type(read_type, *write_types),
             comment: comment,
             location: nil,
             annotations: [],
@@ -525,9 +527,10 @@ module RBSProtobuf
           members: [],
           annotations: []
         ).tap do |class_decl|
-          read_type, write_type = field_type(extension, {})
+          read_type, write_types = field_type(extension, {})
 
-          add_field(class_decl.members, name: field_name, read_type: read_type, write_type: write_type, comment: comment)
+          add_field(class_decl.members, name: field_name, read_type: read_type, write_types: write_types, comment: comment)
+          write_type = factory.union_type(read_type, *write_types)
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :[],
