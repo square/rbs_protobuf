@@ -13,7 +13,7 @@ module RBSProtobuf
 
       @upcase_enum: bool
 
-      @pnested_namespace: bool
+      @nested_namespace: bool
 
       @extension: bool | :print | nil
 
