@@ -7,7 +7,7 @@ sources:
 path: ".gem_rbs_collection"
 gems:
 - name: rbs
-  version: 2.3.1
+  version: 2.3.2
   source:
     type: rubygems
 - name: activesupport
@@ -15,7 +15,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f43bb5ffee382df94113f44c7555027d7089912a
+    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: protobuf
@@ -23,7 +23,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f43bb5ffee382df94113f44c7555027d7089912a
+    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: ast
@@ -31,7 +31,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f43bb5ffee382df94113f44c7555027d7089912a
+    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: i18n
@@ -39,7 +39,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f43bb5ffee382df94113f44c7555027d7089912a
+    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: listen
@@ -47,7 +47,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f43bb5ffee382df94113f44c7555027d7089912a
+    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: parallel
@@ -55,7 +55,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f43bb5ffee382df94113f44c7555027d7089912a
+    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rainbow
@@ -63,7 +63,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f43bb5ffee382df94113f44c7555027d7089912a
+    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: logger
