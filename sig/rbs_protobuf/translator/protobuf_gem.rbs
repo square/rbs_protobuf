@@ -55,7 +55,9 @@ module RBSProtobuf
 
       def enum_type_to_decl: (untyped enum_type, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
 
-      def extension_to_decl: (String extendee_name, Array[untyped] extensions, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> Array[RBS::AST::Declarations::Class]
+      def extension_to_decl: (untyped extension, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
+
+      def add_field: (Array[RBS::AST::Declarations::Class::member] members, name: Symbol, read_type: RBS::Types::t, write_type: RBS::Types::t, comment: RBS::AST::Comment?) -> void
 
       def service_base_class: () -> RBS::AST::Declarations::Class::Super
 

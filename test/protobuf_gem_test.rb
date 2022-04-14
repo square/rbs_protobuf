@@ -961,6 +961,7 @@ message M1 {
 }
 
 extend M1 {
+  // Name of something
   optional string name = 100;
 }
 
@@ -984,7 +985,11 @@ module Test
 end
 
 class ::Test::M1
+  # Name of something
+  #
   attr_accessor name(): ::String
+
+  def name!: () -> ::String?
 
   def []: (:name) -> ::String
         | ...
@@ -995,6 +1000,8 @@ end
 
 class ::Test::M1
   attr_accessor parent(): ::Test::M1?
+
+  def parent!: () -> ::Test::M1?
 
   def []: (:parent) -> ::Test::M1?
         | ...
@@ -1081,6 +1088,8 @@ RBS
 #
 class ::Test::M1
   attr_accessor name(): ::String
+
+  def name!: () -> ::String?
 
   def []: (:name) -> ::String
         | ...

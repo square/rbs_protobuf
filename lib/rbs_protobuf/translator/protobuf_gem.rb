@@ -98,26 +98,22 @@ module RBSProtobuf
           end
         end
 
-        file.extension.group_by(&:extendee).each.with_index do |(name, extensions), index|
+        file.extension.each.with_index do |extension, index|
           if ignore_extension?
             if print_extension_message?
-              stderr.puts "Extension for `#{name}` ignored in `#{file.name}`; Set RBS_PROTOBUF_EXTENSION env var to generate RBS for extensions."
+              stderr.puts "Extension for `#{extension.extendee}` ignored in `#{file.name}`; Set RBS_PROTOBUF_EXTENSION env var to generate RBS for extensions."
             end
           else
-            exts = extension_to_decl(name,
-                                     extensions,
-                                     prefix: RBS::Namespace.root,
-                                     source_code_info: source_code_info,
-                                     path: [7, index])
+            ext = extension_to_decl(extension, prefix: RBS::Namespace.root, source_code_info: source_code_info, path: [7, index])
 
             if print_extension?
               stderr.puts "#=========================================================="
               stderr.puts "# Printing RBS for extensions from #{file.name}"
               stderr.puts "#"
-              RBS::Writer.new(out: stderr).write(exts)
+              RBS::Writer.new(out: stderr).write([ext])
               stderr.puts
             else
-              decls.push(*exts)
+              decls.push(ext)
             end
           end
         end
@@ -186,51 +182,7 @@ module RBSProtobuf
             field_read_types[field_name] = read_type
             field_write_types[field_name] = write_type
 
-            if read_type == write_type
-              class_decl.members << RBS::AST::Members::AttrAccessor.new(
-                name: field_name,
-                type: read_type,
-                comment: comment,
-                location: nil,
-                annotations: [],
-                ivar_name: false,
-                kind: :instance
-              )
-            else
-              class_decl.members << RBS::AST::Members::AttrReader.new(
-                name: field_name,
-                type: read_type,
-                comment: comment,
-                location: nil,
-                annotations: [],
-                ivar_name: false,
-                kind: :instance
-              )
-
-              class_decl.members << RBS::AST::Members::AttrWriter.new(
-                name: field_name,
-                type: write_type,
-                comment: comment,
-                location: nil,
-                annotations: [],
-                ivar_name: false,
-                kind: :instance
-              )
-            end
-
-            class_decl.members << RBS::AST::Members::MethodDefinition.new(
-              name: :"#{field_name}!",
-              types: [
-                factory.method_type(
-                  type: factory.function(factory.optional_type(read_type))
-                )
-              ],
-              annotations: [],
-              comment: nil,
-              location: nil,
-              overload: false,
-              kind: :instance
-            )
+            add_field(class_decl.members, name: field_name, read_type: read_type, write_type: write_type, comment: comment)
           end
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
@@ -400,6 +352,54 @@ module RBSProtobuf
         end
       end
 
+      def add_field(members, name:, read_type:, write_type:, comment:)
+        if read_type == write_type
+          members << RBS::AST::Members::AttrAccessor.new(
+            name: name,
+            type: read_type,
+            comment: comment,
+            location: nil,
+            annotations: [],
+            ivar_name: false,
+            kind: :instance
+          )
+        else
+          members << RBS::AST::Members::AttrReader.new(
+            name: name,
+            type: read_type,
+            comment: comment,
+            location: nil,
+            annotations: [],
+            ivar_name: false,
+            kind: :instance
+          )
+
+          members << RBS::AST::Members::AttrWriter.new(
+            name: name,
+            type: write_type,
+            comment: comment,
+            location: nil,
+            annotations: [],
+            ivar_name: false,
+            kind: :instance
+          )
+        end
+
+        members << RBS::AST::Members::MethodDefinition.new(
+          name: :"#{name}!",
+          types: [
+            factory.method_type(
+              type: factory.function(factory.optional_type(read_type))
+            )
+          ],
+          annotations: [],
+          comment: nil,
+          location: nil,
+          overload: false,
+          kind: :instance
+        )
+      end
+
       def enum_base_class
         ENUM.super_class()
       end
@@ -509,92 +509,61 @@ module RBSProtobuf
         end
       end
 
-      def extension_to_decl(extendee_name, extensions, prefix:, source_code_info:, path:)
-        class_name = message_type(extendee_name).name
+      def extension_to_decl(extension, prefix:, source_code_info:, path:)
+        class_name = message_type(extension.extendee).name
 
-        extensions.map do |field|
-          field_name = field.name.to_sym
+        comment = comment_for_path(source_code_info, path, options: extension.options)
+        field_name = extension.name.to_sym
 
-          RBS::AST::Declarations::Class.new(
-            name: class_name,
-            super_class: nil,
-            type_params: [],
-            location: nil,
+        RBS::AST::Declarations::Class.new(
+          name: class_name,
+          super_class: nil,
+          type_params: [],
+          location: nil,
+          comment: nil,
+          members: [],
+          annotations: []
+        ).tap do |class_decl|
+          read_type, write_type = field_type(extension, {})
+
+          add_field(class_decl.members, name: field_name, read_type: read_type, write_type: write_type, comment: comment)
+
+          class_decl.members << RBS::AST::Members::MethodDefinition.new(
+            name: :[],
+            types: [
+              factory.method_type(
+                type: factory.function(read_type).update(
+                  required_positionals: [
+                    factory.param(factory.literal_type(field_name))
+                  ]
+                )
+              )
+            ],
+            annotations: [],
             comment: nil,
-            members: [],
-            annotations: []
-          ).tap do |class_decl|
-            read_type, write_type = field_type(field, {})
+            location: nil,
+            overload: true,
+            kind: :instance
+          )
 
-            if read_type == write_type
-              class_decl.members << RBS::AST::Members::AttrAccessor.new(
-                name: field_name,
-                type: read_type,
-                comment: nil,
-                location: nil,
-                annotations: [],
-                ivar_name: false,
-                kind: :instance
-              )
-            else
-              class_decl.members << RBS::AST::Members::AttrReader.new(
-                name: field_name,
-                type: read_type,
-                comment: nil,
-                location: nil,
-                annotations: [],
-                ivar_name: false,
-                kind: :instance
-              )
-
-              class_decl.members << RBS::AST::Members::AttrWriter.new(
-                name: field_name,
-                type: write_type,
-                comment: nil,
-                location: nil,
-                annotations: [],
-                ivar_name: false,
-                kind: :instance
-              )
-            end
-
-            class_decl.members << RBS::AST::Members::MethodDefinition.new(
-              name: :[],
-              types: [
-                factory.method_type(
-                  type: factory.function(read_type).update(
-                    required_positionals: [
-                      factory.param(factory.literal_type(field_name))
-                    ]
-                  )
+          class_decl.members << RBS::AST::Members::MethodDefinition.new(
+            name: :[]=,
+            types: [
+              factory.method_type(
+                type: factory.function(write_type).update(
+                  required_positionals: [
+                    factory.param(factory.literal_type(field_name)),
+                    factory.param(write_type)
+                  ]
                 )
-              ],
-              annotations: [],
-              comment: nil,
-              location: nil,
-              overload: true,
-              kind: :instance
-            )
-
-            class_decl.members << RBS::AST::Members::MethodDefinition.new(
-              name: :[]=,
-              types: [
-                factory.method_type(
-                  type: factory.function(write_type).update(
-                    required_positionals: [
-                      factory.param(factory.literal_type(field_name)),
-                      factory.param(write_type)
-                    ]
-                  )
-                )
-              ],
-              annotations: [],
-              comment: nil,
-              location: nil,
-              overload: true,
-              kind: :instance
-            )
-          end
+              )
+            ],
+            annotations: [],
+            comment: nil,
+            location: nil,
+            overload: true,
+            kind: :instance
+          )
         end
       end
 
