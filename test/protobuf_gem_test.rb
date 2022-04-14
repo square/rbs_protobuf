@@ -3,14 +3,35 @@ require "test_helper"
 class ProtobufGemTest < Minitest::Test
   include TestHelper
 
-  def test_message_with_base_type
+  def test_empty_message
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+end
+RBS
+  end
+
+  def test_message_with_optional_base_type
     input = read_proto(<<EOP)
 syntax = "proto2";
 
 message Message {
   optional string name = 1;
-  required string Email = 2;
-  repeated string postAddress = 3;
 }
 EOP
 
@@ -28,24 +49,80 @@ class Message < ::Protobuf::Message
 
   def name!: () -> ::String?
 
-  attr_accessor Email(): ::String
-
-  def Email!: () -> ::String?
-
-  attr_accessor postAddress(): ::Protobuf::Field::FieldArray[::String, ::String]
-
-  def postAddress!: () -> ::Protobuf::Field::FieldArray[::String, ::String]?
-
-  def initialize: (?name: ::String, ?Email: ::String, ?postAddress: ::Protobuf::Field::FieldArray[::String, ::String]) -> void
+  def initialize: (?name: ::String) -> void
 
   def []: (:name) -> ::String
-        | (:Email) -> ::String
-        | (:postAddress) -> ::Protobuf::Field::FieldArray[::String, ::String]
         | (::Symbol) -> untyped
 
   def []=: (:name, ::String) -> ::String
-         | (:Email, ::String) -> ::String
-         | (:postAddress, ::Protobuf::Field::FieldArray[::String, ::String]) -> ::Protobuf::Field::FieldArray[::String, ::String]
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_required_base_type
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+  required string name = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  attr_accessor name(): ::String
+
+  def name!: () -> ::String?
+
+  def initialize: (?name: ::String) -> void
+
+  def []: (:name) -> ::String
+        | (::Symbol) -> untyped
+
+  def []=: (:name, ::String) -> ::String
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_repeated_base_type
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+  repeated string name = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  attr_accessor name(): ::Protobuf::Field::FieldArray[::String, ::String]
+
+  def name!: () -> ::Protobuf::Field::FieldArray[::String, ::String]?
+
+  def initialize: (?name: ::Protobuf::Field::FieldArray[::String, ::String]) -> void
+
+  def []: (:name) -> ::Protobuf::Field::FieldArray[::String, ::String]
+        | (::Symbol) -> untyped
+
+  def []=: (:name, ::Protobuf::Field::FieldArray[::String, ::String]) -> ::Protobuf::Field::FieldArray[::String, ::String]
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -87,7 +164,7 @@ end
 RBS
   end
 
-  def test_message_with_message
+  def test_message_with_optional_message
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -96,8 +173,6 @@ message Message {
 
 message foo {
   optional Message m1 = 1;
-  required Message m2 = 2;
-  repeated Message m3 = 3;
 }
 EOP
 
@@ -119,24 +194,94 @@ class Foo < ::Protobuf::Message
 
   def m1!: () -> ::Message?
 
-  attr_accessor m2(): ::Message
-
-  def m2!: () -> ::Message?
-
-  attr_accessor m3(): ::Protobuf::Field::FieldArray[::Message, ::Message]
-
-  def m3!: () -> ::Protobuf::Field::FieldArray[::Message, ::Message]?
-
-  def initialize: (?m1: ::Message?, ?m2: ::Message, ?m3: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
+  def initialize: (?m1: ::Message?) -> void
 
   def []: (:m1) -> ::Message?
-        | (:m2) -> ::Message
-        | (:m3) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
         | (::Symbol) -> untyped
 
   def []=: (:m1, ::Message?) -> ::Message?
-         | (:m2, ::Message) -> ::Message
-         | (:m3, ::Protobuf::Field::FieldArray[::Message, ::Message]) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_required_message
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+
+message foo {
+  required Message m1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+end
+
+class Foo < ::Protobuf::Message
+  attr_accessor m1(): ::Message
+
+  def m1!: () -> ::Message?
+
+  def initialize: (?m1: ::Message) -> void
+
+  def []: (:m1) -> ::Message
+        | (::Symbol) -> untyped
+
+  def []=: (:m1, ::Message) -> ::Message
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_repeated_message
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+
+message foo {
+  repeated Message m1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+end
+
+class Foo < ::Protobuf::Message
+  attr_accessor m1(): ::Protobuf::Field::FieldArray[::Message, ::Message]
+
+  def m1!: () -> ::Protobuf::Field::FieldArray[::Message, ::Message]?
+
+  def initialize: (?m1: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
+
+  def []: (:m1) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
+        | (::Symbol) -> untyped
+
+  def []=: (:m1, ::Protobuf::Field::FieldArray[::Message, ::Message]) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -225,18 +370,17 @@ end
 RBS
   end
 
-  def test_message_with_enum
+  def test_message_with_optional_enum
     input = read_proto(<<EOP)
 syntax = "proto2";
 
-enum tyPE {
-  Foo = 0;
+enum Size {
+  Small = 0;
+  Large = 1;
 }
 
-message M {
-  required tyPE t1 = 1;
-  optional tyPE t2 = 2;
-  repeated tyPE t3 = 3;
+message Message {
+  optional Size t1 = 1;
 }
 EOP
 
@@ -249,12 +393,12 @@ EOP
     content = translator.rbs_content(input.proto_file[0])
 
     assert_equal <<RBS, content
-class TyPE < ::Protobuf::Enum
-  type names = :FOO
+class Size < ::Protobuf::Enum
+  type names = :SMALL | :LARGE
 
-  type strings = "FOO"
+  type strings = "SMALL" | "LARGE"
 
-  type tags = 0
+  type tags = 0 | 1
 
   type values = names | strings | tags
 
@@ -262,36 +406,140 @@ class TyPE < ::Protobuf::Enum
 
   attr_reader tag(): tags
 
-  FOO: TyPE
+  SMALL: Size
+
+  LARGE: Size
 end
 
-class M < ::Protobuf::Message
-  attr_reader t1(): ::TyPE
+class Message < ::Protobuf::Message
+  attr_reader t1(): ::Size
 
-  attr_writer t1(): ::TyPE | ::TyPE::values
+  attr_writer t1(): ::Size | ::Size::values
 
-  def t1!: () -> ::TyPE?
+  def t1!: () -> ::Size?
 
-  attr_reader t2(): ::TyPE
+  def initialize: (?t1: ::Size | ::Size::values) -> void
 
-  attr_writer t2(): ::TyPE | ::TyPE::values
-
-  def t2!: () -> ::TyPE?
-
-  attr_accessor t3(): ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]
-
-  def t3!: () -> ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]?
-
-  def initialize: (?t1: ::TyPE | ::TyPE::values, ?t2: ::TyPE | ::TyPE::values, ?t3: ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]) -> void
-
-  def []: (:t1) -> ::TyPE
-        | (:t2) -> ::TyPE
-        | (:t3) -> ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]
+  def []: (:t1) -> ::Size
         | (::Symbol) -> untyped
 
-  def []=: (:t1, ::TyPE | ::TyPE::values) -> (::TyPE | ::TyPE::values)
-         | (:t2, ::TyPE | ::TyPE::values) -> (::TyPE | ::TyPE::values)
-         | (:t3, ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]) -> ::Protobuf::Field::FieldArray[::TyPE, ::TyPE | ::TyPE::values]
+  def []=: (:t1, ::Size | ::Size::values) -> (::Size | ::Size::values)
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_required_enum
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+enum Size {
+  Small = 0;
+  Large = 1;
+}
+
+message Message {
+  required Size t1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Size < ::Protobuf::Enum
+  type names = :SMALL | :LARGE
+
+  type strings = "SMALL" | "LARGE"
+
+  type tags = 0 | 1
+
+  type values = names | strings | tags
+
+  attr_reader name(): names
+
+  attr_reader tag(): tags
+
+  SMALL: Size
+
+  LARGE: Size
+end
+
+class Message < ::Protobuf::Message
+  attr_reader t1(): ::Size
+
+  attr_writer t1(): ::Size | ::Size::values
+
+  def t1!: () -> ::Size?
+
+  def initialize: (?t1: ::Size | ::Size::values) -> void
+
+  def []: (:t1) -> ::Size
+        | (::Symbol) -> untyped
+
+  def []=: (:t1, ::Size | ::Size::values) -> (::Size | ::Size::values)
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_repeated_enum
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+enum Size {
+  Small = 0;
+  Large = 1;
+}
+
+message Message {
+  repeated Size t1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Size < ::Protobuf::Enum
+  type names = :SMALL | :LARGE
+
+  type strings = "SMALL" | "LARGE"
+
+  type tags = 0 | 1
+
+  type values = names | strings | tags
+
+  attr_reader name(): names
+
+  attr_reader tag(): tags
+
+  SMALL: Size
+
+  LARGE: Size
+end
+
+class Message < ::Protobuf::Message
+  attr_accessor t1(): ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]
+
+  def t1!: () -> ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]?
+
+  def initialize: (?t1: ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]) -> void
+
+  def []: (:t1) -> ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]
+        | (::Symbol) -> untyped
+
+  def []=: (:t1, ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]) -> ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]
          | (::Symbol, untyped) -> untyped
 end
 RBS
