@@ -170,17 +170,15 @@ module RBSProtobuf
             )
           end
 
-          field_read_types = {}
-          field_write_types = {}
+          # @type var field_types: Hash[Symbol, [RBS::Types::t, RBS::Types::t]]
+          field_types = {}
 
           message.field.each_with_index do |field, index|
             field_name = field.name.to_sym
             comment = comment_for_path(source_code_info, path + [2, index], options: field.options)
 
             read_type, write_type = field_type(field, maps)
-
-            field_read_types[field_name] = read_type
-            field_write_types[field_name] = write_type
+            field_types[field_name] = [read_type, write_type]
 
             add_field(class_decl.members, name: field_name, read_type: read_type, write_type: write_type, comment: comment)
           end
@@ -190,8 +188,9 @@ module RBSProtobuf
             types: [
               factory.method_type(
                 type: factory.function().update(
-                  optional_keywords: field_write_types.transform_values {|ty|
-                    factory.param(ty)
+                  optional_keywords: field_types.transform_values {|pair|
+                    _, write_type = pair
+                    factory.param(write_type)
                   }
                 )
               )
@@ -203,15 +202,17 @@ module RBSProtobuf
             kind: :instance
           )
 
-          unless field_read_types.empty?
+          unless field_types.empty?
             class_decl.members << RBS::AST::Members::MethodDefinition.new(
               name: :[],
               types:
-                field_read_types.keys.map do |key|
+                field_types.map do |field_name, pair|
+                  read_type, _ = pair
+
                   factory.method_type(
-                    type: factory.function(field_read_types[key]).update(
+                    type: factory.function(read_type).update(
                       required_positionals: [
-                        factory.param(factory.literal_type(key))
+                        factory.param(factory.literal_type(field_name))
                       ]
                     )
                   )
@@ -231,18 +232,18 @@ module RBSProtobuf
               overload: false,
               kind: :instance
             )
-          end
 
-          unless field_write_types.empty?
             class_decl.members << RBS::AST::Members::MethodDefinition.new(
               name: :[]=,
               types:
-                field_write_types.keys.map do |key|
+                field_types.map do |field_name, pair|
+                  _, write_type = pair
+
                   factory.method_type(
-                    type: factory.function(field_write_types[key]).update(
+                    type: factory.function(write_type).update(
                       required_positionals: [
-                        factory.literal_type(key),
-                        field_write_types[key]
+                        factory.literal_type(field_name),
+                        write_type
                       ].map {|t| factory.param(t) }
                     )
                   )
