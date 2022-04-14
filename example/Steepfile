@@ -4,6 +4,7 @@ target :lib do
   collection_config "../rbs_collection.yaml"
 
   signature "protobuf-gem"
+  signature "../vendor/gem_rbs_collection/gems/protobuf"
   check "protobuf_gem_example.rb"
 
   configure_code_diagnostics do |hash|
