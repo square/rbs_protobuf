@@ -412,9 +412,10 @@ class Size < ::Protobuf::Enum
 end
 
 class Message < ::Protobuf::Message
-  attr_reader t1(): ::Size
+  attr_accessor t1(): ::Size
 
-  attr_writer t1(): ::Size | ::Size::values
+  def t1=: (::Size::values) -> ::Size::values
+         | ...
 
   def t1!: () -> ::Size?
 
@@ -423,7 +424,8 @@ class Message < ::Protobuf::Message
   def []: (:t1) -> ::Size
         | (::Symbol) -> untyped
 
-  def []=: (:t1, ::Size | ::Size::values) -> (::Size | ::Size::values)
+  def []=: (:t1, ::Size) -> ::Size
+         | (:t1, ::Size::values) -> ::Size::values
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -471,9 +473,10 @@ class Size < ::Protobuf::Enum
 end
 
 class Message < ::Protobuf::Message
-  attr_reader t1(): ::Size
+  attr_accessor t1(): ::Size
 
-  attr_writer t1(): ::Size | ::Size::values
+  def t1=: (::Size::values) -> ::Size::values
+         | ...
 
   def t1!: () -> ::Size?
 
@@ -482,7 +485,8 @@ class Message < ::Protobuf::Message
   def []: (:t1) -> ::Size
         | (::Symbol) -> untyped
 
-  def []=: (:t1, ::Size | ::Size::values) -> (::Size | ::Size::values)
+  def []=: (:t1, ::Size) -> ::Size
+         | (:t1, ::Size::values) -> ::Size::values
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -888,9 +892,10 @@ class Account < ::Protobuf::Message
     BOT: Type
   end
 
-  attr_reader type(): ::Account::Type
+  attr_accessor type(): ::Account::Type
 
-  attr_writer type(): ::Account::Type | ::Account::Type::values
+  def type=: (::Account::Type::values) -> ::Account::Type::values
+           | ...
 
   def type!: () -> ::Account::Type?
 
@@ -899,7 +904,8 @@ class Account < ::Protobuf::Message
   def []: (:type) -> ::Account::Type
         | (::Symbol) -> untyped
 
-  def []=: (:type, ::Account::Type | ::Account::Type::values) -> (::Account::Type | ::Account::Type::values)
+  def []=: (:type, ::Account::Type) -> ::Account::Type
+         | (:type, ::Account::Type::values) -> ::Account::Type::values
          | (::Symbol, untyped) -> untyped
 end
 RBS
