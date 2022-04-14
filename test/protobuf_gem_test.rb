@@ -424,7 +424,8 @@ class Message < ::Protobuf::Message
   def []: (:t1) -> ::Size
         | (::Symbol) -> untyped
 
-  def []=: (:t1, ::Size | ::Size::values) -> (::Size | ::Size::values)
+  def []=: (:t1, ::Size) -> ::Size
+         | (:t1, ::Size::values) -> ::Size::values
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -484,7 +485,8 @@ class Message < ::Protobuf::Message
   def []: (:t1) -> ::Size
         | (::Symbol) -> untyped
 
-  def []=: (:t1, ::Size | ::Size::values) -> (::Size | ::Size::values)
+  def []=: (:t1, ::Size) -> ::Size
+         | (:t1, ::Size::values) -> ::Size::values
          | (::Symbol, untyped) -> untyped
 end
 RBS
@@ -902,7 +904,8 @@ class Account < ::Protobuf::Message
   def []: (:type) -> ::Account::Type
         | (::Symbol) -> untyped
 
-  def []=: (:type, ::Account::Type | ::Account::Type::values) -> (::Account::Type | ::Account::Type::values)
+  def []=: (:type, ::Account::Type) -> ::Account::Type
+         | (:type, ::Account::Type::values) -> ::Account::Type::values
          | (::Symbol, untyped) -> untyped
 end
 RBS

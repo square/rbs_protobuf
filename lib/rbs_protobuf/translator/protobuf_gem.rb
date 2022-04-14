@@ -238,16 +238,17 @@ module RBSProtobuf
               types:
                 field_types.flat_map do |field_name, pair|
                   read_type, write_types = pair
-                  write_type = factory.union_type(read_type, *write_types)
 
-                  factory.method_type(
-                    type: factory.function(write_type).update(
-                      required_positionals: [
-                        factory.literal_type(field_name),
-                        write_type
-                      ].map {|t| factory.param(t) }
+                  [read_type, *write_types].map do |type|
+                    factory.method_type(
+                      type: factory.function(type).update(
+                        required_positionals: [
+                          factory.literal_type(field_name),
+                          type
+                        ].map {|t| factory.param(t) }
+                      )
                     )
-                  )
+                  end
                 end +
                   [
                     factory.method_type(
@@ -526,7 +527,6 @@ module RBSProtobuf
           read_type, write_types = field_type(extension, {})
 
           add_field(class_decl.members, name: field_name, read_type: read_type, write_types: write_types, comment: comment)
-          write_type = factory.union_type(read_type, *write_types)
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :[],
@@ -548,7 +548,7 @@ module RBSProtobuf
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :[]=,
-            types: [
+            types: [read_type, *write_types].map do |write_type|
               factory.method_type(
                 type: factory.function(write_type).update(
                   required_positionals: [
@@ -557,7 +557,7 @@ module RBSProtobuf
                   ]
                 )
               )
-            ],
+            end,
             annotations: [],
             comment: nil,
             location: nil,
