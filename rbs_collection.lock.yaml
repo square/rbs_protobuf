@@ -18,14 +18,6 @@ gems:
     revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
-- name: protobuf
-  version: 3.10.3
-  source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: c7b9329222debd0b8a4a85c0ccdae6588fedd57a
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
 - name: ast
   version: '2.4'
   source:

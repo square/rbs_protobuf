@@ -14,5 +14,6 @@ gems:
   - name: rbs
   - name: activesupport
   - name: protobuf
+    ignore: true
   - name: rbs_protobuf
     ignore: true
