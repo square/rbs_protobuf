@@ -1,6 +1,18 @@
 module RBSProtobuf
   module Translator
     class ProtobufGem < Base
+      # Protobuf::Field::FieldArray[R, W]
+      FIELD_ARRAY: Name::Class
+
+      # Protobuf::Field::FieldHash[K, RV, WV]
+      FIELD_HASH: Name::Class
+
+      # Protobuf::Enum
+      ENUM: Name::Class
+
+      # Protobuf::Message
+      MESSAGE: Name::Class
+
       attr_reader stderr: IO
 
       def initialize: (
