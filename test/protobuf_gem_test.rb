@@ -412,9 +412,10 @@ class Size < ::Protobuf::Enum
 end
 
 class Message < ::Protobuf::Message
-  attr_reader t1(): ::Size
+  attr_accessor t1(): ::Size
 
-  attr_writer t1(): ::Size | ::Size::values
+  def t1=: (::Size::values) -> ::Size::values
+         | ...
 
   def t1!: () -> ::Size?
 
@@ -471,9 +472,10 @@ class Size < ::Protobuf::Enum
 end
 
 class Message < ::Protobuf::Message
-  attr_reader t1(): ::Size
+  attr_accessor t1(): ::Size
 
-  attr_writer t1(): ::Size | ::Size::values
+  def t1=: (::Size::values) -> ::Size::values
+         | ...
 
   def t1!: () -> ::Size?
 
@@ -888,9 +890,10 @@ class Account < ::Protobuf::Message
     BOT: Type
   end
 
-  attr_reader type(): ::Account::Type
+  attr_accessor type(): ::Account::Type
 
-  attr_writer type(): ::Account::Type | ::Account::Type::values
+  def type=: (::Account::Type::values) -> ::Account::Type::values
+           | ...
 
   def type!: () -> ::Account::Type?
 

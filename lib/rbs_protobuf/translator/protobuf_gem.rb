@@ -356,34 +356,30 @@ module RBSProtobuf
       end
 
       def add_field(members, name:, read_type:, write_types:, comment:)
-        if write_types.empty?
-          members << RBS::AST::Members::AttrAccessor.new(
-            name: name,
-            type: read_type,
-            comment: comment,
-            location: nil,
-            annotations: [],
-            ivar_name: false,
-            kind: :instance
-          )
-        else
-          members << RBS::AST::Members::AttrReader.new(
-            name: name,
-            type: read_type,
-            comment: comment,
-            location: nil,
-            annotations: [],
-            ivar_name: false,
-            kind: :instance
-          )
+        members << RBS::AST::Members::AttrAccessor.new(
+          name: name,
+          type: read_type,
+          comment: comment,
+          location: nil,
+          annotations: [],
+          ivar_name: false,
+          kind: :instance
+        )
 
-          members << RBS::AST::Members::AttrWriter.new(
-            name: name,
-            type: factory.union_type(read_type, *write_types),
+        write_types.each do |write_type|
+          members << RBS::AST::Members::MethodDefinition.new(
+            name: :"#{name}=",
+            types: [
+              factory.method_type(
+                type: factory.function(write_type).update(
+                  required_positionals:[factory.param(write_type)]
+                )
+              )
+            ],
+            annotations: [],
             comment: comment,
             location: nil,
-            annotations: [],
-            ivar_name: false,
+            overload: true,
             kind: :instance
           )
         end
