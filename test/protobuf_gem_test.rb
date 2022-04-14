@@ -164,7 +164,7 @@ end
 RBS
   end
 
-  def test_message_with_message
+  def test_message_with_optional_message
     input = read_proto(<<EOP)
 syntax = "proto2";
 
@@ -173,8 +173,6 @@ message Message {
 
 message foo {
   optional Message m1 = 1;
-  required Message m2 = 2;
-  repeated Message m3 = 3;
 }
 EOP
 
@@ -196,24 +194,94 @@ class Foo < ::Protobuf::Message
 
   def m1!: () -> ::Message?
 
-  attr_accessor m2(): ::Message
-
-  def m2!: () -> ::Message?
-
-  attr_accessor m3(): ::Protobuf::Field::FieldArray[::Message, ::Message]
-
-  def m3!: () -> ::Protobuf::Field::FieldArray[::Message, ::Message]?
-
-  def initialize: (?m1: ::Message?, ?m2: ::Message, ?m3: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
+  def initialize: (?m1: ::Message?) -> void
 
   def []: (:m1) -> ::Message?
-        | (:m2) -> ::Message
-        | (:m3) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
         | (::Symbol) -> untyped
 
   def []=: (:m1, ::Message?) -> ::Message?
-         | (:m2, ::Message) -> ::Message
-         | (:m3, ::Protobuf::Field::FieldArray[::Message, ::Message]) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_required_message
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+
+message foo {
+  required Message m1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+end
+
+class Foo < ::Protobuf::Message
+  attr_accessor m1(): ::Message
+
+  def m1!: () -> ::Message?
+
+  def initialize: (?m1: ::Message) -> void
+
+  def []: (:m1) -> ::Message
+        | (::Symbol) -> untyped
+
+  def []=: (:m1, ::Message) -> ::Message
+         | (::Symbol, untyped) -> untyped
+end
+RBS
+  end
+
+  def test_message_with_repeated_message
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+
+message foo {
+  repeated Message m1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true,
+      extension: false
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+end
+
+class Foo < ::Protobuf::Message
+  attr_accessor m1(): ::Protobuf::Field::FieldArray[::Message, ::Message]
+
+  def m1!: () -> ::Protobuf::Field::FieldArray[::Message, ::Message]?
+
+  def initialize: (?m1: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
+
+  def []: (:m1) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
+        | (::Symbol) -> untyped
+
+  def []=: (:m1, ::Protobuf::Field::FieldArray[::Message, ::Message]) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
          | (::Symbol, untyped) -> untyped
 end
 RBS
