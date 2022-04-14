@@ -1,0 +1,45 @@
+module RBSProtobuf
+  module Name
+    class Class
+      attr_reader name: RBS::TypeName
+
+      def initialize: (RBS::TypeName) -> void
+
+      def instance_type: (*RBS::Types::t args) -> RBS::Types::ClassInstance
+
+      def singleton_type: () -> RBS::Types::ClassSingleton
+
+      def instance_type?: (RBS::Types::t) -> bool
+
+      def singleton_type?: (RBS::Types::t) -> bool
+
+      alias [] instance_type
+
+      def super_class: (*RBS::Types::t args) -> RBS::AST::Declarations::Class::Super
+    end
+
+    class Alias
+      attr_reader name: RBS::TypeName
+
+      def initialize: (RBS::TypeName) -> void
+
+      def []: (*RBS::Types::t args) -> RBS::Types::Alias
+
+      def type?: (RBS::Types::t) -> bool
+
+      alias === type?
+    end
+
+    class Interface
+      attr_reader name: RBS::TypeName
+
+      def initialize: (RBS::TypeName) -> void
+
+      def []: (*RBS::Types::t args) -> RBS::Types::Interface
+
+      def type?: (RBS::Types::t) -> bool
+
+      alias === type?
+    end
+  end
+end
