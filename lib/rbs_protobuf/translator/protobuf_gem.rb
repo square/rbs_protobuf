@@ -1,6 +1,14 @@
 module RBSProtobuf
   module Translator
     class ProtobufGem < Base
+      FIELD_ARRAY = Name::Class.new(TypeName("::Protobuf::Field::FieldArray"))
+
+      FIELD_HASH = Name::Class.new(TypeName("::Protobuf::Field::FieldHash"))
+
+      ENUM = Name::Class.new(TypeName("::Protobuf::Enum"))
+
+      MESSAGE = Name::Class.new(TypeName("::Protobuf::Message"))
+
       attr_reader :stderr
 
       def initialize(input, upcase_enum:, nested_namespace:, extension:, stderr: STDERR)
@@ -120,22 +128,11 @@ module RBSProtobuf
       end
 
       def message_base_class
-        RBS::AST::Declarations::Class::Super.new(
-          name: RBS::TypeName.new(
-            name: :Message,
-            namespace: RBS::Namespace.parse("::Protobuf")
-          ),
-          args: [],
-          location: nil
-        )
+        MESSAGE.super_class
       end
 
       def repeated_field_type(type, wtype = type)
-        factory.instance_type(
-          factory.type_name("::Protobuf::Field::FieldArray"),
-          type,
-          wtype
-        )
+        FIELD_ARRAY[type, wtype]
       end
 
       def message_to_decl(message, prefix:, message_path:, source_code_info:, path:)
@@ -345,12 +342,11 @@ module RBSProtobuf
             key_type_r, _ = field_type(key_field, maps)
             value_type_r, value_type_w = field_type(value_field, maps)
 
-            hash_type = factory.instance_type(
-              factory.type_name("::Protobuf::Field::FieldHash"),
+            hash_type = FIELD_HASH[
               key_type_r,
               factory.unwrap_optional(value_type_r),
               factory.unwrap_optional(value_type_w)
-            )
+            ]
 
             [
               hash_type,
@@ -405,11 +401,7 @@ module RBSProtobuf
       end
 
       def enum_base_class
-        RBS::AST::Declarations::Class::Super.new(
-          name: factory.type_name("::Protobuf::Enum"),
-          args: [],
-          location: nil
-        )
+        ENUM.super_class()
       end
 
       def enum_name(name)
