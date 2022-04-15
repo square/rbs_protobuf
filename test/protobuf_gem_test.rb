@@ -22,6 +22,20 @@ EOP
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -56,6 +70,20 @@ class Message < ::Protobuf::Message
 
   def []=: (:name, ::String) -> ::String
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -90,6 +118,20 @@ class Message < ::Protobuf::Message
 
   def []=: (:name, ::String) -> ::String
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -124,6 +166,20 @@ class Message < ::Protobuf::Message
 
   def []=: (:name, ::Protobuf::Field::FieldArray[::String, ::String]) -> ::Protobuf::Field::FieldArray[::String, ::String]
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -160,6 +216,20 @@ class Message < ::Protobuf::Message
          | (::Symbol, untyped) -> untyped
 
   def name?: () -> bool
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -187,6 +257,20 @@ EOP
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 
 class Foo < ::Protobuf::Message
@@ -201,6 +285,20 @@ class Foo < ::Protobuf::Message
 
   def []=: (:m1, ::Message?) -> ::Message?
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Foo
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | _ToProto]
+
+  type array = ::Array[Foo | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
 end
 RBS
   end
@@ -228,6 +326,20 @@ EOP
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 
 class Foo < ::Protobuf::Message
@@ -242,6 +354,20 @@ class Foo < ::Protobuf::Message
 
   def []=: (:m1, ::Message) -> ::Message
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Foo
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | _ToProto]
+
+  type array = ::Array[Foo | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
 end
 RBS
   end
@@ -269,6 +395,20 @@ EOP
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 
 class Foo < ::Protobuf::Message
@@ -283,6 +423,20 @@ class Foo < ::Protobuf::Message
 
   def []=: (:m1, ::Protobuf::Field::FieldArray[::Message, ::Message]) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Foo
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | _ToProto]
+
+  type array = ::Array[Foo | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
 end
 RBS
   end
@@ -427,6 +581,20 @@ class Message < ::Protobuf::Message
   def []=: (:t1, ::Size) -> ::Size
          | (:t1, ::Size::values) -> ::Size::values
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -488,6 +656,20 @@ class Message < ::Protobuf::Message
   def []=: (:t1, ::Size) -> ::Size
          | (:t1, ::Size::values) -> ::Size::values
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -545,6 +727,20 @@ class Message < ::Protobuf::Message
 
   def []=: (:t1, ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]) -> ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -590,6 +786,20 @@ module Foo
       def []=: (:name, ::String) -> ::String
              | (:replyTo, ::Foo::Ba_r::Message?) -> ::Foo::Ba_r::Message?
              | (::Symbol, untyped) -> untyped
+
+      interface _ToProto
+        def to_proto: () -> Message
+      end
+
+      # The type of `repeated` field.
+      type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+      # The type of `map` field.
+      type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+      type array = ::Array[Message | _ToProto]
+
+      type hash[KEY] = ::Hash[KEY, Message | _ToProto]
     end
   end
 end
@@ -617,6 +827,20 @@ EOP
     assert_equal <<RBS, content
 class Foo::Ba_r::Message < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Foo::Ba_r::Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Foo::Ba_r::Message, Foo::Ba_r::Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo::Ba_r::Message, Foo::Ba_r::Message | _ToProto]
+
+  type array = ::Array[Foo::Ba_r::Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Foo::Ba_r::Message | _ToProto]
 end
 RBS
   end
@@ -662,6 +886,20 @@ class Message < ::Protobuf::Message
   def []=: (:name, ::String) -> ::String
          | (:size, ::Integer) -> ::Integer
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -703,6 +941,20 @@ class Message < ::Protobuf::Message
   def []=: (:numbers, ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]) -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
          | (:messages, ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]) -> ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -762,6 +1014,20 @@ class Message < ::Protobuf::Message
 
   def []=: (:foos, ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]) -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -802,9 +1068,37 @@ module Test1
 
       def []=: (:foo, ::Protobuf::Field::FieldHash[::String, ::String, ::String]) -> ::Protobuf::Field::FieldHash[::String, ::String, ::String]
              | (::Symbol, untyped) -> untyped
+
+      interface _ToProto
+        def to_proto: () -> Message2
+      end
+
+      # The type of `repeated` field.
+      type field_array = ::Protobuf::Field::FieldArray[Message2, Message2 | _ToProto]
+
+      # The type of `map` field.
+      type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message2, Message2 | _ToProto]
+
+      type array = ::Array[Message2 | _ToProto]
+
+      type hash[KEY] = ::Hash[KEY, Message2 | _ToProto]
     end
 
     def initialize: () -> void
+
+    interface _ToProto
+      def to_proto: () -> Message
+    end
+
+    # The type of `repeated` field.
+    type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+    # The type of `map` field.
+    type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+    type array = ::Array[Message | _ToProto]
+
+    type hash[KEY] = ::Hash[KEY, Message | _ToProto]
   end
 end
 RBS
@@ -833,6 +1127,20 @@ EOP
 class M1 < ::Protobuf::Message
   class M2 < ::Protobuf::Message
     def initialize: () -> void
+
+    interface _ToProto
+      def to_proto: () -> M2
+    end
+
+    # The type of `repeated` field.
+    type field_array = ::Protobuf::Field::FieldArray[M2, M2 | _ToProto]
+
+    # The type of `map` field.
+    type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, M2, M2 | _ToProto]
+
+    type array = ::Array[M2 | _ToProto]
+
+    type hash[KEY] = ::Hash[KEY, M2 | _ToProto]
   end
 
   attr_accessor m(): ::M1::M2?
@@ -846,6 +1154,20 @@ class M1 < ::Protobuf::Message
 
   def []=: (:m, ::M1::M2?) -> ::M1::M2?
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> M1
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, M1, M1 | _ToProto]
+
+  type array = ::Array[M1 | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
 end
 RBS
   end
@@ -907,6 +1229,20 @@ class Account < ::Protobuf::Message
   def []=: (:type, ::Account::Type) -> ::Account::Type
          | (:type, ::Account::Type::values) -> ::Account::Type::values
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Account
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Account, Account | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Account, Account | _ToProto]
+
+  type array = ::Array[Account | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Account | _ToProto]
 end
 RBS
   end
@@ -941,14 +1277,56 @@ EOP
     assert_equal <<RBS, content
 class SearchRequest < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> SearchRequest
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[SearchRequest, SearchRequest | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, SearchRequest, SearchRequest | _ToProto]
+
+  type array = ::Array[SearchRequest | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, SearchRequest | _ToProto]
 end
 
 class SearchResponse < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> SearchResponse
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[SearchResponse, SearchResponse | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, SearchResponse, SearchResponse | _ToProto]
+
+  type array = ::Array[SearchResponse | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, SearchResponse | _ToProto]
 end
 
 class Message < ::Protobuf::Message
   def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 
 class SearchService < ::Protobuf::Rpc::Service
@@ -987,6 +1365,20 @@ EOP
 module Test
   class M1 < ::Protobuf::Message
     def initialize: () -> void
+
+    interface _ToProto
+      def to_proto: () -> M1
+    end
+
+    # The type of `repeated` field.
+    type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
+
+    # The type of `map` field.
+    type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, M1, M1 | _ToProto]
+
+    type array = ::Array[M1 | _ToProto]
+
+    type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
   end
 end
 
@@ -1047,6 +1439,20 @@ EOP
 module Test
   class M1 < ::Protobuf::Message
     def initialize: () -> void
+
+    interface _ToProto
+      def to_proto: () -> M1
+    end
+
+    # The type of `repeated` field.
+    type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
+
+    # The type of `map` field.
+    type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, M1, M1 | _ToProto]
+
+    type array = ::Array[M1 | _ToProto]
+
+    type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
   end
 end
 RBS
@@ -1084,6 +1490,20 @@ EOP
 module Test
   class M1 < ::Protobuf::Message
     def initialize: () -> void
+
+    interface _ToProto
+      def to_proto: () -> M1
+    end
+
+    # The type of `repeated` field.
+    type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
+
+    # The type of `map` field.
+    type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, M1, M1 | _ToProto]
+
+    type array = ::Array[M1 | _ToProto]
+
+    type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
   end
 end
 RBS
@@ -1146,6 +1566,20 @@ class Message < ::Protobuf::Message
 
   def []=: (:name, ::String) -> ::String
          | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end

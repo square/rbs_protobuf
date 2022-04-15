@@ -13,6 +13,9 @@ module RBSProtobuf
       # Protobuf::Message
       MESSAGE: Name::Class
 
+      # _ToProto
+      TO_PROTO: Name::Interface
+
       attr_reader stderr: IO
 
       def initialize: (

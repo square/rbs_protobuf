@@ -9,6 +9,8 @@ module RBSProtobuf
 
       MESSAGE = Name::Class.new(TypeName("::Protobuf::Message"))
 
+      TO_PROTO = Name::Interface.new(TypeName("_ToProto"))
+
       attr_reader :stderr
 
       def initialize(input, upcase_enum:, nested_namespace:, extension:, stderr: STDERR)
@@ -139,6 +141,8 @@ module RBSProtobuf
           members: [],
           annotations: []
         ).tap do |class_decl|
+          class_instance_type = factory.instance_type(class_decl.name)
+
           maps = {}
 
           message.nested_type.each_with_index do |nested_type, index|
@@ -281,6 +285,75 @@ module RBSProtobuf
               )
             end
           end
+
+          class_decl.members << RBS::AST::Declarations::Interface.new(
+            name: TO_PROTO.name,
+            type_params: [],
+            members: [],
+            annotations: [],
+            comment: nil,
+            location: nil
+          ).tap do |interface_decl|
+            interface_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: :to_proto,
+              types: [
+                factory.method_type(
+                  type: factory.function(factory.instance_type(class_decl.name))
+                )
+              ],
+              annotations: [],
+              comment: nil,
+              location: nil,
+              overload: false,
+              kind: :instance
+            )
+          end
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_array"),
+            type_params: [],
+            type: FIELD_ARRAY[
+              class_instance_type,
+              factory.union_type(class_instance_type, TO_PROTO[])
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `repeated` field.", location: nil),
+            location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: FIELD_HASH[
+              factory.type_var(:KEY),
+              class_instance_type,
+              factory.union_type(class_instance_type, TO_PROTO[])
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `map` field.", location: nil),
+            location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("array"),
+            type_params: [],
+            type: RBS::BuiltinNames::Array.instance_type(factory.union_type(class_instance_type, TO_PROTO[])),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: RBS::BuiltinNames::Hash.instance_type(
+              factory.type_var(:KEY),
+              factory.union_type(class_instance_type, TO_PROTO[])
+            ),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
         end
       end
 
