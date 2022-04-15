@@ -170,15 +170,15 @@ module RBSProtobuf
             )
           end
 
-          # @type var field_types: Hash[Symbol, [RBS::Types::t, Array[RBS::Types::t]]]
+          # @type var field_types: Hash[Symbol, [RBS::Types::t, Array[RBS::Types::t], RBS::Types::t]]
           field_types = {}
 
           message.field.each_with_index do |field, index|
             field_name = field.name.to_sym
             comment = comment_for_path(source_code_info, path + [2, index], options: field.options)
 
-            read_type, write_types = field_type(field, maps)
-            field_types[field_name] = [read_type, write_types]
+            read_type, write_types, init_type = field_type(field, maps)
+            field_types[field_name] = [read_type, write_types, init_type]
 
             add_field(class_decl.members, name: field_name, read_type: read_type, write_types: write_types, comment: comment)
           end
@@ -189,8 +189,8 @@ module RBSProtobuf
               factory.method_type(
                 type: factory.function().update(
                   optional_keywords: field_types.transform_values {|pair|
-                    read_type, write_types = pair
-                    factory.param(factory.union_type(read_type, *write_types))
+                    _, _, init_type = pair
+                    factory.param(init_type)
                   }
                 )
               )
@@ -377,7 +377,8 @@ module RBSProtobuf
 
             [
               hash_type,
-              []
+              [],
+              hash_type
             ]
           else
             type = message_type(field.type_name)
@@ -385,12 +386,12 @@ module RBSProtobuf
             case field.label
             when FieldDescriptorProto::Label::LABEL_OPTIONAL
               type = factory.optional_type(type)
-              [type, []]
+              [type, [], type]
             when FieldDescriptorProto::Label::LABEL_REPEATED
               type = repeated_field_type(type)
-              [type, []]
+              [type, [], type]
             else
-              [type, []]
+              [type, [], type]
             end
           end
         when field.type == FieldDescriptorProto::Type::TYPE_ENUM
@@ -405,12 +406,14 @@ module RBSProtobuf
 
             [
               type,
-              []
+              [],
+              type
             ]
           else
             [
               type,
-              [values]
+              [values],
+              factory.union_type(type, values)
             ]
           end
         else
@@ -418,9 +421,9 @@ module RBSProtobuf
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
             type = repeated_field_type(type)
-            [type, []]
+            [type, [], type]
           else
-            [type, []]
+            [type, [], type]
           end
         end
       end
@@ -589,7 +592,7 @@ module RBSProtobuf
           members: [],
           annotations: []
         ).tap do |class_decl|
-          read_type, write_types = field_type(extension, {})
+          read_type, write_types, _ = field_type(extension, {})
 
           add_field(class_decl.members, name: field_name, read_type: read_type, write_types: write_types, comment: comment)
 

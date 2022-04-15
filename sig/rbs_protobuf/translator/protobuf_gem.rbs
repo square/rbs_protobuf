@@ -76,12 +76,13 @@ module RBSProtobuf
       #
       def service_to_decl: (untyped service, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
 
-      # Returns a pair of types of a field.
+      # Returns a triple of types of a field.
       #
       # - The first one is the type of the attribute. (read and write)
       # - The second one is the array of type of additional possibilities for write.
+      # - The last one is the type of `initialize` parameter.
       #
-      def field_type: (untyped field, Hash[String, [RBS::Types::t, RBS::Types::t]] maps) -> [RBS::Types::t, Array[RBS::Types::t]]
+      def field_type: (untyped field, Hash[String, [RBS::Types::t, RBS::Types::t]] maps) -> [RBS::Types::t, Array[RBS::Types::t], RBS::Types::t]
 
       # Returns enum names with respect to `#upcase_enum?`.
       #
