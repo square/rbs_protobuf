@@ -41,8 +41,6 @@ module RBSProtobuf
 
       def rbs_content: (untyped file) -> String
 
-      def message_base_class: () -> RBS::AST::Declarations::Class::Super
-
       def repeated_field_type: (RBS::Types::t `type`, ?RBS::Types::t wtype) -> RBS::Types::ClassInstance
 
       def message_to_decl: (untyped message, prefix: RBS::Namespace, message_path: untyped, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
@@ -53,8 +51,6 @@ module RBSProtobuf
       # - The second one is the array of type of additional possibilities for write.
       #
       def field_type: (untyped field, Hash[String, [RBS::Types::t, RBS::Types::t]] maps) -> [RBS::Types::t, Array[RBS::Types::t]]
-
-      def enum_base_class: () -> RBS::AST::Declarations::Class::Super
 
       def enum_name: (String name) -> Symbol
 

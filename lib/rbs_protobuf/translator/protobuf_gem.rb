@@ -123,10 +123,6 @@ module RBSProtobuf
         end.string
       end
 
-      def message_base_class
-        MESSAGE.super_class
-      end
-
       def repeated_field_type(type, wtype = type)
         FIELD_ARRAY[type, wtype]
       end
@@ -136,7 +132,7 @@ module RBSProtobuf
 
         RBS::AST::Declarations::Class.new(
           name: RBS::TypeName.new(name: class_name.to_sym, namespace: prefix),
-          super_class: message_base_class,
+          super_class: MESSAGE.super_class,
           type_params: [],
           location: nil,
           comment: comment_for_path(source_code_info, path, options: message.options),
@@ -400,10 +396,6 @@ module RBSProtobuf
         )
       end
 
-      def enum_base_class
-        ENUM.super_class()
-      end
-
       def enum_name(name)
         if upcase_enum?
           name.upcase.to_sym
@@ -417,7 +409,7 @@ module RBSProtobuf
 
         RBS::AST::Declarations::Class.new(
           name: RBS::TypeName.new(name: enum_name.to_sym, namespace: prefix),
-          super_class: enum_base_class(),
+          super_class: ENUM.super_class,
           type_params: factory.module_type_params(),
           members: [],
           comment: comment_for_path(source_code_info, path, options: enum_type.options),
