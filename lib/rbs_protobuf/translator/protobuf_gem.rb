@@ -141,7 +141,7 @@ module RBSProtobuf
           members: [],
           annotations: []
         ).tap do |class_decl|
-          class_instance_type = factory.instance_type(class_decl.name)
+          class_instance_type = factory.instance_type(RBS::TypeName.new(name: class_decl.name.name, namespace: RBS::Namespace.empty))
 
           maps = {}
 
@@ -298,7 +298,7 @@ module RBSProtobuf
               name: :to_proto,
               types: [
                 factory.method_type(
-                  type: factory.function(factory.instance_type(class_decl.name))
+                  type: factory.function(class_instance_type)
                 )
               ],
               annotations: [],
@@ -308,6 +308,15 @@ module RBSProtobuf
               kind: :instance
             )
           end
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("init"),
+            type_params: [],
+            type: factory.union_type(class_instance_type, TO_PROTO[]),
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `#initialize` parameter.", location: nil),
+            location: nil
+          )
 
           class_decl.members << RBS::AST::Declarations::Alias.new(
             name: TypeName("field_array"),

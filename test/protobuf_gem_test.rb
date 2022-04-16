@@ -27,6 +27,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -74,6 +77,9 @@ class Message < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Message
   end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -123,6 +129,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -170,6 +179,9 @@ class Message < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Message
   end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -221,6 +233,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -262,6 +277,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -289,6 +307,9 @@ class Foo < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Foo
   end
+
+  # The type of `#initialize` parameter.
+  type init = Foo | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -331,6 +352,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -358,6 +382,9 @@ class Foo < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Foo
   end
+
+  # The type of `#initialize` parameter.
+  type init = Foo | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -400,6 +427,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -427,6 +457,9 @@ class Foo < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Foo
   end
+
+  # The type of `#initialize` parameter.
+  type init = Foo | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -586,6 +619,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -661,6 +697,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -732,6 +771,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -785,11 +827,15 @@ module Foo
 
       def []=: (:name, ::String) -> ::String
              | (:replyTo, ::Foo::Ba_r::Message?) -> ::Foo::Ba_r::Message?
+             | (:replyTo, ::Foo::Ba_r::Message::_ToProto?) -> ::Foo::Ba_r::Message::_ToProto?
              | (::Symbol, untyped) -> untyped
 
       interface _ToProto
         def to_proto: () -> Message
       end
+
+      # The type of `#initialize` parameter.
+      type init = Message | _ToProto
 
       # The type of `repeated` field.
       type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -829,18 +875,21 @@ class Foo::Ba_r::Message < ::Protobuf::Message
   def initialize: () -> void
 
   interface _ToProto
-    def to_proto: () -> Foo::Ba_r::Message
+    def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
-  type field_array = ::Protobuf::Field::FieldArray[Foo::Ba_r::Message, Foo::Ba_r::Message | _ToProto]
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
   # The type of `map` field.
-  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo::Ba_r::Message, Foo::Ba_r::Message | _ToProto]
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
 
-  type array = ::Array[Foo::Ba_r::Message | _ToProto]
+  type array = ::Array[Message | _ToProto]
 
-  type hash[KEY] = ::Hash[KEY, Foo::Ba_r::Message | _ToProto]
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
 end
 RBS
   end
@@ -890,6 +939,9 @@ class Message < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Message
   end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -945,6 +997,9 @@ class Message < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Message
   end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1019,6 +1074,9 @@ class Message < ::Protobuf::Message
     def to_proto: () -> Message
   end
 
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
 
@@ -1073,6 +1131,9 @@ module Test1
         def to_proto: () -> Message2
       end
 
+      # The type of `#initialize` parameter.
+      type init = Message2 | _ToProto
+
       # The type of `repeated` field.
       type field_array = ::Protobuf::Field::FieldArray[Message2, Message2 | _ToProto]
 
@@ -1089,6 +1150,9 @@ module Test1
     interface _ToProto
       def to_proto: () -> Message
     end
+
+    # The type of `#initialize` parameter.
+    type init = Message | _ToProto
 
     # The type of `repeated` field.
     type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1132,6 +1196,9 @@ class M1 < ::Protobuf::Message
       def to_proto: () -> M2
     end
 
+    # The type of `#initialize` parameter.
+    type init = M2 | _ToProto
+
     # The type of `repeated` field.
     type field_array = ::Protobuf::Field::FieldArray[M2, M2 | _ToProto]
 
@@ -1158,6 +1225,9 @@ class M1 < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> M1
   end
+
+  # The type of `#initialize` parameter.
+  type init = M1 | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
@@ -1234,6 +1304,9 @@ class Account < ::Protobuf::Message
     def to_proto: () -> Account
   end
 
+  # The type of `#initialize` parameter.
+  type init = Account | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Account, Account | _ToProto]
 
@@ -1282,6 +1355,9 @@ class SearchRequest < ::Protobuf::Message
     def to_proto: () -> SearchRequest
   end
 
+  # The type of `#initialize` parameter.
+  type init = SearchRequest | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[SearchRequest, SearchRequest | _ToProto]
 
@@ -1300,6 +1376,9 @@ class SearchResponse < ::Protobuf::Message
     def to_proto: () -> SearchResponse
   end
 
+  # The type of `#initialize` parameter.
+  type init = SearchResponse | _ToProto
+
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[SearchResponse, SearchResponse | _ToProto]
 
@@ -1317,6 +1396,9 @@ class Message < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Message
   end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1369,6 +1451,9 @@ module Test
     interface _ToProto
       def to_proto: () -> M1
     end
+
+    # The type of `#initialize` parameter.
+    type init = M1 | _ToProto
 
     # The type of `repeated` field.
     type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
@@ -1444,6 +1529,9 @@ module Test
       def to_proto: () -> M1
     end
 
+    # The type of `#initialize` parameter.
+    type init = M1 | _ToProto
+
     # The type of `repeated` field.
     type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
 
@@ -1494,6 +1582,9 @@ module Test
     interface _ToProto
       def to_proto: () -> M1
     end
+
+    # The type of `#initialize` parameter.
+    type init = M1 | _ToProto
 
     # The type of `repeated` field.
     type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
@@ -1570,6 +1661,9 @@ class Message < ::Protobuf::Message
   interface _ToProto
     def to_proto: () -> Message
   end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
 
   # The type of `repeated` field.
   type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
