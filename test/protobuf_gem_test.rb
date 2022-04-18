@@ -164,16 +164,20 @@ EOP
 
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
-  attr_accessor name(): ::Protobuf::Field::FieldArray[::String, ::String]
+  attr_accessor name(): ::Protobuf::field_array[::String]
 
-  def name!: () -> ::Protobuf::Field::FieldArray[::String, ::String]?
+  def name=: (::Array[::String]) -> ::Array[::String]
+           | ...
 
-  def initialize: (?name: ::Protobuf::Field::FieldArray[::String, ::String]) -> void
+  def name!: () -> ::Protobuf::field_array[::String]?
 
-  def []: (:name) -> ::Protobuf::Field::FieldArray[::String, ::String]
+  def initialize: (?name: ::Array[::String]) -> void
+
+  def []: (:name) -> ::Protobuf::field_array[::String]
         | (::Symbol) -> untyped
 
-  def []=: (:name, ::Protobuf::Field::FieldArray[::String, ::String]) -> ::Protobuf::Field::FieldArray[::String, ::String]
+  def []=: (:name, ::Protobuf::field_array[::String]) -> ::Protobuf::field_array[::String]
+         | (:name, ::Array[::String]) -> ::Array[::String]
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -1060,9 +1064,12 @@ EOP
 
     assert_equal <<RBS, content
 class Message < ::Protobuf::Message
-  attr_accessor numbers(): ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
+  attr_accessor numbers(): ::Protobuf::field_hash[::String, ::Integer]
 
-  def numbers!: () -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]?
+  def numbers=: (::Hash[::String, ::Integer]) -> ::Hash[::String, ::Integer]
+              | ...
+
+  def numbers!: () -> ::Protobuf::field_hash[::String, ::Integer]?
 
   attr_accessor messages(): ::Message::field_hash[::Integer]
 
@@ -1071,13 +1078,14 @@ class Message < ::Protobuf::Message
 
   def messages!: () -> ::Message::field_hash[::Integer]?
 
-  def initialize: (?numbers: ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer], ?messages: ::Message::hash[::Integer]) -> void
+  def initialize: (?numbers: ::Hash[::String, ::Integer], ?messages: ::Message::hash[::Integer]) -> void
 
-  def []: (:numbers) -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
+  def []: (:numbers) -> ::Protobuf::field_hash[::String, ::Integer]
         | (:messages) -> ::Message::field_hash[::Integer]
         | (::Symbol) -> untyped
 
-  def []=: (:numbers, ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]) -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
+  def []=: (:numbers, ::Protobuf::field_hash[::String, ::Integer]) -> ::Protobuf::field_hash[::String, ::Integer]
+         | (:numbers, ::Hash[::String, ::Integer]) -> ::Hash[::String, ::Integer]
          | (:messages, ::Message::field_hash[::Integer]) -> ::Message::field_hash[::Integer]
          | (:messages, ::Message::hash[::Integer]) -> ::Message::hash[::Integer]
          | (::Symbol, untyped) -> untyped
@@ -1220,16 +1228,20 @@ EOP
 module Test1
   class Message < ::Protobuf::Message
     class Message2 < ::Protobuf::Message
-      attr_accessor foo(): ::Protobuf::Field::FieldHash[::String, ::String, ::String]
+      attr_accessor foo(): ::Protobuf::field_hash[::String, ::String]
 
-      def foo!: () -> ::Protobuf::Field::FieldHash[::String, ::String, ::String]?
+      def foo=: (::Hash[::String, ::String]) -> ::Hash[::String, ::String]
+              | ...
 
-      def initialize: (?foo: ::Protobuf::Field::FieldHash[::String, ::String, ::String]) -> void
+      def foo!: () -> ::Protobuf::field_hash[::String, ::String]?
 
-      def []: (:foo) -> ::Protobuf::Field::FieldHash[::String, ::String, ::String]
+      def initialize: (?foo: ::Hash[::String, ::String]) -> void
+
+      def []: (:foo) -> ::Protobuf::field_hash[::String, ::String]
             | (::Symbol) -> untyped
 
-      def []=: (:foo, ::Protobuf::Field::FieldHash[::String, ::String, ::String]) -> ::Protobuf::Field::FieldHash[::String, ::String, ::String]
+      def []=: (:foo, ::Protobuf::field_hash[::String, ::String]) -> ::Protobuf::field_hash[::String, ::String]
+             | (:foo, ::Hash[::String, ::String]) -> ::Hash[::String, ::String]
              | (::Symbol, untyped) -> untyped
 
       interface _ToProto

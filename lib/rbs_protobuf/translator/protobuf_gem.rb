@@ -11,6 +11,10 @@ module RBSProtobuf
 
       TO_PROTO = Name::Interface.new(TypeName("_ToProto"))
 
+      FIELD_ARRAY_a = Name::Alias.new(TypeName("::Protobuf::field_array"))
+
+      FIELD_HASH_a = Name::Alias.new(TypeName("::Protobuf::field_hash"))
+
       attr_reader :stderr
 
       def initialize(input, upcase_enum:, nested_namespace:, extension:, stderr: STDERR)
@@ -450,9 +454,9 @@ module RBSProtobuf
               ]
 
               [
-                hash_type,
-                [],
-                hash_type
+                FIELD_HASH_a[key_type_r, value_type_r],
+                [RBS::BuiltinNames::Hash.instance_type(key_type_r, value_type_r)],
+                RBS::BuiltinNames::Hash.instance_type(key_type_r, value_type_r)
               ]
             end
           else
@@ -505,8 +509,11 @@ module RBSProtobuf
           type = base_type(field.type)
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
-            type = FIELD_ARRAY[type]
-            [type, [], type]
+            [
+              FIELD_ARRAY_a[type],
+              [RBS::BuiltinNames::Array.instance_type(type)],
+              RBS::BuiltinNames::Array.instance_type(type)
+            ]
           else
             [type, [], type]
           end

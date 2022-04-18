@@ -16,6 +16,12 @@ module RBSProtobuf
       # _ToProto
       TO_PROTO: Name::Interface
 
+      # Protobuf::field_array[T]
+      FIELD_ARRAY_a: Name::Alias
+
+      # Protobuf::field_hash[K, V]
+      FIELD_HASH_a: Name::Alias
+
       attr_reader stderr: IO
 
       def initialize: (
