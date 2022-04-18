@@ -521,6 +521,19 @@ class Type < ::Protobuf::Enum
   Foo: Type
 
   BAR: Type
+
+  # The type of `#initialize` parameter.
+  type init = Type | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Type, Type | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Type, Type | values]
+
+  type array = ::Array[Type | values]
+
+  type hash[KEY] = ::Hash[KEY, Type | values]
 end
 RBS
   end
@@ -565,6 +578,19 @@ class Type < ::Protobuf::Enum
   Foo: Type
 
   BAR: Type
+
+  # The type of `#initialize` parameter.
+  type init = Type | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Type, Type | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Type, Type | values]
+
+  type array = ::Array[Type | values]
+
+  type hash[KEY] = ::Hash[KEY, Type | values]
 end
 RBS
   end
@@ -608,6 +634,19 @@ class Size < ::Protobuf::Enum
   SMALL: Size
 
   LARGE: Size
+
+  # The type of `#initialize` parameter.
+  type init = Size | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Size, Size | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Size, Size | values]
+
+  type array = ::Array[Size | values]
+
+  type hash[KEY] = ::Hash[KEY, Size | values]
 end
 
 class Message < ::Protobuf::Message
@@ -686,6 +725,19 @@ class Size < ::Protobuf::Enum
   SMALL: Size
 
   LARGE: Size
+
+  # The type of `#initialize` parameter.
+  type init = Size | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Size, Size | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Size, Size | values]
+
+  type array = ::Array[Size | values]
+
+  type hash[KEY] = ::Hash[KEY, Size | values]
 end
 
 class Message < ::Protobuf::Message
@@ -764,6 +816,19 @@ class Size < ::Protobuf::Enum
   SMALL: Size
 
   LARGE: Size
+
+  # The type of `#initialize` parameter.
+  type init = Size | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Size, Size | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Size, Size | values]
+
+  type array = ::Array[Size | values]
+
+  type hash[KEY] = ::Hash[KEY, Size | values]
 end
 
 class Message < ::Protobuf::Message
@@ -1074,6 +1139,19 @@ class Foo < ::Protobuf::Enum
   BAR: Foo
 
   BAZ: Foo
+
+  # The type of `#initialize` parameter.
+  type init = Foo | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | values]
+
+  type array = ::Array[Foo | values]
+
+  type hash[KEY] = ::Hash[KEY, Foo | values]
 end
 
 class Message < ::Protobuf::Message
@@ -1305,6 +1383,19 @@ class Account < ::Protobuf::Message
     HUMAN: Type
 
     BOT: Type
+
+    # The type of `#initialize` parameter.
+    type init = Type | values
+
+    # The type of `repeated` field.
+    type field_array = ::Protobuf::Field::FieldArray[Type, Type | values]
+
+    # The type of `map` field.
+    type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Type, Type | values]
+
+    type array = ::Array[Type | values]
+
+    type hash[KEY] = ::Hash[KEY, Type | values]
   end
 
   attr_accessor type(): ::Account::Type

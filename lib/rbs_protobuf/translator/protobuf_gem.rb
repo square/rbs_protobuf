@@ -702,6 +702,64 @@ module RBSProtobuf
               location: nil
             )
           end
+
+          enum_instance_type = factory.instance_type(RBS::TypeName.new(name: enum_name.to_sym, namespace: RBS::Namespace.empty))
+          values_type = factory.alias_type(RBS::TypeName.new(name: :values, namespace: RBS::Namespace.empty))
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("init"),
+            type_params: [],
+            type: factory.union_type(enum_instance_type, values_type),
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `#initialize` parameter.", location: nil),
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_array"),
+            type_params: [],
+            type: FIELD_ARRAY[
+              enum_instance_type,
+              factory.union_type(enum_instance_type, values_type)
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `repeated` field.", location: nil),
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: FIELD_HASH[
+              factory.type_var(:KEY),
+              enum_instance_type,
+              factory.union_type(enum_instance_type, values_type)
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `map` field.", location: nil),
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("array"),
+            type_params: [],
+            type: RBS::BuiltinNames::Array.instance_type(factory.union_type(enum_instance_type, values_type)),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: RBS::BuiltinNames::Hash.instance_type(
+              factory.type_var(:KEY),
+              factory.union_type(enum_instance_type, values_type)
+            ),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
         end
       end
 
