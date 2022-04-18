@@ -125,10 +125,6 @@ module RBSProtobuf
         end.string
       end
 
-      def repeated_field_type(type, wtype = type)
-        FIELD_ARRAY[type, wtype]
-      end
-
       def message_to_decl(message, prefix:, message_path:, source_code_info:, path:)
         class_name = ActiveSupport::Inflector.upcase_first(message.name)
 
@@ -509,7 +505,7 @@ module RBSProtobuf
           type = base_type(field.type)
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
-            type = repeated_field_type(type)
+            type = FIELD_ARRAY[type]
             [type, [], type]
           else
             [type, [], type]

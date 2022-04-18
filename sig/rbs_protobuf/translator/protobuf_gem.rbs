@@ -68,10 +68,6 @@ module RBSProtobuf
       #
       def extension_to_decl: (untyped extension, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
 
-      # Returns `FieldArray` instance type.
-      #
-      def repeated_field_type: (RBS::Types::t `type`, ?RBS::Types::t wtype) -> RBS::Types::ClassInstance
-
       # Returns service class stub.
       #
       def service_to_decl: (untyped service, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
