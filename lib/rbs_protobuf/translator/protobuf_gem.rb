@@ -439,7 +439,7 @@ module RBSProtobuf
             value_write_types = value_write_types.map {|type| factory.unwrap_optional(type) }
 
             case value_field.type
-            when FieldDescriptorProto::Type::TYPE_MESSAGE
+            when FieldDescriptorProto::Type::TYPE_MESSAGE, FieldDescriptorProto::Type::TYPE_ENUM
               value_type_r.is_a?(RBS::Types::ClassInstance) or raise
               [
                 message_field_hash_type(value_type_r, key_type_r),
@@ -490,23 +490,19 @@ module RBSProtobuf
         when field.type == FieldDescriptorProto::Type::TYPE_ENUM
           type = message_type(field.type_name)
           enum_namespace = type.name.to_namespace
-
           values = factory.alias_type(RBS::TypeName.new(name: :values, namespace: enum_namespace))
-          wtype = factory.union_type(type, values)
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
-            type = repeated_field_type(type, wtype)
-
             [
-              type,
-              [],
-              type
+              message_field_array_type(type),
+              [message_array_type(type)],
+              message_array_type(type)
             ]
           else
             [
               type,
               [values],
-              factory.union_type(type, values)
+              message_init_type(type)
             ]
           end
         else

@@ -657,7 +657,7 @@ class Message < ::Protobuf::Message
 
   def t1!: () -> ::Size?
 
-  def initialize: (?t1: ::Size | ::Size::values) -> void
+  def initialize: (?t1: ::Size::init) -> void
 
   def []: (:t1) -> ::Size
         | (::Symbol) -> untyped
@@ -748,7 +748,7 @@ class Message < ::Protobuf::Message
 
   def t1!: () -> ::Size?
 
-  def initialize: (?t1: ::Size | ::Size::values) -> void
+  def initialize: (?t1: ::Size::init) -> void
 
   def []: (:t1) -> ::Size
         | (::Symbol) -> untyped
@@ -832,16 +832,20 @@ class Size < ::Protobuf::Enum
 end
 
 class Message < ::Protobuf::Message
-  attr_accessor t1(): ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]
+  attr_accessor t1(): ::Size::field_array
 
-  def t1!: () -> ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]?
+  def t1=: (::Size::array) -> ::Size::array
+         | ...
 
-  def initialize: (?t1: ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]) -> void
+  def t1!: () -> ::Size::field_array?
 
-  def []: (:t1) -> ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]
+  def initialize: (?t1: ::Size::array) -> void
+
+  def []: (:t1) -> ::Size::field_array
         | (::Symbol) -> untyped
 
-  def []=: (:t1, ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]) -> ::Protobuf::Field::FieldArray[::Size, ::Size | ::Size::values]
+  def []=: (:t1, ::Size::field_array) -> ::Size::field_array
+         | (:t1, ::Size::array) -> ::Size::array
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -1155,16 +1159,20 @@ class Foo < ::Protobuf::Enum
 end
 
 class Message < ::Protobuf::Message
-  attr_accessor foos(): ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
+  attr_accessor foos(): ::Foo::field_hash[::String]
 
-  def foos!: () -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]?
+  def foos=: (::Foo::hash[::String]) -> ::Foo::hash[::String]
+           | ...
 
-  def initialize: (?foos: ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]) -> void
+  def foos!: () -> ::Foo::field_hash[::String]?
 
-  def []: (:foos) -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
+  def initialize: (?foos: ::Foo::hash[::String]) -> void
+
+  def []: (:foos) -> ::Foo::field_hash[::String]
         | (::Symbol) -> untyped
 
-  def []=: (:foos, ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]) -> ::Protobuf::Field::FieldHash[::String, ::Foo, ::Foo | ::Foo::values]
+  def []=: (:foos, ::Foo::field_hash[::String]) -> ::Foo::field_hash[::String]
+         | (:foos, ::Foo::hash[::String]) -> ::Foo::hash[::String]
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -1405,7 +1413,7 @@ class Account < ::Protobuf::Message
 
   def type!: () -> ::Account::Type?
 
-  def initialize: (?type: ::Account::Type | ::Account::Type::values) -> void
+  def initialize: (?type: ::Account::Type::init) -> void
 
   def []: (:type) -> ::Account::Type
         | (::Symbol) -> untyped
