@@ -3,7 +3,7 @@ require "rbs_protobuf/version"
 require "logger"
 
 require "protobuf/descriptors"
-require "active_support/inflector"
+require "active_support"
 require "rbs"
 
 module RBSProtobuf
