@@ -240,14 +240,25 @@ module RBSProtobuf
                   read_type, write_types = pair
 
                   [read_type, *write_types].map do |type|
-                    factory.method_type(
-                      type: factory.function(type).update(
-                        required_positionals: [
-                          factory.literal_type(field_name),
-                          type
-                        ].map {|t| factory.param(t) }
+                    if (type_param, type_var = interface_type?(type))
+                      factory.method_type(
+                        type: factory.function(type_var).update(
+                          required_positionals: [
+                            factory.literal_type(field_name),
+                            type_var
+                          ].map {|t| factory.param(t) }
+                        )
+                      ).update(type_params: [type_param])
+                    else
+                      factory.method_type(
+                        type: factory.function(type).update(
+                          required_positionals: [
+                            factory.literal_type(field_name),
+                            type
+                          ].map {|t| factory.param(t) }
+                        )
                       )
-                    )
+                    end
                   end
                 end +
                   [
@@ -366,6 +377,55 @@ module RBSProtobuf
         end
       end
 
+      def message_to_proto_type(type)
+        namespace = type.name.to_namespace
+        RBS::Types::Interface.new(
+          name: RBS::TypeName.new(name: :_ToProto, namespace: namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_init_type(type)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :init, namespace: type.name.to_namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_field_array_type(type)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :field_array, namespace: type.name.to_namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_array_type(type)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :array, namespace: type.name.to_namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_hash_type(type, key)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :hash, namespace: type.name.to_namespace),
+          args: [key],
+          location: nil
+        )
+      end
+
+      def message_field_hash_type(type, key)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :field_hash, namespace: type.name.to_namespace),
+          args: [key],
+          location: nil
+        )
+      end
+
       def field_type(field, maps)
         case
         when field.type == FieldDescriptorProto::Type::TYPE_MESSAGE
@@ -378,29 +438,53 @@ module RBSProtobuf
             value_type_r = factory.unwrap_optional(value_type_r)
             value_write_types = value_write_types.map {|type| factory.unwrap_optional(type) }
 
-            hash_type = FIELD_HASH[
-              key_type_r,
-              value_type_r,
-              factory.union_type(value_type_r, *value_write_types)
-            ]
+            case value_field.type
+            when FieldDescriptorProto::Type::TYPE_MESSAGE
+              value_type_r.is_a?(RBS::Types::ClassInstance) or raise
+              [
+                message_field_hash_type(value_type_r, key_type_r),
+                [message_hash_type(value_type_r, key_type_r)],
+                message_hash_type(value_type_r, key_type_r)
+              ]
+            else
+              hash_type = FIELD_HASH[
+                key_type_r,
+                value_type_r,
+                factory.union_type(value_type_r, *value_write_types)
+              ]
 
-            [
-              hash_type,
-              [],
-              hash_type
-            ]
+              [
+                hash_type,
+                [],
+                hash_type
+              ]
+            end
           else
             type = message_type(field.type_name)
 
             case field.label
             when FieldDescriptorProto::Label::LABEL_OPTIONAL
-              type = factory.optional_type(type)
-              [type, [], type]
+              [
+                factory.optional_type(type),
+                [
+                  factory.optional_type(message_to_proto_type(type))
+                ],
+                factory.optional_type(message_init_type(type))
+              ]
             when FieldDescriptorProto::Label::LABEL_REPEATED
-              type = repeated_field_type(type)
-              [type, [], type]
+              [
+                message_field_array_type(type),
+                [
+                  message_array_type(type)
+                ],
+                message_array_type(type)
+              ]
             else
-              [type, [], type]
+              [
+                type,
+                [message_to_proto_type(type)],
+                message_init_type(type)
+              ]
             end
           end
         when field.type == FieldDescriptorProto::Type::TYPE_ENUM
@@ -437,6 +521,23 @@ module RBSProtobuf
         end
       end
 
+      def interface_type?(type)
+        case
+        when type.is_a?(RBS::Types::Interface)
+          [
+            RBS::AST::TypeParam.new(name: :M, upper_bound: type, variance: :invariant, location: nil),
+            factory.type_var(:M)
+          ]
+        when type.is_a?(RBS::Types::Optional)
+          if (type = type.type).is_a?(RBS::Types::Interface)
+            [
+              RBS::AST::TypeParam.new(name: :M, upper_bound: type, variance: :invariant, location: nil),
+              factory.optional_type(factory.type_var(:M))
+            ]
+          end
+        end
+      end
+
       def add_field(members, name:, read_type:, write_types:, comment:)
         members << RBS::AST::Members::AttrAccessor.new(
           name: name,
@@ -449,21 +550,39 @@ module RBSProtobuf
         )
 
         write_types.each do |write_type|
-          members << RBS::AST::Members::MethodDefinition.new(
-            name: :"#{name}=",
-            types: [
-              factory.method_type(
-                type: factory.function(write_type).update(
-                  required_positionals:[factory.param(write_type)]
+          if (type_param, type = interface_type?(write_type))
+            members << RBS::AST::Members::MethodDefinition.new(
+              name: :"#{name}=",
+              types: [
+                factory.method_type(
+                  type: factory.function(type).update(
+                    required_positionals:[factory.param(type)]
+                  )
+                ).update(type_params: [type_param])
+              ],
+              annotations: [],
+              comment: comment,
+              location: nil,
+              overload: true,
+              kind: :instance
+            )
+          else
+            members << RBS::AST::Members::MethodDefinition.new(
+              name: :"#{name}=",
+              types: [
+                factory.method_type(
+                  type: factory.function(write_type).update(
+                    required_positionals:[factory.param(write_type)]
+                  )
                 )
-              )
-            ],
-            annotations: [],
-            comment: comment,
-            location: nil,
-            overload: true,
-            kind: :instance
-          )
+              ],
+              annotations: [],
+              comment: comment,
+              location: nil,
+              overload: true,
+              kind: :instance
+            )
+          end
         end
 
         members << RBS::AST::Members::MethodDefinition.new(
@@ -626,14 +745,25 @@ module RBSProtobuf
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :[]=,
             types: [read_type, *write_types].map do |write_type|
-              factory.method_type(
-                type: factory.function(write_type).update(
-                  required_positionals: [
-                    factory.param(factory.literal_type(field_name)),
-                    factory.param(write_type)
-                  ]
+              if (type_param, type_var = interface_type?(write_type))
+                factory.method_type(
+                  type: factory.function(type_var).update(
+                    required_positionals: [
+                      factory.param(factory.literal_type(field_name)),
+                      factory.param(type_var)
+                    ]
+                  )
+                ).update(type_params: [type_param])
+              else
+                factory.method_type(
+                  type: factory.function(write_type).update(
+                    required_positionals: [
+                      factory.param(factory.literal_type(field_name)),
+                      factory.param(write_type)
+                    ]
+                  )
                 )
-              )
+              end
             end,
             annotations: [],
             comment: nil,

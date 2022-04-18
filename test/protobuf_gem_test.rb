@@ -294,14 +294,18 @@ end
 class Foo < ::Protobuf::Message
   attr_accessor m1(): ::Message?
 
+  def m1=: [M < ::Message::_ToProto] (M?) -> M?
+         | ...
+
   def m1!: () -> ::Message?
 
-  def initialize: (?m1: ::Message?) -> void
+  def initialize: (?m1: ::Message::init?) -> void
 
   def []: (:m1) -> ::Message?
         | (::Symbol) -> untyped
 
   def []=: (:m1, ::Message?) -> ::Message?
+         | [M < ::Message::_ToProto] (:m1, M?) -> M?
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -369,14 +373,18 @@ end
 class Foo < ::Protobuf::Message
   attr_accessor m1(): ::Message
 
+  def m1=: [M < ::Message::_ToProto] (M) -> M
+         | ...
+
   def m1!: () -> ::Message?
 
-  def initialize: (?m1: ::Message) -> void
+  def initialize: (?m1: ::Message::init) -> void
 
   def []: (:m1) -> ::Message
         | (::Symbol) -> untyped
 
   def []=: (:m1, ::Message) -> ::Message
+         | [M < ::Message::_ToProto] (:m1, M) -> M
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -442,16 +450,20 @@ class Message < ::Protobuf::Message
 end
 
 class Foo < ::Protobuf::Message
-  attr_accessor m1(): ::Protobuf::Field::FieldArray[::Message, ::Message]
+  attr_accessor m1(): ::Message::field_array
 
-  def m1!: () -> ::Protobuf::Field::FieldArray[::Message, ::Message]?
+  def m1=: (::Message::array) -> ::Message::array
+         | ...
 
-  def initialize: (?m1: ::Protobuf::Field::FieldArray[::Message, ::Message]) -> void
+  def m1!: () -> ::Message::field_array?
 
-  def []: (:m1) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
+  def initialize: (?m1: ::Message::array) -> void
+
+  def []: (:m1) -> ::Message::field_array
         | (::Symbol) -> untyped
 
-  def []=: (:m1, ::Protobuf::Field::FieldArray[::Message, ::Message]) -> ::Protobuf::Field::FieldArray[::Message, ::Message]
+  def []=: (:m1, ::Message::field_array) -> ::Message::field_array
+         | (:m1, ::Message::array) -> ::Message::array
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -817,9 +829,12 @@ module Foo
 
       attr_accessor replyTo(): ::Foo::Ba_r::Message?
 
+      def replyTo=: [M < ::Foo::Ba_r::Message::_ToProto] (M?) -> M?
+                  | ...
+
       def replyTo!: () -> ::Foo::Ba_r::Message?
 
-      def initialize: (?name: ::String, ?replyTo: ::Foo::Ba_r::Message?) -> void
+      def initialize: (?name: ::String, ?replyTo: ::Foo::Ba_r::Message::init?) -> void
 
       def []: (:name) -> ::String
             | (:replyTo) -> ::Foo::Ba_r::Message?
@@ -827,7 +842,7 @@ module Foo
 
       def []=: (:name, ::String) -> ::String
              | (:replyTo, ::Foo::Ba_r::Message?) -> ::Foo::Ba_r::Message?
-             | (:replyTo, ::Foo::Ba_r::Message::_ToProto?) -> ::Foo::Ba_r::Message::_ToProto?
+             | [M < ::Foo::Ba_r::Message::_ToProto] (:replyTo, M?) -> M?
              | (::Symbol, untyped) -> untyped
 
       interface _ToProto
@@ -980,18 +995,22 @@ class Message < ::Protobuf::Message
 
   def numbers!: () -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]?
 
-  attr_accessor messages(): ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
+  attr_accessor messages(): ::Message::field_hash[::Integer]
 
-  def messages!: () -> ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]?
+  def messages=: (::Message::hash[::Integer]) -> ::Message::hash[::Integer]
+               | ...
 
-  def initialize: (?numbers: ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer], ?messages: ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]) -> void
+  def messages!: () -> ::Message::field_hash[::Integer]?
+
+  def initialize: (?numbers: ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer], ?messages: ::Message::hash[::Integer]) -> void
 
   def []: (:numbers) -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
-        | (:messages) -> ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
+        | (:messages) -> ::Message::field_hash[::Integer]
         | (::Symbol) -> untyped
 
   def []=: (:numbers, ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]) -> ::Protobuf::Field::FieldHash[::String, ::Integer, ::Integer]
-         | (:messages, ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]) -> ::Protobuf::Field::FieldHash[::Integer, ::Message, ::Message]
+         | (:messages, ::Message::field_hash[::Integer]) -> ::Message::field_hash[::Integer]
+         | (:messages, ::Message::hash[::Integer]) -> ::Message::hash[::Integer]
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -1212,14 +1231,18 @@ class M1 < ::Protobuf::Message
 
   attr_accessor m(): ::M1::M2?
 
+  def m=: [M < ::M1::M2::_ToProto] (M?) -> M?
+        | ...
+
   def m!: () -> ::M1::M2?
 
-  def initialize: (?m: ::M1::M2?) -> void
+  def initialize: (?m: ::M1::M2::init?) -> void
 
   def []: (:m) -> ::M1::M2?
         | (::Symbol) -> untyped
 
   def []=: (:m, ::M1::M2?) -> ::M1::M2?
+         | [M < ::M1::M2::_ToProto] (:m, M?) -> M?
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
@@ -1484,12 +1507,16 @@ end
 class ::Test::M1
   attr_accessor parent(): ::Test::M1?
 
+  def parent=: [M < ::Test::M1::_ToProto] (M?) -> M?
+             | ...
+
   def parent!: () -> ::Test::M1?
 
   def []: (:parent) -> ::Test::M1?
         | ...
 
   def []=: (:parent, ::Test::M1?) -> ::Test::M1?
+         | [M < ::Test::M1::_ToProto] (:parent, M?) -> M?
          | ...
 end
 RBS
