@@ -95,12 +95,15 @@ gems:
 We assume that you don't type check the generated `.pb.rb` code.
 If you want to type check them, you need the definition of `Google::Protobuf`, which can be generated from [`descriptor.proto`](https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/descriptor.proto).
 
+Note: `rbs_protobuf` generates RBS files assuming some types added in [this PR](https://github.com/ruby/gem_rbs_collection/pull/145). Make sure you are using one of the newer versions of `rbs_gem_collection` definitions.
+
 ### Options
 
 * `RBS_PROTOBUF_BACKEND` specifies the Ruby code generator gem. Supported value is `protobuf`. (We will add `google-protobuf` for `google-protobuf` gem.)
 * `PB_UPCASE_ENUMS` is for `protobuf` gem support. Specify the environment variable to make enum value constants upper case.
 * `RBS_PROTOBUF_NO_NESTED_NAMESPACE` is to make the RBS declarations flat.
 * `RBS_PROTOBUF_EXTENSION` specifies what to do for extensions.
+* `RBS_PROTOBUF_ACCEPT_NIL_ATTR_WRITER` is to allow passing `nil` to required fields.
 
 ## Supported features
 
