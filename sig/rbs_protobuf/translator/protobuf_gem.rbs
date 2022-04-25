@@ -24,12 +24,15 @@ module RBSProtobuf
 
       attr_reader stderr: IO
 
+      attr_reader accept_nil_writer: bool
+
       def initialize: (
         untyped input,
         upcase_enum: bool,
         nested_namespace: bool,
         extension: bool | :print | nil,
-        ?stderr: IO
+        accept_nil_writer: bool,
+        ?stderr: IO,
       ) -> void
 
       @upcase_enum: bool

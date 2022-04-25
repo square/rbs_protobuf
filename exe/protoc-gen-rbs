@@ -34,7 +34,8 @@ translator = case backend
                  input,
                  upcase_enum: upcase_enum,
                  nested_namespace: !no_nested_namespace,
-                 extension: extension
+                 extension: extension,
+                 accept_nil_writer: false
                )
              when "google-protobuf"
                raise NotImplementedError

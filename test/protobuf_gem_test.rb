@@ -15,7 +15,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -56,7 +57,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -107,7 +109,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -158,7 +161,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -213,7 +217,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -269,7 +274,8 @@ EOP
       input,
       upcase_enum: false,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -348,7 +354,8 @@ EOP
       input,
       upcase_enum: false,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -427,7 +434,8 @@ EOP
       input,
       upcase_enum: false,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -504,7 +512,8 @@ EOP
       input,
       upcase_enum: false,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -557,7 +566,8 @@ EOP
       input,
       upcase_enum: false,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -617,7 +627,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -708,7 +719,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -799,7 +811,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -888,7 +901,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -954,7 +968,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: false,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1000,7 +1015,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1058,7 +1074,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1130,7 +1147,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1220,7 +1238,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1300,7 +1319,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1381,7 +1401,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1477,7 +1498,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1573,7 +1595,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: true
+      extension: true,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1654,7 +1677,8 @@ EOP
       upcase_enum: true,
       nested_namespace: true,
       extension: nil,
-      stderr: stderr
+      stderr: stderr,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1708,7 +1732,8 @@ EOP
       upcase_enum: true,
       nested_namespace: true,
       extension: :print,
-      stderr: stderr
+      stderr: stderr,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1770,7 +1795,8 @@ EOP
       input,
       upcase_enum: true,
       nested_namespace: true,
-      extension: false
+      extension: false,
+      accept_nil_writer: false
     )
     content = translator.rbs_content(input.proto_file[0])
 
@@ -1794,6 +1820,472 @@ class Message < ::Protobuf::Message
         | (::Symbol) -> untyped
 
   def []=: (:name, ::String) -> ::String
+         | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+end
+RBS
+  end
+
+  def test_message_with_optional_base_type_allow_nil
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+  optional string name = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  attr_accessor name(): ::String
+
+  def name=: (::String?) -> ::String?
+           | ...
+
+  def name!: () -> ::String?
+
+  def initialize: (?name: ::String?) -> void
+
+  def []: (:name) -> ::String
+        | (::Symbol) -> untyped
+
+  def []=: (:name, ::String) -> ::String
+         | (:name, ::String?) -> ::String?
+         | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+end
+RBS
+  end
+
+  def test_message_with_repeated_base_type_allow_nil
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+  repeated string name = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  attr_accessor name(): ::Protobuf::field_array[::String]
+
+  def name=: (::Protobuf::field_array[::String]?) -> ::Protobuf::field_array[::String]?
+           | (::Array[::String]?) -> ::Array[::String]?
+           | ...
+
+  def name!: () -> ::Protobuf::field_array[::String]?
+
+  def initialize: (?name: ::Array[::String]?) -> void
+
+  def []: (:name) -> ::Protobuf::field_array[::String]
+        | (::Symbol) -> untyped
+
+  def []=: (:name, ::Protobuf::field_array[::String]) -> ::Protobuf::field_array[::String]
+         | (:name, ::Protobuf::field_array[::String]?) -> ::Protobuf::field_array[::String]?
+         | (:name, ::Array[::String]?) -> ::Array[::String]?
+         | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+end
+RBS
+  end
+
+  def test_message_with_required_message_allow_nil
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+
+message foo {
+  required Message m1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+end
+
+class Foo < ::Protobuf::Message
+  attr_accessor m1(): ::Message
+
+  def m1=: (::Message?) -> ::Message?
+         | [M < ::Message::_ToProto] (M?) -> M?
+         | ...
+
+  def m1!: () -> ::Message?
+
+  def initialize: (?m1: ::Message::init?) -> void
+
+  def []: (:m1) -> ::Message
+        | (::Symbol) -> untyped
+
+  def []=: (:m1, ::Message) -> ::Message
+         | (:m1, ::Message?) -> ::Message?
+         | [M < ::Message::_ToProto] (:m1, M?) -> M?
+         | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Foo
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Foo | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | _ToProto]
+
+  type array = ::Array[Foo | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+end
+RBS
+  end
+
+  def test_message_with_repeated_message_allow_nil
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+message Message {
+}
+
+message foo {
+  repeated Message m1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: false,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Message < ::Protobuf::Message
+  def initialize: () -> void
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+end
+
+class Foo < ::Protobuf::Message
+  attr_accessor m1(): ::Message::field_array
+
+  def m1=: (::Message::field_array?) -> ::Message::field_array?
+         | (::Message::array?) -> ::Message::array?
+         | ...
+
+  def m1!: () -> ::Message::field_array?
+
+  def initialize: (?m1: ::Message::array?) -> void
+
+  def []: (:m1) -> ::Message::field_array
+        | (::Symbol) -> untyped
+
+  def []=: (:m1, ::Message::field_array) -> ::Message::field_array
+         | (:m1, ::Message::field_array?) -> ::Message::field_array?
+         | (:m1, ::Message::array?) -> ::Message::array?
+         | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Foo
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Foo | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | _ToProto]
+
+  type array = ::Array[Foo | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+end
+RBS
+  end
+
+  def test_message_with_required_enum_allow_nil
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+enum Size {
+  Small = 0;
+  Large = 1;
+}
+
+message Message {
+  required Size t1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Size < ::Protobuf::Enum
+  type names = :SMALL | :LARGE
+
+  type strings = "SMALL" | "LARGE"
+
+  type tags = 0 | 1
+
+  type values = names | strings | tags
+
+  attr_reader name(): names
+
+  attr_reader tag(): tags
+
+  SMALL: Size
+
+  LARGE: Size
+
+  # The type of `#initialize` parameter.
+  type init = Size | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Size, Size | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Size, Size | values]
+
+  type array = ::Array[Size | values]
+
+  type hash[KEY] = ::Hash[KEY, Size | values]
+end
+
+class Message < ::Protobuf::Message
+  attr_accessor t1(): ::Size
+
+  def t1=: (::Size?) -> ::Size?
+         | (::Size::values?) -> ::Size::values?
+         | ...
+
+  def t1!: () -> ::Size?
+
+  def initialize: (?t1: ::Size::init?) -> void
+
+  def []: (:t1) -> ::Size
+        | (::Symbol) -> untyped
+
+  def []=: (:t1, ::Size) -> ::Size
+         | (:t1, ::Size?) -> ::Size?
+         | (:t1, ::Size::values?) -> ::Size::values?
+         | (::Symbol, untyped) -> untyped
+
+  interface _ToProto
+    def to_proto: () -> Message
+  end
+
+  # The type of `#initialize` parameter.
+  type init = Message | _ToProto
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Message, Message | _ToProto]
+
+  type array = ::Array[Message | _ToProto]
+
+  type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+end
+RBS
+  end
+
+  def test_message_with_repeated_enum_allow_nil
+    input = read_proto(<<EOP)
+syntax = "proto2";
+
+enum Size {
+  Small = 0;
+  Large = 1;
+}
+
+message Message {
+  repeated Size t1 = 1;
+}
+EOP
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    content = translator.rbs_content(input.proto_file[0])
+
+    assert_equal <<RBS, content
+class Size < ::Protobuf::Enum
+  type names = :SMALL | :LARGE
+
+  type strings = "SMALL" | "LARGE"
+
+  type tags = 0 | 1
+
+  type values = names | strings | tags
+
+  attr_reader name(): names
+
+  attr_reader tag(): tags
+
+  SMALL: Size
+
+  LARGE: Size
+
+  # The type of `#initialize` parameter.
+  type init = Size | values
+
+  # The type of `repeated` field.
+  type field_array = ::Protobuf::Field::FieldArray[Size, Size | values]
+
+  # The type of `map` field.
+  type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Size, Size | values]
+
+  type array = ::Array[Size | values]
+
+  type hash[KEY] = ::Hash[KEY, Size | values]
+end
+
+class Message < ::Protobuf::Message
+  attr_accessor t1(): ::Size::field_array
+
+  def t1=: (::Size::field_array?) -> ::Size::field_array?
+         | (::Size::array?) -> ::Size::array?
+         | ...
+
+  def t1!: () -> ::Size::field_array?
+
+  def initialize: (?t1: ::Size::array?) -> void
+
+  def []: (:t1) -> ::Size::field_array
+        | (::Symbol) -> untyped
+
+  def []=: (:t1, ::Size::field_array) -> ::Size::field_array
+         | (:t1, ::Size::field_array?) -> ::Size::field_array?
+         | (:t1, ::Size::array?) -> ::Size::array?
          | (::Symbol, untyped) -> untyped
 
   interface _ToProto
