@@ -13,6 +13,15 @@ module RBSProtobuf
       # Protobuf::Message
       MESSAGE: Name::Class
 
+      # _ToProto
+      TO_PROTO: Name::Interface
+
+      # Protobuf::field_array[T]
+      FIELD_ARRAY_a: Name::Alias
+
+      # Protobuf::field_hash[K, V]
+      FIELD_HASH_a: Name::Alias
+
       attr_reader stderr: IO
 
       def initialize: (
@@ -65,20 +74,29 @@ module RBSProtobuf
       #
       def extension_to_decl: (untyped extension, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
 
-      # Returns `FieldArray` instance type.
-      #
-      def repeated_field_type: (RBS::Types::t `type`, ?RBS::Types::t wtype) -> RBS::Types::ClassInstance
-
       # Returns service class stub.
       #
       def service_to_decl: (untyped service, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
 
-      # Returns a pair of types of a field.
+      # Returns a triple of types of a field.
       #
       # - The first one is the type of the attribute. (read and write)
       # - The second one is the array of type of additional possibilities for write.
+      # - The last one is the type of `initialize` parameter.
       #
-      def field_type: (untyped field, Hash[String, [RBS::Types::t, RBS::Types::t]] maps) -> [RBS::Types::t, Array[RBS::Types::t]]
+      def field_type: (untyped field, Hash[String, [untyped, untyped]] maps) -> [RBS::Types::t, Array[RBS::Types::t], RBS::Types::t]
+
+      def message_to_proto_type: (RBS::Types::ClassInstance) -> RBS::Types::Interface
+
+      def message_array_type: (RBS::Types::ClassInstance) -> RBS::Types::Alias
+
+      def message_field_array_type: (RBS::Types::ClassInstance) -> RBS::Types::Alias
+
+      def message_hash_type: (RBS::Types::ClassInstance, RBS::Types::t key) -> RBS::Types::Alias
+
+      def message_field_hash_type: (RBS::Types::ClassInstance, RBS::Types::t key) -> RBS::Types::Alias
+
+      def message_init_type: (RBS::Types::ClassInstance) -> RBS::Types::Alias
 
       # Returns enum names with respect to `#upcase_enum?`.
       #
@@ -90,6 +108,10 @@ module RBSProtobuf
       # - Overloads for attribute writer with `write_types`
       #
       def add_field: (Array[RBS::AST::Declarations::Class::member] members, name: Symbol, read_type: RBS::Types::t, write_types: Array[RBS::Types::t], comment: RBS::AST::Comment?) -> void
+
+      # Returns true if `write_type` is an _interface type_ or an optional type of _interface type_.
+      #
+      def interface_type?: (RBS::Types::t write_type) -> [RBS::AST::TypeParam, RBS::Types::t]?
 
       def service_base_class: () -> RBS::AST::Declarations::Class::Super
     end

@@ -9,6 +9,12 @@ module RBSProtobuf
 
       MESSAGE = Name::Class.new(TypeName("::Protobuf::Message"))
 
+      TO_PROTO = Name::Interface.new(TypeName("_ToProto"))
+
+      FIELD_ARRAY_a = Name::Alias.new(TypeName("::Protobuf::field_array"))
+
+      FIELD_HASH_a = Name::Alias.new(TypeName("::Protobuf::field_hash"))
+
       attr_reader :stderr
 
       def initialize(input, upcase_enum:, nested_namespace:, extension:, stderr: STDERR)
@@ -123,10 +129,6 @@ module RBSProtobuf
         end.string
       end
 
-      def repeated_field_type(type, wtype = type)
-        FIELD_ARRAY[type, wtype]
-      end
-
       def message_to_decl(message, prefix:, message_path:, source_code_info:, path:)
         class_name = ActiveSupport::Inflector.upcase_first(message.name)
 
@@ -139,6 +141,8 @@ module RBSProtobuf
           members: [],
           annotations: []
         ).tap do |class_decl|
+          class_instance_type = factory.instance_type(RBS::TypeName.new(name: class_decl.name.name, namespace: RBS::Namespace.empty))
+
           maps = {}
 
           message.nested_type.each_with_index do |nested_type, index|
@@ -166,15 +170,15 @@ module RBSProtobuf
             )
           end
 
-          # @type var field_types: Hash[Symbol, [RBS::Types::t, Array[RBS::Types::t]]]
+          # @type var field_types: Hash[Symbol, [RBS::Types::t, Array[RBS::Types::t], RBS::Types::t]]
           field_types = {}
 
           message.field.each_with_index do |field, index|
             field_name = field.name.to_sym
             comment = comment_for_path(source_code_info, path + [2, index], options: field.options)
 
-            read_type, write_types = field_type(field, maps)
-            field_types[field_name] = [read_type, write_types]
+            read_type, write_types, init_type = field_type(field, maps)
+            field_types[field_name] = [read_type, write_types, init_type]
 
             add_field(class_decl.members, name: field_name, read_type: read_type, write_types: write_types, comment: comment)
           end
@@ -185,8 +189,8 @@ module RBSProtobuf
               factory.method_type(
                 type: factory.function().update(
                   optional_keywords: field_types.transform_values {|pair|
-                    read_type, write_types = pair
-                    factory.param(factory.union_type(read_type, *write_types))
+                    _, _, init_type = pair
+                    factory.param(init_type)
                   }
                 )
               )
@@ -236,14 +240,25 @@ module RBSProtobuf
                   read_type, write_types = pair
 
                   [read_type, *write_types].map do |type|
-                    factory.method_type(
-                      type: factory.function(type).update(
-                        required_positionals: [
-                          factory.literal_type(field_name),
-                          type
-                        ].map {|t| factory.param(t) }
+                    if (type_param, type_var = interface_type?(type))
+                      factory.method_type(
+                        type: factory.function(type_var).update(
+                          required_positionals: [
+                            factory.literal_type(field_name),
+                            type_var
+                          ].map {|t| factory.param(t) }
+                        )
+                      ).update(type_params: [type_param])
+                    else
+                      factory.method_type(
+                        type: factory.function(type).update(
+                          required_positionals: [
+                            factory.literal_type(field_name),
+                            type
+                          ].map {|t| factory.param(t) }
+                        )
                       )
-                    )
+                    end
                   end
                 end +
                   [
@@ -281,7 +296,134 @@ module RBSProtobuf
               )
             end
           end
+
+          class_decl.members << RBS::AST::Declarations::Interface.new(
+            name: TO_PROTO.name,
+            type_params: [],
+            members: [],
+            annotations: [],
+            comment: nil,
+            location: nil
+          ).tap do |interface_decl|
+            interface_decl.members << RBS::AST::Members::MethodDefinition.new(
+              name: :to_proto,
+              types: [
+                factory.method_type(
+                  type: factory.function(class_instance_type)
+                )
+              ],
+              annotations: [],
+              comment: nil,
+              location: nil,
+              overload: false,
+              kind: :instance
+            )
+          end
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("init"),
+            type_params: [],
+            type: factory.union_type(class_instance_type, TO_PROTO[]),
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `#initialize` parameter.", location: nil),
+            location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_array"),
+            type_params: [],
+            type: FIELD_ARRAY[
+              class_instance_type,
+              factory.union_type(class_instance_type, TO_PROTO[])
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `repeated` field.", location: nil),
+            location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: FIELD_HASH[
+              factory.type_var(:KEY),
+              class_instance_type,
+              factory.union_type(class_instance_type, TO_PROTO[])
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `map` field.", location: nil),
+            location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("array"),
+            type_params: [],
+            type: RBS::BuiltinNames::Array.instance_type(factory.union_type(class_instance_type, TO_PROTO[])),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: RBS::BuiltinNames::Hash.instance_type(
+              factory.type_var(:KEY),
+              factory.union_type(class_instance_type, TO_PROTO[])
+            ),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
         end
+      end
+
+      def message_to_proto_type(type)
+        namespace = type.name.to_namespace
+        RBS::Types::Interface.new(
+          name: RBS::TypeName.new(name: :_ToProto, namespace: namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_init_type(type)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :init, namespace: type.name.to_namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_field_array_type(type)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :field_array, namespace: type.name.to_namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_array_type(type)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :array, namespace: type.name.to_namespace),
+          args: [],
+          location: nil
+        )
+      end
+
+      def message_hash_type(type, key)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :hash, namespace: type.name.to_namespace),
+          args: [key],
+          location: nil
+        )
+      end
+
+      def message_field_hash_type(type, key)
+        RBS::Types::Alias.new(
+          name: RBS::TypeName.new(name: :field_hash, namespace: type.name.to_namespace),
+          args: [key],
+          location: nil
+        )
       end
 
       def field_type(field, maps)
@@ -296,58 +438,101 @@ module RBSProtobuf
             value_type_r = factory.unwrap_optional(value_type_r)
             value_write_types = value_write_types.map {|type| factory.unwrap_optional(type) }
 
-            hash_type = FIELD_HASH[
-              key_type_r,
-              value_type_r,
-              factory.union_type(value_type_r, *value_write_types)
-            ]
+            case value_field.type
+            when FieldDescriptorProto::Type::TYPE_MESSAGE, FieldDescriptorProto::Type::TYPE_ENUM
+              value_type_r.is_a?(RBS::Types::ClassInstance) or raise
+              [
+                message_field_hash_type(value_type_r, key_type_r),
+                [message_hash_type(value_type_r, key_type_r)],
+                message_hash_type(value_type_r, key_type_r)
+              ]
+            else
+              hash_type = FIELD_HASH[
+                key_type_r,
+                value_type_r,
+                factory.union_type(value_type_r, *value_write_types)
+              ]
 
-            [
-              hash_type,
-              []
-            ]
+              [
+                FIELD_HASH_a[key_type_r, value_type_r],
+                [RBS::BuiltinNames::Hash.instance_type(key_type_r, value_type_r)],
+                RBS::BuiltinNames::Hash.instance_type(key_type_r, value_type_r)
+              ]
+            end
           else
             type = message_type(field.type_name)
 
             case field.label
             when FieldDescriptorProto::Label::LABEL_OPTIONAL
-              type = factory.optional_type(type)
-              [type, []]
+              [
+                factory.optional_type(type),
+                [
+                  factory.optional_type(message_to_proto_type(type))
+                ],
+                factory.optional_type(message_init_type(type))
+              ]
             when FieldDescriptorProto::Label::LABEL_REPEATED
-              type = repeated_field_type(type)
-              [type, []]
+              [
+                message_field_array_type(type),
+                [
+                  message_array_type(type)
+                ],
+                message_array_type(type)
+              ]
             else
-              [type, []]
+              [
+                type,
+                [message_to_proto_type(type)],
+                message_init_type(type)
+              ]
             end
           end
         when field.type == FieldDescriptorProto::Type::TYPE_ENUM
           type = message_type(field.type_name)
           enum_namespace = type.name.to_namespace
-
           values = factory.alias_type(RBS::TypeName.new(name: :values, namespace: enum_namespace))
-          wtype = factory.union_type(type, values)
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
-            type = repeated_field_type(type, wtype)
-
             [
-              type,
-              []
+              message_field_array_type(type),
+              [message_array_type(type)],
+              message_array_type(type)
             ]
           else
             [
               type,
-              [values]
+              [values],
+              message_init_type(type)
             ]
           end
         else
           type = base_type(field.type)
 
           if field.label == FieldDescriptorProto::Label::LABEL_REPEATED
-            type = repeated_field_type(type)
-            [type, []]
+            [
+              FIELD_ARRAY_a[type],
+              [RBS::BuiltinNames::Array.instance_type(type)],
+              RBS::BuiltinNames::Array.instance_type(type)
+            ]
           else
-            [type, []]
+            [type, [], type]
+          end
+        end
+      end
+
+      def interface_type?(type)
+        case
+        when type.is_a?(RBS::Types::Interface)
+          [
+            RBS::AST::TypeParam.new(name: :M, upper_bound: type, variance: :invariant, location: nil),
+            factory.type_var(:M)
+          ]
+        when type.is_a?(RBS::Types::Optional)
+          if (type = type.type).is_a?(RBS::Types::Interface)
+            [
+              RBS::AST::TypeParam.new(name: :M, upper_bound: type, variance: :invariant, location: nil),
+              factory.optional_type(factory.type_var(:M))
+            ]
           end
         end
       end
@@ -364,21 +549,39 @@ module RBSProtobuf
         )
 
         write_types.each do |write_type|
-          members << RBS::AST::Members::MethodDefinition.new(
-            name: :"#{name}=",
-            types: [
-              factory.method_type(
-                type: factory.function(write_type).update(
-                  required_positionals:[factory.param(write_type)]
+          if (type_param, type = interface_type?(write_type))
+            members << RBS::AST::Members::MethodDefinition.new(
+              name: :"#{name}=",
+              types: [
+                factory.method_type(
+                  type: factory.function(type).update(
+                    required_positionals:[factory.param(type)]
+                  )
+                ).update(type_params: [type_param])
+              ],
+              annotations: [],
+              comment: comment,
+              location: nil,
+              overload: true,
+              kind: :instance
+            )
+          else
+            members << RBS::AST::Members::MethodDefinition.new(
+              name: :"#{name}=",
+              types: [
+                factory.method_type(
+                  type: factory.function(write_type).update(
+                    required_positionals:[factory.param(write_type)]
+                  )
                 )
-              )
-            ],
-            annotations: [],
-            comment: comment,
-            location: nil,
-            overload: true,
-            kind: :instance
-          )
+              ],
+              annotations: [],
+              comment: comment,
+              location: nil,
+              overload: true,
+              kind: :instance
+            )
+          end
         end
 
         members << RBS::AST::Members::MethodDefinition.new(
@@ -498,6 +701,64 @@ module RBSProtobuf
               location: nil
             )
           end
+
+          enum_instance_type = factory.instance_type(RBS::TypeName.new(name: enum_name.to_sym, namespace: RBS::Namespace.empty))
+          values_type = factory.alias_type(RBS::TypeName.new(name: :values, namespace: RBS::Namespace.empty))
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("init"),
+            type_params: [],
+            type: factory.union_type(enum_instance_type, values_type),
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `#initialize` parameter.", location: nil),
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_array"),
+            type_params: [],
+            type: FIELD_ARRAY[
+              enum_instance_type,
+              factory.union_type(enum_instance_type, values_type)
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `repeated` field.", location: nil),
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("field_hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: FIELD_HASH[
+              factory.type_var(:KEY),
+              enum_instance_type,
+              factory.union_type(enum_instance_type, values_type)
+            ],
+            annotations: [],
+            comment: RBS::AST::Comment.new(string: "The type of `map` field.", location: nil),
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("array"),
+            type_params: [],
+            type: RBS::BuiltinNames::Array.instance_type(factory.union_type(enum_instance_type, values_type)),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
+
+          enum_decl.members << RBS::AST::Declarations::Alias.new(
+            name: TypeName("hash"),
+            type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
+            type: RBS::BuiltinNames::Hash.instance_type(
+              factory.type_var(:KEY),
+              factory.union_type(enum_instance_type, values_type)
+            ),
+            annotations: [],
+            comment: nil,
+            location: nil
+          )
         end
       end
 
@@ -516,7 +777,7 @@ module RBSProtobuf
           members: [],
           annotations: []
         ).tap do |class_decl|
-          read_type, write_types = field_type(extension, {})
+          read_type, write_types, _ = field_type(extension, {})
 
           add_field(class_decl.members, name: field_name, read_type: read_type, write_types: write_types, comment: comment)
 
@@ -541,14 +802,25 @@ module RBSProtobuf
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :[]=,
             types: [read_type, *write_types].map do |write_type|
-              factory.method_type(
-                type: factory.function(write_type).update(
-                  required_positionals: [
-                    factory.param(factory.literal_type(field_name)),
-                    factory.param(write_type)
-                  ]
+              if (type_param, type_var = interface_type?(write_type))
+                factory.method_type(
+                  type: factory.function(type_var).update(
+                    required_positionals: [
+                      factory.param(factory.literal_type(field_name)),
+                      factory.param(type_var)
+                    ]
+                  )
+                ).update(type_params: [type_param])
+              else
+                factory.method_type(
+                  type: factory.function(write_type).update(
+                    required_positionals: [
+                      factory.param(factory.literal_type(field_name)),
+                      factory.param(write_type)
+                    ]
+                  )
                 )
-              )
+              end
             end,
             annotations: [],
             comment: nil,
