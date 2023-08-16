@@ -15,9 +15,11 @@ jobs:
           - 2.7-bionic
           - 3.0-focal
           - 3.1-focal
+          - 3.2-dev-jammy
         protoc_version:
-          - 3.18.2
-          - 3.19.4
+          - "3.18.2"
+          - "3.19.4"
+          - "24.0"
     container:
       image: rubylang/ruby:${{ matrix.container_tag }}
     steps:
