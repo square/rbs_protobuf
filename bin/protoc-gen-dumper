@@ -7,5 +7,7 @@ require "rbs_protobuf"
 input = STDIN.read()
 File.write(ENV["PROTOC_DUMPER_OUT"] || "a.pb.out", input)
 
-response = Google::Protobuf::Compiler::CodeGeneratorResponse.new
+response = Google::Protobuf::Compiler::CodeGeneratorResponse.new(
+  :supported_features => ::Google::Protobuf::Compiler::CodeGeneratorResponse::Feature::FEATURE_PROTO3_OPTIONAL.to_i
+)
 print Google::Protobuf::Compiler::CodeGeneratorResponse.encode(response)

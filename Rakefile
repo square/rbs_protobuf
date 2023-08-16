@@ -27,7 +27,8 @@ namespace :example do
       "-I#{proto_path}",
       "example/a.proto",
       "example/b.proto",
-      "example/c.proto"
+      "example/c.proto",
+      "example/d.proto"
     )
     sh(
       { "RBS_PROTOBUF_BACKEND" => "protobuf", "RBS_PROTOBUF_EXTENSION" => "true" },
@@ -35,7 +36,8 @@ namespace :example do
       "--rbs_out=example/protobuf-gem",
       "-Iexample",
       "example/a.proto",
-      "example/b.proto"
+      "example/b.proto",
+      "example/d.proto"
     )
     sh(
       { "RBS_PROTOBUF_BACKEND" => "protobuf", "RBS_PROTOBUF_EXTENSION" => "true", "RUBYOPT" => "-rbundler/setup -Iexample/protobuf-gem -rc.pb" },
