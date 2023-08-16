@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.1.0 (2023-08-16)
+
+* Support optional fields in proto3 ([\#32](https://github.com/square/rbs_protobuf/pull/32))
+* Update Steep to 1.5 and RBS to 3.1 ([\#30](https://github.com/square/rbs_protobuf/pull/30))
+
 ## 1.0.0 (2022-04-25)
 
 This is version 1.0.0. 🎉
