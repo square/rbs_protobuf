@@ -32,6 +32,9 @@ jobs:
           mv bin/protoc /usr/local/bin/protoc
           protoc --version
       - uses: actions/checkout@v3
+      - name: Set up git safe.directory
+        run: |
+          git config --global --add safe.directory /__w/rbs_protobuf/rbs_protobuf
       - name: Run test
         run: |
           ruby -v
