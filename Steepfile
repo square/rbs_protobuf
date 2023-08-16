@@ -2,7 +2,6 @@ D = Steep::Diagnostic
 
 target :lib do
   signature "sig"
-  signature "vendor/gem_rbs_collection/gems/protobuf"
   check "lib"
 
   configure_code_diagnostics do |hash|
