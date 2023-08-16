@@ -188,96 +188,114 @@ module RBSProtobuf
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :initialize,
-            types: [
-              factory.method_type(
-                type: factory.function().update(
-                  optional_keywords: field_types.transform_values {|pair|
-                    _, _, init_type = pair
-                    factory.param(init_type)
-                  }
-                )
-              )
+            overloads: [
+              RBS::AST::Members::MethodDefinition::Overload.new(
+                method_type: factory.method_type(
+                  type: factory.function().update(
+                    optional_keywords: field_types.transform_values {|pair|
+                      _, _, init_type = pair
+                      factory.param(init_type)
+                    }
+                  )
+                ),
+                annotations: []
+              ),
             ],
             annotations: [],
             comment: nil,
             location: nil,
-            overload: false,
+            overloading: false,
+            visibility: nil,
             kind: :instance
           )
 
           unless field_types.empty?
             class_decl.members << RBS::AST::Members::MethodDefinition.new(
               name: :[],
-              types:
+              overloads:
                 field_types.map do |field_name, pair|
                   read_type, _ = pair
 
-                  factory.method_type(
-                    type: factory.function(read_type).update(
-                      required_positionals: [
-                        factory.param(factory.literal_type(field_name))
-                      ]
-                    )
+                  RBS::AST::Members::MethodDefinition::Overload.new(
+                    method_type: factory.method_type(
+                      type: factory.function(read_type).update(
+                        required_positionals: [
+                          factory.param(factory.literal_type(field_name))
+                        ]
+                      )
+                    ),
+                    annotations: []
                   )
                 end +
                   [
-                    factory.method_type(
-                      type: factory.function(factory.untyped).update(
-                        required_positionals: [
-                          factory.param(RBS::BuiltinNames::Symbol.instance_type)
-                        ]
-                      )
+                    RBS::AST::Members::MethodDefinition::Overload.new(
+                      method_type: factory.method_type(
+                        type: factory.function(factory.untyped).update(
+                          required_positionals: [
+                            factory.param(RBS::BuiltinNames::Symbol.instance_type)
+                          ]
+                        )
+                      ),
+                      annotations: []
                     )
                   ],
               annotations: [],
               comment: nil,
               location: nil,
-              overload: false,
+              overloading: false,
+              visibility: nil,
               kind: :instance
             )
 
             class_decl.members << RBS::AST::Members::MethodDefinition.new(
               name: :[]=,
-              types:
+              overloads:
                 field_types.flat_map do |field_name, pair|
                   read_type, write_types = pair
 
                   [read_type, *write_types].map do |type|
-                    if (type_param, type_var = interface_type?(type))
-                      factory.method_type(
-                        type: factory.function(type_var).update(
-                          required_positionals: [
-                            factory.literal_type(field_name),
-                            type_var
-                          ].map {|t| factory.param(t) }
+                    method_type =
+                      if (type_param, type_var = interface_type?(type))
+                        factory.method_type(
+                          type: factory.function(type_var).update(
+                            required_positionals: [
+                              factory.literal_type(field_name),
+                              type_var
+                            ].map {|t| factory.param(t) }
+                          )
+                        ).update(type_params: [type_param])
+                      else
+                        factory.method_type(
+                          type: factory.function(type).update(
+                            required_positionals: [
+                              factory.literal_type(field_name),
+                              type
+                            ].map {|t| factory.param(t) }
+                          )
                         )
-                      ).update(type_params: [type_param])
-                    else
-                      factory.method_type(
-                        type: factory.function(type).update(
-                          required_positionals: [
-                            factory.literal_type(field_name),
-                            type
-                          ].map {|t| factory.param(t) }
-                        )
-                      )
-                    end
+                      end
+
+                    RBS::AST::Members::MethodDefinition::Overload.new(method_type: method_type, annotations: [])
                   end
                 end +
                   [
-                    factory.method_type(
-                      type: factory.function(factory.untyped).update(
-                        required_positionals: [
-                          RBS::BuiltinNames::Symbol.instance_type,
-                          factory.untyped
-                        ].map {|t| factory.param(t) }
-                      )
+                    RBS::AST::Members::MethodDefinition::Overload.new(
+                      method_type: factory.method_type(
+                        type: factory.function(factory.untyped).update(
+                          required_positionals: [
+                            RBS::BuiltinNames::Symbol.instance_type,
+                            factory.untyped
+                          ].map {|t| factory.param(t) }
+                        )
+                      ),
+                      annotations: []
                     )
                   ],
               annotations: [],
               comment: nil,
               location: nil,
-              overload: false,
+              overloading: false,
+              visibility: nil,
               kind: :instance
             )
           end
@@ -286,15 +304,19 @@ module RBSProtobuf
             if field.type == FieldDescriptorProto::Type::TYPE_BOOL
               class_decl.members << RBS::AST::Members::MethodDefinition.new(
                 name: :"#{field.name}?",
-                types: [
-                  factory.method_type(
-                    type: factory.function(factory.bool_type)
+                overloads: [
+                  RBS::AST::Members::MethodDefinition::Overload.new(
+                    method_type: factory.method_type(
+                      type: factory.function(factory.bool_type)
+                    ),
+                    annotations: []
                   )
                 ],
                 annotations: [],
                 comment: nil,
                 location: nil,
-                overload: false,
+                overloading: false,
+                visibility: nil,
                 kind: :instance
               )
             end
@@ -310,20 +332,24 @@ module RBSProtobuf
           ).tap do |interface_decl|
             interface_decl.members << RBS::AST::Members::MethodDefinition.new(
               name: :to_proto,
-              types: [
-                factory.method_type(
-                  type: factory.function(class_instance_type)
+              overloads: [
+                RBS::AST::Members::MethodDefinition::Overload.new(
+                  method_type: factory.method_type(
+                    type: factory.function(class_instance_type)
+                  ),
+                  annotations: []
                 )
               ],
               annotations: [],
               comment: nil,
               location: nil,
-              overload: false,
+              overloading: false,
+              visibility: nil,
               kind: :instance
             )
           end
 
-          class_decl.members << RBS::AST::Declarations::Alias.new(
+          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("init"),
             type_params: [],
             type: factory.union_type(class_instance_type, TO_PROTO[]),
@@ -332,7 +358,7 @@ module RBSProtobuf
             location: nil
           )
 
-          class_decl.members << RBS::AST::Declarations::Alias.new(
+          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("field_array"),
             type_params: [],
             type: FIELD_ARRAY[
@@ -344,7 +370,7 @@ module RBSProtobuf
             location: nil
           )
 
-          class_decl.members << RBS::AST::Declarations::Alias.new(
+          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("field_hash"),
             type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
             type: FIELD_HASH[
@@ -357,7 +383,7 @@ module RBSProtobuf
             location: nil
           )
 
-          class_decl.members << RBS::AST::Declarations::Alias.new(
+          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("array"),
             type_params: [],
             type: RBS::BuiltinNames::Array.instance_type(factory.union_type(class_instance_type, TO_PROTO[])),
@@ -366,7 +392,7 @@ module RBSProtobuf
             location: nil
           )
 
-          class_decl.members << RBS::AST::Declarations::Alias.new(
+          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("hash"),
             type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
             type: RBS::BuiltinNames::Hash.instance_type(
@@ -567,41 +593,52 @@ module RBSProtobuf
         unless write_types.empty?
           members << RBS::AST::Members::MethodDefinition.new(
             name: :"#{name}=",
-            types:
+            overloads:
               write_types.map do |write_type|
-                if (type_param, type = interface_type?(write_type))
-                  factory.method_type(
-                    type: factory.function(type).update(
-                      required_positionals:[factory.param(type)]
+                method_type =
+                  if (type_param, type = interface_type?(write_type))
+                    factory.method_type(
+                      type: factory.function(type).update(
+                        required_positionals:[factory.param(type)]
+                      )
+                    ).update(type_params: [type_param])
+                  else
+                    factory.method_type(
+                      type: factory.function(write_type).update(
+                        required_positionals:[factory.param(write_type)]
+                      )
                     )
-                  ).update(type_params: [type_param])
-                else
-                  factory.method_type(
-                    type: factory.function(write_type).update(
-                      required_positionals:[factory.param(write_type)]
-                    )
-                  )
-                end
+                  end
+
+                RBS::AST::Members::MethodDefinition::Overload.new(
+                  method_type: method_type,
+                  annotations: []
+                )
               end,
             annotations: [],
             comment: comment,
             location: nil,
-            overload: true,
+            overloading: true,
+            visibility: nil,
             kind: :instance
           )
         end
 
         members << RBS::AST::Members::MethodDefinition.new(
           name: :"#{name}!",
-          types: [
-            factory.method_type(
-              type: factory.function(factory.optional_type(read_type))
+          overloads: [
+            RBS::AST::Members::MethodDefinition::Overload.new(
+              method_type: factory.method_type(
+                type: factory.function(factory.optional_type(read_type))
+              ),
+              annotations: []
             )
           ],
           annotations: [],
           comment: nil,
           location: nil,
-          overload: false,
+          overloading: false,
+          visibility: nil,
           kind: :instance
         )
       end
@@ -638,7 +675,7 @@ module RBSProtobuf
             factory.literal_type(v.number)
           end.uniq
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: factory.type_name("names"),
             type_params: [],
             type: factory.union_type(*names),
@@ -647,7 +684,7 @@ module RBSProtobuf
             annotations: []
           )
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: factory.type_name("strings"),
             type_params: [],
             type: factory.union_type(*strings),
@@ -656,7 +693,7 @@ module RBSProtobuf
             annotations: []
           )
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: factory.type_name("tags"),
             type_params: [],
             type: factory.union_type(*tags),
@@ -665,7 +702,7 @@ module RBSProtobuf
             annotations: []
           )
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: factory.type_name("values"),
             type_params: [],
             type: factory.union_type(
@@ -712,7 +749,7 @@ module RBSProtobuf
           enum_instance_type = factory.instance_type(RBS::TypeName.new(name: enum_name.to_sym, namespace: RBS::Namespace.empty))
           values_type = factory.alias_type(RBS::TypeName.new(name: :values, namespace: RBS::Namespace.empty))
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("init"),
             type_params: [],
             type: factory.union_type(enum_instance_type, values_type),
@@ -721,7 +758,7 @@ module RBSProtobuf
             location: nil
           )
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("field_array"),
             type_params: [],
             type: FIELD_ARRAY[
@@ -733,7 +770,7 @@ module RBSProtobuf
             location: nil
           )
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("field_hash"),
             type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
             type: FIELD_HASH[
@@ -746,7 +783,7 @@ module RBSProtobuf
             location: nil
           )
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("array"),
             type_params: [],
             type: RBS::BuiltinNames::Array.instance_type(factory.union_type(enum_instance_type, values_type)),
@@ -755,7 +792,7 @@ module RBSProtobuf
             location: nil
           )
 
-          enum_decl.members << RBS::AST::Declarations::Alias.new(
+          enum_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("hash"),
             type_params: [RBS::AST::TypeParam.new(name: :KEY, variance: :invariant, upper_bound: nil, location: nil)],
             type: RBS::BuiltinNames::Hash.instance_type(
@@ -790,49 +827,59 @@ module RBSProtobuf
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :[],
-            types: [
-              factory.method_type(
-                type: factory.function(read_type).update(
-                  required_positionals: [
-                    factory.param(factory.literal_type(field_name))
-                  ]
-                )
+            overloads: [
+              RBS::AST::Members::MethodDefinition::Overload.new(
+                method_type: factory.method_type(
+                  type: factory.function(read_type).update(
+                    required_positionals: [
+                      factory.param(factory.literal_type(field_name))
+                    ]
+                  )
+                ),
+                annotations: []
               )
             ],
             annotations: [],
             comment: nil,
             location: nil,
-            overload: true,
+            overloading: true,
+            visibility: nil,
             kind: :instance
           )
 
           class_decl.members << RBS::AST::Members::MethodDefinition.new(
             name: :[]=,
-            types: [read_type, *write_types].map do |write_type|
-              if (type_param, type_var = interface_type?(write_type))
-                factory.method_type(
-                  type: factory.function(type_var).update(
-                    required_positionals: [
-                      factory.param(factory.literal_type(field_name)),
-                      factory.param(type_var)
-                    ]
+            overloads: [read_type, *write_types].map do |write_type|
+              method_type =
+                if (type_param, type_var = interface_type?(write_type))
+                  factory.method_type(
+                    type: factory.function(type_var).update(
+                      required_positionals: [
+                        factory.param(factory.literal_type(field_name)),
+                        factory.param(type_var)
+                      ]
+                    )
+                  ).update(type_params: [type_param])
+                else
+                  factory.method_type(
+                    type: factory.function(write_type).update(
+                      required_positionals: [
+                        factory.param(factory.literal_type(field_name)),
+                        factory.param(write_type)
+                      ]
+                    )
                   )
-                ).update(type_params: [type_param])
-              else
-                factory.method_type(
-                  type: factory.function(write_type).update(
-                    required_positionals: [
-                      factory.param(factory.literal_type(field_name)),
-                      factory.param(write_type)
-                    ]
-                  )
-                )
-              end
+                end
+              RBS::AST::Members::MethodDefinition::Overload.new(
+                method_type: method_type,
+                annotations: []
+              )
             end,
             annotations: [],
             comment: nil,
             location: nil,
-            overload: true,
+            overloading: true,
+            visibility: nil,
             kind: :instance
           )
         end
