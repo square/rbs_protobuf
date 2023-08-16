@@ -14,7 +14,7 @@ module RBSProtobuf
       end
 
       def response
-        @response ||= Google::Protobuf::Compiler::CodeGeneratorResponse.new
+        @response ||= Google::Protobuf::Compiler::CodeGeneratorResponse.new(:supported_features => ::Google::Protobuf::Compiler::CodeGeneratorResponse::Feature::FEATURE_PROTO3_OPTIONAL.to_i)
       end
 
       def generate_rbs!
