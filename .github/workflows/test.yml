@@ -12,12 +12,13 @@ jobs:
     strategy:
       matrix:
         container_tag:
-          - 2.7-bionic
-          - 3.0-focal
-          - 3.1-focal
+          - 3.0-dev-focal
+          - 3.1-dev-jammy
+          - 3.2-dev-jammy
         protoc_version:
-          - 3.18.2
-          - 3.19.4
+          - "3.18.2"
+          - "3.19.4"
+          - "24.0"
     container:
       image: rubylang/ruby:${{ matrix.container_tag }}
     steps:
@@ -31,8 +32,9 @@ jobs:
           mv bin/protoc /usr/local/bin/protoc
           protoc --version
       - uses: actions/checkout@v3
-        with:
-          submodules: true
+      - name: Set up git safe.directory
+        run: |
+          git config --global --add safe.directory /__w/rbs_protobuf/rbs_protobuf
       - name: Run test
         run: |
           ruby -v
