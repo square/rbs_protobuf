@@ -9,13 +9,4 @@ echo ">>> Checking if protoc is available... 👀"
 protoc --version
 
 echo ">>> Setting up gem_rbs_collection... 💎"
-REPODIR=$(cd $(dirname $0)/..; pwd)/tmp/rbs/gem_rbs_collection
-if [ -e $REPODIR ]; then
-  echo "      ${REPODIR} exists"
-else
-  echo "      Cloning git repo into ${REPODIR}..."
-  mkdir -p $REPODIR/..
-  git clone https://github.com/ruby/gem_rbs_collection.git ${REPODIR}
-fi
-
 bundle exec rbs collection install
