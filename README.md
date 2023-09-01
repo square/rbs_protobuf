@@ -82,21 +82,6 @@ Run `protoc` with `--rbs_out` option.
 
 You may need `bundle exec protoc ...` to let bundler set up PATH.
 
-## Type checking
-
-To type check the output, you need to configure your tools to import [gem_rbs_collection](https://github.com/ruby/gem_rbs_collection) with `rbs collection` command.
-
-```yaml
-# Add the dependency in rbs_collection.yaml
-gems:
-  - name: rbs_protobuf
-```
-
-We assume that you don't type check the generated `.pb.rb` code.
-If you want to type check them, you need the definition of `Google::Protobuf`, which can be generated from [`descriptor.proto`](https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/descriptor.proto).
-
-Note: `rbs_protobuf` generates RBS files assuming some types added in [this PR](https://github.com/ruby/gem_rbs_collection/pull/145). Make sure you are using one of the newer versions of `rbs_gem_collection` definitions.
-
 ### Options
 
 * `RBS_PROTOBUF_BACKEND` specifies the Ruby code generator gem. Supported value is `protobuf`. (We will add `google-protobuf` for `google-protobuf` gem.)
@@ -104,6 +89,19 @@ Note: `rbs_protobuf` generates RBS files assuming some types added in [this PR](
 * `RBS_PROTOBUF_NO_NESTED_NAMESPACE` is to make the RBS declarations flat.
 * `RBS_PROTOBUF_EXTENSION` specifies what to do for extensions.
 * `RBS_PROTOBUF_ACCEPT_NIL_ATTR_WRITER` is to allow passing `nil` to required fields.
+* `RBS_PROTOBUF_FILTERS` contains filter Ruby script paths separated by `File::PATH_SEPARATOR`
+
+## Type checking
+
+To type check the output, make sure your type checker configuration loads type definitions of `protobuf` gem.
+
+```ruby
+# Declare in Gemfile and load it with rbs-collection
+gem 'protobuf'
+```
+
+We assume that you don't type check the generated `.pb.rb` code.
+If you want to type check them, you need the definition of `Google::Protobuf`, which can be generated from [`descriptor.proto`](https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/descriptor.proto).
 
 ## Supported features
 
@@ -118,7 +116,7 @@ Note: `rbs_protobuf` generates RBS files assuming some types added in [this PR](
 | Services                | Only generates classes     |
 | Oneof                   | No support in `protobuf` gem |
 
-### Extensions
+## Extensions
 
 Adding extensions may cause problems if the name of new attribute conflicts.
 
@@ -143,6 +141,27 @@ You can control the behavior with `RBS_PROTOBUF_EXTENSION` environment variable.
 * `print`: Prints RBS for extensions instead of writing them to files. You can copy or modify the printed RBS, and put them in some RBS files.
 * Any value else: Generates RBS for extensions.
 * undefined: Ignores extensions but print messages to ask you to specify a value.
+
+## Filters
+
+You can apply filters that modifies generated RBS files.
+
+A filter is a proc object with type of `^(String rbs_name, String rbs_content, untyped proto_file) -> [String, String]`:
+It receives the file name of RBS file, the content of RBS file, the source protobuf object, and returns a pair of RBS file name and content.
+
+```ruby
+# example_fitler.rb: It adds a warning comment at the top of the RBS content.
+->(rbs_name, rbs_content, _proto_file) {
+  [
+    rbs_name,
+    "# Don't modify this file. This is generated with rbs_protobuf.\n\n" + rbs_content
+  ]
+}
+```
+
+You can apply filters by setting `RBS_PROTOBUF_FILTERS` environment variable.
+
+    $ RBS_PROTOBUF_BACKEND=protobuf RBS_PROTOBUF_FILTERS=example_filter.rb protoc ...
 
 ## Development
 
