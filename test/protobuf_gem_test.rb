@@ -40,6 +40,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
     RBS
   end
@@ -69,6 +71,7 @@ class ProtobufGemTest < Minitest::Test
         def name!: () -> ::String?
 
         def initialize: (?name: ::String) -> void
+                      | (record) -> void
 
         def []: (:name) -> ::String
               | (::Symbol) -> untyped
@@ -81,7 +84,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -92,6 +95,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -121,6 +126,7 @@ class ProtobufGemTest < Minitest::Test
         def name!: () -> ::String?
 
         def initialize: (?name: ::String) -> void
+                      | (record) -> void
 
         def []: (:name) -> ::String
               | (::Symbol) -> untyped
@@ -133,7 +139,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -144,6 +150,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -176,6 +184,7 @@ class ProtobufGemTest < Minitest::Test
         def name!: () -> ::Protobuf::field_array[::String]?
 
         def initialize: (?name: ::Array[::String]) -> void
+                      | (record) -> void
 
         def []: (:name) -> ::Protobuf::field_array[::String]
               | (::Symbol) -> untyped
@@ -189,7 +198,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -200,6 +209,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::Array[::String]? }
       end
     RBS
   end
@@ -229,6 +240,7 @@ class ProtobufGemTest < Minitest::Test
         def name!: () -> bool?
 
         def initialize: (?name: bool) -> void
+                      | (record) -> void
 
         def []: (:name) -> bool
               | (::Symbol) -> untyped
@@ -243,7 +255,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -254,6 +266,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: bool? }
       end
     RBS
   end
@@ -299,6 +313,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -310,6 +326,7 @@ class ProtobufGemTest < Minitest::Test
         def m1!: () -> ::Message?
 
         def initialize: (?m1: ::Message::init?) -> void
+                      | (record) -> void
 
         def []: (:m1) -> ::Message?
               | (::Symbol) -> untyped
@@ -323,7 +340,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Foo | _ToProto
+        type init = Foo | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -334,6 +351,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::init? }
       end
     RBS
   end
@@ -379,6 +398,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -390,6 +411,7 @@ class ProtobufGemTest < Minitest::Test
         def m1!: () -> ::Message?
 
         def initialize: (?m1: ::Message::init) -> void
+                      | (record) -> void
 
         def []: (:m1) -> ::Message
               | (::Symbol) -> untyped
@@ -403,7 +425,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Foo | _ToProto
+        type init = Foo | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -414,6 +436,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::init? }
       end
     RBS
   end
@@ -459,6 +483,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -470,6 +496,7 @@ class ProtobufGemTest < Minitest::Test
         def m1!: () -> ::Message::field_array?
 
         def initialize: (?m1: ::Message::array) -> void
+                      | (record) -> void
 
         def []: (:m1) -> ::Message::field_array
               | (::Symbol) -> untyped
@@ -483,7 +510,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Foo | _ToProto
+        type init = Foo | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -494,6 +521,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::array? }
       end
     RBS
   end
@@ -673,6 +702,7 @@ class ProtobufGemTest < Minitest::Test
         def t1!: () -> ::Size?
 
         def initialize: (?t1: ::Size::init) -> void
+                      | (record) -> void
 
         def []: (:t1) -> ::Size
               | (::Symbol) -> untyped
@@ -686,7 +716,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -697,6 +727,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::init? }
       end
     RBS
   end
@@ -765,6 +797,7 @@ class ProtobufGemTest < Minitest::Test
         def t1!: () -> ::Size?
 
         def initialize: (?t1: ::Size::init) -> void
+                      | (record) -> void
 
         def []: (:t1) -> ::Size
               | (::Symbol) -> untyped
@@ -778,7 +811,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -789,6 +822,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::init? }
       end
     RBS
   end
@@ -857,6 +892,7 @@ class ProtobufGemTest < Minitest::Test
         def t1!: () -> ::Size::field_array?
 
         def initialize: (?t1: ::Size::array) -> void
+                      | (record) -> void
 
         def []: (:t1) -> ::Size::field_array
               | (::Symbol) -> untyped
@@ -870,7 +906,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -881,6 +917,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::array? }
       end
     RBS
   end
@@ -922,6 +960,7 @@ class ProtobufGemTest < Minitest::Test
             def replyTo!: () -> ::Foo::Ba_r::Message?
 
             def initialize: (?name: ::String, ?replyTo: ::Foo::Ba_r::Message::init?) -> void
+                          | (record) -> void
 
             def []: (:name) -> ::String
                   | (:replyTo) -> ::Foo::Ba_r::Message?
@@ -937,7 +976,7 @@ class ProtobufGemTest < Minitest::Test
             end
 
             # The type of `#initialize` parameter.
-            type init = Message | _ToProto
+            type init = Message | _ToProto | record
 
             # The type of `repeated` field.
             type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -948,6 +987,8 @@ class ProtobufGemTest < Minitest::Test
             type array = ::Array[Message | _ToProto]
 
             type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+            type record = { name: ::String?, replyTo: ::Foo::Ba_r::Message::init? }
           end
         end
       end
@@ -993,6 +1034,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
     RBS
   end
@@ -1031,6 +1074,7 @@ class ProtobufGemTest < Minitest::Test
         def size!: () -> ::Integer?
 
         def initialize: (?name: ::String, ?size: ::Integer) -> void
+                      | (record) -> void
 
         def []: (:name) -> ::String
               | (:size) -> ::Integer
@@ -1045,7 +1089,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1056,6 +1100,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String?, size: ::Integer? }
       end
     RBS
   end
@@ -1096,6 +1142,7 @@ class ProtobufGemTest < Minitest::Test
         def messages!: () -> ::Message::field_hash[::Integer]?
 
         def initialize: (?numbers: ::Hash[::String, ::Integer], ?messages: ::Message::hash[::Integer]) -> void
+                      | (record) -> void
 
         def []: (:numbers) -> ::Protobuf::field_hash[::String, ::Integer]
               | (:messages) -> ::Message::field_hash[::Integer]
@@ -1112,7 +1159,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1123,6 +1170,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { numbers: ::Hash[::String, ::Integer]?, messages: ::Message::hash[::Integer]? }
       end
     RBS
   end
@@ -1193,6 +1242,7 @@ class ProtobufGemTest < Minitest::Test
         def foos!: () -> ::Foo::field_hash[::String]?
 
         def initialize: (?foos: ::Foo::hash[::String]) -> void
+                      | (record) -> void
 
         def []: (:foos) -> ::Foo::field_hash[::String]
               | (::Symbol) -> untyped
@@ -1206,7 +1256,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1217,6 +1267,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { foos: ::Foo::hash[::String]? }
       end
     RBS
   end
@@ -1255,6 +1307,7 @@ class ProtobufGemTest < Minitest::Test
             def foo!: () -> ::Protobuf::field_hash[::String, ::String]?
 
             def initialize: (?foo: ::Hash[::String, ::String]) -> void
+                          | (record) -> void
 
             def []: (:foo) -> ::Protobuf::field_hash[::String, ::String]
                   | (::Symbol) -> untyped
@@ -1268,7 +1321,7 @@ class ProtobufGemTest < Minitest::Test
             end
 
             # The type of `#initialize` parameter.
-            type init = Message2 | _ToProto
+            type init = Message2 | _ToProto | record
 
             # The type of `repeated` field.
             type field_array = ::Protobuf::Field::FieldArray[Message2, Message2 | _ToProto]
@@ -1279,6 +1332,8 @@ class ProtobufGemTest < Minitest::Test
             type array = ::Array[Message2 | _ToProto]
 
             type hash[KEY] = ::Hash[KEY, Message2 | _ToProto]
+
+            type record = { foo: ::Hash[::String, ::String]? }
           end
 
           def initialize: () -> void
@@ -1299,6 +1354,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[Message | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+          type record = { }
         end
       end
     RBS
@@ -1345,6 +1402,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M2 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M2 | _ToProto]
+
+          type record = { }
         end
 
         attr_accessor m(): ::M1::M2?
@@ -1355,6 +1414,7 @@ class ProtobufGemTest < Minitest::Test
         def m!: () -> ::M1::M2?
 
         def initialize: (?m: ::M1::M2::init?) -> void
+                      | (record) -> void
 
         def []: (:m) -> ::M1::M2?
               | (::Symbol) -> untyped
@@ -1368,7 +1428,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = M1 | _ToProto
+        type init = M1 | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[M1, M1 | _ToProto]
@@ -1379,6 +1439,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[M1 | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+        type record = { m: ::M1::M2::init? }
       end
     RBS
   end
@@ -1447,6 +1509,7 @@ class ProtobufGemTest < Minitest::Test
         def type!: () -> ::Account::Type?
 
         def initialize: (?type: ::Account::Type::init) -> void
+                      | (record) -> void
 
         def []: (:type) -> ::Account::Type
               | (::Symbol) -> untyped
@@ -1460,7 +1523,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Account | _ToProto
+        type init = Account | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Account, Account | _ToProto]
@@ -1471,6 +1534,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Account | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Account | _ToProto]
+
+        type record = { type: ::Account::Type::init? }
       end
     RBS
   end
@@ -1523,6 +1588,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[SearchRequest | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, SearchRequest | _ToProto]
+
+        type record = { }
       end
 
       class SearchResponse < ::Protobuf::Message
@@ -1544,6 +1611,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[SearchResponse | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, SearchResponse | _ToProto]
+
+        type record = { }
       end
 
       class Message < ::Protobuf::Message
@@ -1565,6 +1634,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class SearchService < ::Protobuf::Rpc::Service
@@ -1621,6 +1692,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M1 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+          type record = { }
         end
       end
 
@@ -1703,6 +1776,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M1 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+          type record = { }
         end
       end
     RBS
@@ -1758,6 +1833,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M1 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+          type record = { }
         end
       end
     RBS
@@ -1815,6 +1892,7 @@ class ProtobufGemTest < Minitest::Test
         def name!: () -> ::String?
 
         def initialize: (?name: ::String) -> void
+                      | (record) -> void
 
         def []: (:name) -> ::String
               | (::Symbol) -> untyped
@@ -1827,7 +1905,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1838,6 +1916,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -1870,6 +1950,7 @@ class ProtobufGemTest < Minitest::Test
         def name!: () -> ::String?
 
         def initialize: (?name: ::String?) -> void
+                      | (record) -> void
 
         def []: (:name) -> ::String
               | (::Symbol) -> untyped
@@ -1883,7 +1964,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1894,6 +1975,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -1927,6 +2010,7 @@ class ProtobufGemTest < Minitest::Test
         def name!: () -> ::Protobuf::field_array[::String]?
 
         def initialize: (?name: ::Array[::String]?) -> void
+                      | (record) -> void
 
         def []: (:name) -> ::Protobuf::field_array[::String]
               | (::Symbol) -> untyped
@@ -1941,7 +2025,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -1952,6 +2036,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::Array[::String]? }
       end
     RBS
   end
@@ -1997,6 +2083,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -2009,6 +2097,7 @@ class ProtobufGemTest < Minitest::Test
         def m1!: () -> ::Message?
 
         def initialize: (?m1: ::Message::init?) -> void
+                      | (record) -> void
 
         def []: (:m1) -> ::Message
               | (::Symbol) -> untyped
@@ -2023,7 +2112,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Foo | _ToProto
+        type init = Foo | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -2034,6 +2123,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::init? }
       end
     RBS
   end
@@ -2079,6 +2170,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -2091,6 +2184,7 @@ class ProtobufGemTest < Minitest::Test
         def m1!: () -> ::Message::field_array?
 
         def initialize: (?m1: ::Message::array?) -> void
+                      | (record) -> void
 
         def []: (:m1) -> ::Message::field_array
               | (::Symbol) -> untyped
@@ -2105,7 +2199,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Foo | _ToProto
+        type init = Foo | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -2116,6 +2210,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::array? }
       end
     RBS
   end
@@ -2185,6 +2281,7 @@ class ProtobufGemTest < Minitest::Test
         def t1!: () -> ::Size?
 
         def initialize: (?t1: ::Size::init?) -> void
+                      | (record) -> void
 
         def []: (:t1) -> ::Size
               | (::Symbol) -> untyped
@@ -2199,7 +2296,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -2210,6 +2307,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::init? }
       end
     RBS
   end
@@ -2279,6 +2378,7 @@ class ProtobufGemTest < Minitest::Test
         def t1!: () -> ::Size::field_array?
 
         def initialize: (?t1: ::Size::array?) -> void
+                      | (record) -> void
 
         def []: (:t1) -> ::Size::field_array
               | (::Symbol) -> untyped
@@ -2293,7 +2393,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Message | _ToProto
+        type init = Message | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Message, Message | _ToProto]
@@ -2304,6 +2404,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::array? }
       end
     RBS
   end
@@ -2344,6 +2446,7 @@ class ProtobufGemTest < Minitest::Test
         def baz!: () -> ::String?
 
         def initialize: (?bar: ::String?, ?baz: ::String?) -> void
+                      | (record) -> void
 
         def []: (:bar) -> ::String
               | (:baz) -> ::String
@@ -2360,7 +2463,7 @@ class ProtobufGemTest < Minitest::Test
         end
 
         # The type of `#initialize` parameter.
-        type init = Foo | _ToProto
+        type init = Foo | _ToProto | record
 
         # The type of `repeated` field.
         type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -2371,6 +2474,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { bar: ::String?, baz: ::String? }
       end
     RBS
   end
@@ -2440,6 +2545,7 @@ class ProtobufGemTest < Minitest::Test
           def baz!: () -> ::String?
 
           def initialize: (?bar: ::String?, ?baz: ::String?) -> void
+                        | (record) -> void
 
           def []: (:bar) -> ::String
                 | (:baz) -> ::String
@@ -2456,7 +2562,7 @@ class ProtobufGemTest < Minitest::Test
           end
 
           # The type of `#initialize` parameter.
-          type init = Foo | _ToProto
+          type init = Foo | _ToProto | record
 
           # The type of `repeated` field.
           type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
@@ -2467,6 +2573,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[Foo | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+          type record = { bar: ::String?, baz: ::String? }
         end
       end
     RBS

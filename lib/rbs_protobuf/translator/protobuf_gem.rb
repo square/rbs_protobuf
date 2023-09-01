@@ -200,7 +200,17 @@ module RBSProtobuf
                 ),
                 annotations: []
               ),
-            ],
+              unless field_types.empty?
+                RBS::AST::Members::MethodDefinition::Overload.new(
+                  method_type: factory.method_type(
+                    type: factory.function().update(
+                      required_positionals: [factory.param(factory.alias_type("record"))]
+                    )
+                  ),
+                  annotations: []
+                )
+              end,
+            ].compact,
             annotations: [],
             comment: nil,
             location: nil,
@@ -352,7 +362,11 @@ module RBSProtobuf
           class_decl.members << RBS::AST::Declarations::TypeAlias.new(
             name: TypeName("init"),
             type_params: [],
-            type: factory.union_type(class_instance_type, TO_PROTO[]),
+            type: factory.union_type(
+              class_instance_type,
+              TO_PROTO[],
+              field_types.empty? ? nil : factory.alias_type("record")
+            ),
             annotations: [],
             comment: RBS::AST::Comment.new(string: "The type of `#initialize` parameter.", location: nil),
             location: nil
@@ -402,6 +416,18 @@ module RBSProtobuf
             annotations: [],
             comment: nil,
             location: nil
+          )
+
+          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
+            name: TypeName("record"),
+            type_params: [],
+            type: RBS::Types::Record.new(
+              fields: field_types.transform_values {|_, _, type| optional_type(type) },
+              location: nil
+              ),
+            annotations: [],
+            location: nil,
+            comment: nil
           )
         end
       end

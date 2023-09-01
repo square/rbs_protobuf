@@ -46,6 +46,7 @@ module RBSProtobuf
     end
 
     def union_type(type, *types)
+      types = types.compact
       if types.empty?
         type
       else

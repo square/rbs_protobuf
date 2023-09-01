@@ -10,7 +10,7 @@ module RBSProtobuf
 
     def singleton_type: (String | RBS::TypeName name) -> RBS::Types::ClassSingleton
 
-    def union_type: (RBS::Types::t `type`, *RBS::Types::t types) -> RBS::Types::t
+    def union_type: (RBS::Types::t `type`, *RBS::Types::t? types) -> RBS::Types::t
 
     def nil_type: (?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Bases::Nil
 

@@ -128,6 +128,15 @@ module RBSProtobuf
           )
         )
       end
+
+      def optional_type(type)
+        case type
+        when RBS::Types::Optional
+          type
+        else
+          RBS::Types::Optional.new(type: type, location: nil)
+        end
+      end
     end
   end
 end
