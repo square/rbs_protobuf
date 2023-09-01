@@ -922,11 +922,81 @@ module RBSProtobuf
       def service_to_decl(service, prefix:, source_code_info:, path:)
         service_name = ActiveSupport::Inflector.camelize(service.name)
 
+        members = [] #: Array[RBS::AST::Declarations::Class::member]
+
+        service.method.each do |method|
+          method_name = ActiveSupport::Inflector.underscore(method.name).to_sym #: Symbol
+
+          interface_name = "_#{ActiveSupport::Inflector.camelize(method.name)}Method"
+
+          members << RBS::AST::Declarations::Interface.new(
+            name: factory.type_name(interface_name),
+            type_params: [],
+            members: [
+              RBS::AST::Members::MethodDefinition.new(
+                name: :request,
+                kind: :instance,
+                overloads: [
+                  RBS::AST::Members::MethodDefinition::Overload.new(
+                    method_type: factory.method_type(type: factory.function(message_type(method.input_type))),
+                    annotations: []
+                  )
+                ],
+                annotations: [],
+                location: nil,
+                comment: nil,
+                overloading: false,
+                visibility: nil
+              ),
+              RBS::AST::Members::MethodDefinition.new(
+                name: :respond_with,
+                kind: :instance,
+                overloads: [
+                  RBS::AST::Members::MethodDefinition::Overload.new(
+                    method_type: factory.method_type(
+                      type: factory.function().update(
+                        required_positionals: [
+                          factory.param(message_init_type(message_type(method.output_type)))
+                        ]
+                      )
+                    ),
+                    annotations: []
+                  )
+                ],
+                annotations: [],
+                location: nil,
+                comment: nil,
+                overloading: false,
+                visibility: nil
+              )
+            ],
+            annotations: [],
+            location: nil,
+            comment: nil
+          )
+
+          members << RBS::AST::Members::MethodDefinition.new(
+            name: method_name,
+            kind: :instance,
+            overloads: [
+              RBS::AST::Members::MethodDefinition::Overload.new(
+                method_type: factory.method_type(type: factory.function()),
+                annotations: []
+              )
+            ],
+            annotations: [],
+            location: nil,
+            comment: nil,
+            overloading: false,
+            visibility: nil
+          )
+        end
+
         RBS::AST::Declarations::Class.new(
           name: RBS::TypeName.new(name: service_name.to_sym, namespace: prefix),
           super_class: service_base_class,
           type_params: factory.module_type_params(),
-          members: [],
+          members: members,
           comment: comment_for_path(source_code_info, path, options: nil),
           location: nil,
           annotations: []

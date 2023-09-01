@@ -1639,6 +1639,21 @@ class ProtobufGemTest < Minitest::Test
       end
 
       class SearchService < ::Protobuf::Rpc::Service
+        interface _SearchMethod
+          def request: () -> ::SearchRequest
+
+          def respond_with: (::SearchResponse::init) -> void
+        end
+
+        def search: () -> void
+
+        interface _SendMessageMethod
+          def request: () -> ::Message
+
+          def respond_with: (::Message::init) -> void
+        end
+
+        def send_message: () -> void
       end
     RBS
   end
