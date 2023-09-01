@@ -5,7 +5,13 @@ module RBSProtobuf
 
       attr_reader input: untyped
 
-      def initialize: (untyped input) -> void
+      type filter = ^(String rbs_name, String rbs_content, untyped proto_file) -> [String, String]
+
+      attr_reader filters: Array[filter]
+
+      def initialize: (untyped input, ?Array[filter] filters) -> void
+
+      def apply_filter: (String rbs_name, String rbs_content, untyped proto_file) -> [String, String]
 
       @factory: RBSFactory
 

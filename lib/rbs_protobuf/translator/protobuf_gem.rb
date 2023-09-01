@@ -19,8 +19,8 @@ module RBSProtobuf
 
       attr_reader :accept_nil_writer
 
-      def initialize(input, upcase_enum:, nested_namespace:, extension:, accept_nil_writer:, stderr: STDERR)
-        super(input)
+      def initialize(input, filters=[], upcase_enum:, nested_namespace:, extension:, accept_nil_writer:, stderr: STDERR)
+        super(input, filters)
         @upcase_enum = upcase_enum
         @nested_namespace = nested_namespace
         @extension = extension

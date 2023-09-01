@@ -2374,4 +2374,101 @@ RBS
       end
     RBS
   end
+
+  def test_filter
+    input = read_proto(<<~PROTO)
+      syntax = "proto3";
+
+      message Foo {
+        string bar = 1;
+        optional string baz = 2;
+      }
+    PROTO
+
+    filters = [
+      -> (name, content, file) {
+        _, dirs, decls = RBS::Parser.parse_signature(content)
+
+        content = StringIO.new.tap do |io|
+          RBS::Writer.new(out: io).write(
+            [
+              *dirs,
+              RBS::AST::Declarations::Module.new(
+                name: TypeName("OuterNamespace"),
+                type_params: [],
+                members: decls,
+                location: nil,
+                annotations: [],
+                comment: nil,
+                self_types: []
+              )
+            ]
+          )
+        end.string
+
+        ["hello.rbs", content]
+      }
+    ]
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      filters,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    translator.generate_rbs!
+
+    output = translator.response.file.find {|file| file.name == "hello.rbs" }
+
+    assert_equal <<~RBS, output.content
+      module OuterNamespace
+        class Foo < ::Protobuf::Message
+          attr_accessor bar(): ::String
+
+          def bar=: (::String?) -> ::String?
+                  | ...
+
+          def bar!: () -> ::String?
+
+          attr_accessor baz(): ::String
+
+          def baz=: (::String?) -> ::String?
+                  | ...
+
+          def baz!: () -> ::String?
+
+          def initialize: (?bar: ::String?, ?baz: ::String?) -> void
+
+          def []: (:bar) -> ::String
+                | (:baz) -> ::String
+                | (::Symbol) -> untyped
+
+          def []=: (:bar, ::String) -> ::String
+                 | (:bar, ::String?) -> ::String?
+                 | (:baz, ::String) -> ::String
+                 | (:baz, ::String?) -> ::String?
+                 | (::Symbol, untyped) -> untyped
+
+          interface _ToProto
+            def to_proto: () -> Foo
+          end
+
+          # The type of `#initialize` parameter.
+          type init = Foo | _ToProto
+
+          # The type of `repeated` field.
+          type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
+
+          # The type of `map` field.
+          type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | _ToProto]
+
+          type array = ::Array[Foo | _ToProto]
+
+          type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+        end
+      end
+    RBS
+  end
 end

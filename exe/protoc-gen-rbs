@@ -13,6 +13,20 @@ unless backend
   exit 1
 end
 
+filters = []
+
+if string = ENV["RBS_PROTOBUF_FILTERS"]
+  string.split(File::PATH_SEPARATOR).each do |file|
+    filter = Module.new.instance_eval(File.read(file), file)
+
+    if filter.respond_to?(:call)
+      filters << filter
+    else
+      raise "A filter `#{file}` returns `#{filter.inspect}`, but a proc object of type `^(String rbs_name, String rbs_content, untyped proto_file) -> [String, String]` is expected"
+    end
+  end
+end
+
 input = Google::Protobuf::Compiler::CodeGeneratorRequest.decode(STDIN.read)
 
 translator = case backend
@@ -34,6 +48,7 @@ translator = case backend
 
                RBSProtobuf::Translator::ProtobufGem.new(
                  input,
+                 filters,
                  upcase_enum: upcase_enum,
                  nested_namespace: !no_nested_namespace,
                  extension: extension,

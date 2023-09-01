@@ -28,6 +28,7 @@ module RBSProtobuf
 
       def initialize: (
         untyped input,
+        ?Array[Base::filter] filters,
         upcase_enum: bool,
         nested_namespace: bool,
         extension: bool | :print | nil,
