@@ -40,6 +40,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
     RBS
   end
@@ -92,6 +94,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -144,6 +148,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -200,6 +206,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::Array[::String]? }
       end
     RBS
   end
@@ -254,6 +262,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: bool? }
       end
     RBS
   end
@@ -299,6 +309,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -334,6 +346,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::init? }
       end
     RBS
   end
@@ -379,6 +393,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -414,6 +430,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::init? }
       end
     RBS
   end
@@ -459,6 +477,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -494,6 +514,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::array? }
       end
     RBS
   end
@@ -697,6 +719,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::init? }
       end
     RBS
   end
@@ -789,6 +813,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::init? }
       end
     RBS
   end
@@ -881,6 +907,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::array? }
       end
     RBS
   end
@@ -948,6 +976,8 @@ class ProtobufGemTest < Minitest::Test
             type array = ::Array[Message | _ToProto]
 
             type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+            type record = { name: ::String?, replyTo: ::Foo::Ba_r::Message::init? }
           end
         end
       end
@@ -993,6 +1023,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
     RBS
   end
@@ -1056,6 +1088,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String?, size: ::Integer? }
       end
     RBS
   end
@@ -1123,6 +1157,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { numbers: ::Hash[::String, ::Integer]?, messages: ::Message::hash[::Integer]? }
       end
     RBS
   end
@@ -1217,6 +1253,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { foos: ::Foo::hash[::String]? }
       end
     RBS
   end
@@ -1279,6 +1317,8 @@ class ProtobufGemTest < Minitest::Test
             type array = ::Array[Message2 | _ToProto]
 
             type hash[KEY] = ::Hash[KEY, Message2 | _ToProto]
+
+            type record = { foo: ::Hash[::String, ::String]? }
           end
 
           def initialize: () -> void
@@ -1299,6 +1339,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[Message | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+          type record = { }
         end
       end
     RBS
@@ -1345,6 +1387,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M2 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M2 | _ToProto]
+
+          type record = { }
         end
 
         attr_accessor m(): ::M1::M2?
@@ -1379,6 +1423,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[M1 | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+        type record = { m: ::M1::M2::init? }
       end
     RBS
   end
@@ -1471,6 +1517,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Account | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Account | _ToProto]
+
+        type record = { type: ::Account::Type::init? }
       end
     RBS
   end
@@ -1523,6 +1571,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[SearchRequest | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, SearchRequest | _ToProto]
+
+        type record = { }
       end
 
       class SearchResponse < ::Protobuf::Message
@@ -1544,6 +1594,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[SearchResponse | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, SearchResponse | _ToProto]
+
+        type record = { }
       end
 
       class Message < ::Protobuf::Message
@@ -1565,6 +1617,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class SearchService < ::Protobuf::Rpc::Service
@@ -1621,6 +1675,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M1 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+          type record = { }
         end
       end
 
@@ -1703,6 +1759,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M1 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+          type record = { }
         end
       end
     RBS
@@ -1758,6 +1816,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[M1 | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, M1 | _ToProto]
+
+          type record = { }
         end
       end
     RBS
@@ -1838,6 +1898,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -1894,6 +1956,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::String? }
       end
     RBS
   end
@@ -1952,6 +2016,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { name: ::Array[::String]? }
       end
     RBS
   end
@@ -1997,6 +2063,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -2034,6 +2102,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::init? }
       end
     RBS
   end
@@ -2079,6 +2149,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { }
       end
 
       class Foo < ::Protobuf::Message
@@ -2116,6 +2188,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { :m1 => ::Message::array? }
       end
     RBS
   end
@@ -2210,6 +2284,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::init? }
       end
     RBS
   end
@@ -2304,6 +2380,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Message | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Message | _ToProto]
+
+        type record = { :t1 => ::Size::array? }
       end
     RBS
   end
@@ -2371,6 +2449,8 @@ class ProtobufGemTest < Minitest::Test
         type array = ::Array[Foo | _ToProto]
 
         type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { bar: ::String?, baz: ::String? }
       end
     RBS
   end
@@ -2467,6 +2547,8 @@ class ProtobufGemTest < Minitest::Test
           type array = ::Array[Foo | _ToProto]
 
           type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+          type record = { bar: ::String?, baz: ::String? }
         end
       end
     RBS

@@ -403,6 +403,18 @@ module RBSProtobuf
             comment: nil,
             location: nil
           )
+
+          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
+            name: TypeName("record"),
+            type_params: [],
+            type: RBS::Types::Record.new(
+              fields: field_types.transform_values {|_, _, type| optional_type(type) },
+              location: nil
+              ),
+            annotations: [],
+            location: nil,
+            comment: nil
+          )
         end
       end
 

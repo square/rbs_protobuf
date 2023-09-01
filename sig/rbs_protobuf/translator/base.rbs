@@ -36,6 +36,8 @@ module RBSProtobuf
       def base_type: (untyped `type`) -> RBS::Types::t
 
       def message_type: (String) -> RBS::Types::ClassInstance
+
+      def optional_type: (RBS::Types::t) -> RBS::Types::Optional
     end
   end
 end
