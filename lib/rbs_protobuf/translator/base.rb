@@ -3,10 +3,17 @@ module RBSProtobuf
     class Base
       FieldDescriptorProto = Google::Protobuf::FieldDescriptorProto
 
-      attr_reader :input
+      attr_reader :input, :filters
 
-      def initialize(input)
+      def initialize(input, filters = [])
         @input = input
+        @filters = filters
+      end
+
+      def apply_filter(rbs_name, rbs_content, proto_file)
+        filters.inject([rbs_name, rbs_content]) do |(rbs_name, rbs_content), filter| #$ [String, String]
+          filter[rbs_name, rbs_content, proto_file]
+        end
       end
 
       def factory
@@ -19,9 +26,10 @@ module RBSProtobuf
 
       def generate_rbs!
         input.proto_file.each do |file|
+          name, content = apply_filter(rbs_name(file.name), rbs_content(file), file)
           response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
-            name: rbs_name(file.name),
-            content: rbs_content(file)
+            name: name,
+            content: content
           )
         end
       end
