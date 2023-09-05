@@ -10,9 +10,9 @@ module RBSProtobuf
         @filters = filters
       end
 
-      def apply_filter(rbs_name, rbs_content, proto_file)
+      def apply_filter(rbs_name, rbs_content, proto_files)
         filters.inject([rbs_name, rbs_content]) do |(rbs_name, rbs_content), filter| #$ [String, String]
-          filter[rbs_name, rbs_content, proto_file]
+          filter[rbs_name, rbs_content, proto_files] or return
         end
       end
 
@@ -26,11 +26,12 @@ module RBSProtobuf
 
       def generate_rbs!
         input.proto_file.each do |file|
-          name, content = apply_filter(rbs_name(file.name), rbs_content(file), file)
-          response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
-            name: name,
-            content: content
-          )
+          if (name, content = apply_filter(rbs_name(file.name), rbs_content(file), [file]))
+            response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
+              name: name,
+              content: content
+            )
+          end
         end
       end
 

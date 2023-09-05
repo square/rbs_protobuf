@@ -2594,4 +2594,31 @@ class ProtobufGemTest < Minitest::Test
       end
     RBS
   end
+
+  def test_filter_return_nil
+    input = read_proto(<<~PROTO)
+      syntax = "proto3";
+
+      message Foo {
+        string bar = 1;
+        optional string baz = 2;
+      }
+    PROTO
+
+    filters = [
+      -> (name, content, file) { nil }
+    ]
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      filters,
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    translator.generate_rbs!
+
+    assert_nil translator.response.file.find {|file| file.name == "hello.rbs" }
+  end
 end
