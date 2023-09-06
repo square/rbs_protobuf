@@ -90,6 +90,7 @@ You may need `bundle exec protoc ...` to let bundler set up PATH.
 * `RBS_PROTOBUF_EXTENSION` specifies what to do for extensions.
 * `RBS_PROTOBUF_ACCEPT_NIL_ATTR_WRITER` is to allow passing `nil` to required fields.
 * `RBS_PROTOBUF_FILTERS` contains filter Ruby script paths separated by `File::PATH_SEPARATOR`
+* `RBS_PROTOBUF_CONCAT_LEVEL` contains the number of dir levels that groups generated RBS files to concat
 
 ## Type checking
 

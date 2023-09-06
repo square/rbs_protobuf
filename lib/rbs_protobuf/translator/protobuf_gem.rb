@@ -49,7 +49,7 @@ module RBSProtobuf
       end
 
       def rbs_content(file)
-        decls = []
+        decls = [] #: Array[RBS::AST::Declarations::t]
 
         source_code_info = file.source_code_info
 
@@ -127,9 +127,7 @@ module RBSProtobuf
           end
         end
 
-        StringIO.new.tap do |io|
-          RBS::Writer.new(out: io).write(decls)
-        end.string
+        decls
       end
 
       def message_to_decl(message, prefix:, message_path:, source_code_info:, path:)

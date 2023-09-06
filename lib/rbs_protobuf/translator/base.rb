@@ -5,14 +5,16 @@ module RBSProtobuf
 
       attr_reader :input, :filters
 
+      attr_accessor :rbs_concat_level
+
       def initialize(input, filters = [])
         @input = input
         @filters = filters
       end
 
-      def apply_filter(rbs_name, rbs_content, proto_file)
+      def apply_filter(rbs_name, rbs_content, proto_files)
         filters.inject([rbs_name, rbs_content]) do |(rbs_name, rbs_content), filter| #$ [String, String]
-          filter[rbs_name, rbs_content, proto_file]
+          filter[rbs_name, rbs_content, proto_files] or return
         end
       end
 
@@ -25,13 +27,59 @@ module RBSProtobuf
       end
 
       def generate_rbs!
+        rbs_decls = {} #: Hash[Pathname, [Array[RBS::AST::Declarations::t], untyped]]
+
         input.proto_file.each do |file|
-          name, content = apply_filter(rbs_name(file.name), rbs_content(file), file)
-          response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
-            name: name,
-            content: content
-          )
+          path = Pathname(file.name).sub_ext(".rbs")
+          decls = rbs_content(file)
+          rbs_decls[path] = [decls, file]
         end
+
+        rbs_contents = {} #: Hash[Pathname, [String, Array[untyped]]]
+
+        if (level = rbs_concat_level)&.nonzero?
+          groups = rbs_decls.each_key.group_by do |path|
+            path.sub_ext("").to_s.split(File::SEPARATOR).take(level).join(File::SEPARATOR)
+          end
+
+          groups.each do |prefix, paths|
+            path = Pathname(prefix).sub_ext(".rbs")
+
+            decls = [] #: Array[RBS::AST::Declarations::t]
+            files = [] #: Array[untyped]
+
+            paths.each do |path|
+              ds, file = rbs_decls.fetch(path)
+              decls.concat(ds)
+              files.push(file)
+            end
+
+            rbs_contents[path] = [
+              format_rbs(decls: decls),
+              files
+            ]
+          end
+        else
+          rbs_decls.each do |path, (decls, file)|
+            content = format_rbs(decls: decls)
+            rbs_contents[path] = [content, [file]]
+          end
+        end
+
+        rbs_contents.each do |path, (content, files)|
+          if (name, content = apply_filter(path.to_s, content, files))
+            response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
+              name: name,
+              content: content
+            )
+          end
+        end
+      end
+
+      def format_rbs(dirs: [], decls: [])
+        StringIO.new.tap do |io|
+          RBS::Writer.new(out: io).write(dirs + decls)
+        end.string
       end
 
       def rbs_name(proto_name)
