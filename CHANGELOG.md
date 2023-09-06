@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.2.0 (2023-09-06)
+
+* Add `RBS_PROTOBUF_CONCAT_LEVEL` option ([#38](https://github.com/square/rbs_protobuf/pull/38))
+* Generate rpc method types and interfaces ([#37](https://github.com/square/rbs_protobuf/pull/37))
+* Generate `record` type of each proto message ([#36](https://github.com/square/rbs_protobuf/pull/36))
+* Add filter ([#34](https://github.com/square/rbs_protobuf/pull/34))
+
 ## 1.1.0 (2023-08-16)
 
 * Support optional fields in proto3 ([\#32](https://github.com/square/rbs_protobuf/pull/32))
