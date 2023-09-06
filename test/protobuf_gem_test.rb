@@ -18,7 +18,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -62,7 +62,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -117,7 +117,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -172,7 +172,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -231,7 +231,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -291,7 +291,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -376,7 +376,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -461,7 +461,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -544,7 +544,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Type < ::Protobuf::Enum
@@ -598,7 +598,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       # Protobuf options:
@@ -659,7 +659,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Size < ::Protobuf::Enum
@@ -754,7 +754,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Size < ::Protobuf::Enum
@@ -849,7 +849,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Size < ::Protobuf::Enum
@@ -942,7 +942,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       module Foo
@@ -1012,7 +1012,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Foo::Ba_r::Message < ::Protobuf::Message
@@ -1061,7 +1061,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -1123,7 +1123,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -1199,7 +1199,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Foo < ::Protobuf::Enum
@@ -1293,7 +1293,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       module Test1
@@ -1379,7 +1379,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class M1 < ::Protobuf::Message
@@ -1466,7 +1466,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~'RBS', content
       class Account < ::Protobuf::Message
@@ -1566,7 +1566,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class SearchRequest < ::Protobuf::Message
@@ -1684,7 +1684,7 @@ class ProtobufGemTest < Minitest::Test
       extension: true,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       module Test
@@ -1768,7 +1768,7 @@ class ProtobufGemTest < Minitest::Test
       stderr: stderr,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       module Test
@@ -1825,7 +1825,7 @@ class ProtobufGemTest < Minitest::Test
       stderr: stderr,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       module Test
@@ -1890,7 +1890,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: false
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       # Protobuf options:
@@ -1953,7 +1953,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: true
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -2012,7 +2012,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: true
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -2076,7 +2076,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: true
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -2163,7 +2163,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: true
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Message < ::Protobuf::Message
@@ -2252,7 +2252,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: true
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Size < ::Protobuf::Enum
@@ -2349,7 +2349,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: true
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Size < ::Protobuf::Enum
@@ -2442,7 +2442,7 @@ class ProtobufGemTest < Minitest::Test
       extension: false,
       accept_nil_writer: true
     )
-    content = translator.rbs_content(input.proto_file[0])
+    content = translator.format_rbs(decls: translator.rbs_content(input.proto_file[0]))
 
     assert_equal <<~RBS, content
       class Foo < ::Protobuf::Message

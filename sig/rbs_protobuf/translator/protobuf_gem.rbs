@@ -64,7 +64,7 @@ module RBSProtobuf
       # The entry point.
       # Generate RBS declarations from the `file` and returns the string representation of the declarations.
       #
-      def rbs_content: (untyped file) -> String
+      def rbs_content: (untyped file) -> Array[RBS::AST::Declarations::t]
 
       # Returns the class declaration for given message.
       #

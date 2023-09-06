@@ -27,7 +27,9 @@ module RBSProtobuf
 
       def rbs_suffix: () -> ::String
 
-      def rbs_content: (String file) -> String
+      def format_rbs: (?dirs: Array[RBS::AST::Directives::t], ?decls: Array[RBS::AST::Declarations::t]) -> String
+
+      def rbs_content: (String file) -> Array[RBS::AST::Declarations::t]
 
       def comment_for_path: (untyped source_code_info, Array[Integer] path, options: untyped) -> RBS::AST::Comment?
 

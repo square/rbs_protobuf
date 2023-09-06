@@ -26,13 +26,21 @@ module RBSProtobuf
 
       def generate_rbs!
         input.proto_file.each do |file|
-          if (name, content = apply_filter(rbs_name(file.name), rbs_content(file), [file]))
+          name = rbs_name(file.name)
+          decls = rbs_content(file)
+          if (name, content = apply_filter(name, format_rbs(decls: decls), [file]))
             response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
               name: name,
               content: content
             )
           end
         end
+      end
+
+      def format_rbs(dirs: [], decls: [])
+        StringIO.new.tap do |io|
+          RBS::Writer.new(out: io).write(dirs + decls)
+        end.string
       end
 
       def rbs_name(proto_name)
