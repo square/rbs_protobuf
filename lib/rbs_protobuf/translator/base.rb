@@ -25,10 +25,23 @@ module RBSProtobuf
       end
 
       def generate_rbs!
+        rbs_decls = {} #: Hash[Pathname, [Array[RBS::AST::Declarations::t], untyped]]
+
         input.proto_file.each do |file|
-          name = rbs_name(file.name)
+          path = Pathname(file.name).sub_ext(".rbs")
           decls = rbs_content(file)
-          if (name, content = apply_filter(name, format_rbs(decls: decls), [file]))
+          rbs_decls[path] = [decls, file]
+        end
+
+        rbs_contents = {} #: Hash[Pathname, [String, Array[untyped]]]
+
+        rbs_decls.each do |path, (decls, file)|
+          content = format_rbs(decls: decls)
+          rbs_contents[path] = [content, [file]]
+        end
+
+        rbs_contents.each do |path, (content, files)|
+          if (name, content = apply_filter(path.to_s, content, files))
             response.file << Google::Protobuf::Compiler::CodeGeneratorResponse::File.new(
               name: name,
               content: content
