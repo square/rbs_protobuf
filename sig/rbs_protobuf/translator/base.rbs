@@ -9,6 +9,8 @@ module RBSProtobuf
 
       attr_reader filters: Array[filter]
 
+      attr_accessor rbs_concat_level: Integer?
+
       def initialize: (untyped input, ?Array[filter] filters) -> void
 
       def apply_filter: (String rbs_name, String rbs_content, Array[untyped] proto_file) -> [String, String]?

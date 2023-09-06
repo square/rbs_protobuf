@@ -8,7 +8,7 @@ require "open3"
 
 module TestHelper
   def tmpdir_path
-    File.join(__dir__, "../tmp")
+    Pathname(File.join(__dir__, "../tmp")).cleanpath.to_s
   end
 
   def setup
@@ -17,17 +17,27 @@ module TestHelper
   end
 
   def read_proto(proto)
+    read_protos("a.proto" => proto)
+  end
+
+  def read_protos(protos)
     dumper_path = File.join(__dir__, "../bin/protoc-gen-dumper")
 
     Dir.mktmpdir(nil, tmpdir_path) do |dir|
-      File.write(File.join(dir, "a.proto"), proto)
+      protos.each do |name, content|
+        path = Pathname(dir) + name
+        path.parent.mkpath
+        path.write(content)
+      end
 
       Dir.chdir(dir) do
-        Open3.capture2("protoc",
-                       "--plugin=#{dumper_path}",
-                       "--dumper_out=/",      # --dumper_out is ignored
-                       "--proto_path=#{dir}",
-                       "a.proto")
+        Open3.capture2(
+          "protoc",
+          "--plugin=#{dumper_path}",
+          "--dumper_out=/",      # --dumper_out is ignored
+          "--proto_path=#{dir}",
+          *protos.keys
+        )
       end
 
       content = File.read(File.join(dir, "a.pb.out"))

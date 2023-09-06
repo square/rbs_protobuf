@@ -2621,4 +2621,84 @@ class ProtobufGemTest < Minitest::Test
 
     assert_nil translator.response.file.find {|file| file.name == "hello.rbs" }
   end
+
+  def test_concat_level
+    input = read_protos(
+      "foo.proto" => <<~PROTO,
+        syntax = "proto3";
+
+        message Foo {
+        }
+      PROTO
+      "foo/bar.proto" => <<~PROTO,
+        syntax = "proto3";
+
+        message Bar {
+        }
+      PROTO
+    )
+
+    translator = RBSProtobuf::Translator::ProtobufGem.new(
+      input,
+      [],
+      upcase_enum: true,
+      nested_namespace: true,
+      extension: false,
+      accept_nil_writer: true
+    )
+    translator.rbs_concat_level = 1
+    translator.generate_rbs!
+
+    assert translator.response.file.find {|file| file.name == "foo.rbs" }
+    refute translator.response.file.find {|file| file.name == "foo/bar.rbs" }
+
+    file = translator.response.file.find {|file| file.name == "foo.rbs" }
+    assert_equal <<~RBS, file.content
+      class Foo < ::Protobuf::Message
+        def initialize: () -> void
+
+        interface _ToProto
+          def to_proto: () -> Foo
+        end
+
+        # The type of `#initialize` parameter.
+        type init = Foo | _ToProto
+
+        # The type of `repeated` field.
+        type field_array = ::Protobuf::Field::FieldArray[Foo, Foo | _ToProto]
+
+        # The type of `map` field.
+        type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Foo, Foo | _ToProto]
+
+        type array = ::Array[Foo | _ToProto]
+
+        type hash[KEY] = ::Hash[KEY, Foo | _ToProto]
+
+        type record = { }
+      end
+
+      class Bar < ::Protobuf::Message
+        def initialize: () -> void
+
+        interface _ToProto
+          def to_proto: () -> Bar
+        end
+
+        # The type of `#initialize` parameter.
+        type init = Bar | _ToProto
+
+        # The type of `repeated` field.
+        type field_array = ::Protobuf::Field::FieldArray[Bar, Bar | _ToProto]
+
+        # The type of `map` field.
+        type field_hash[KEY] = ::Protobuf::Field::FieldHash[KEY, Bar, Bar | _ToProto]
+
+        type array = ::Array[Bar | _ToProto]
+
+        type hash[KEY] = ::Hash[KEY, Bar | _ToProto]
+
+        type record = { }
+      end
+    RBS
+  end
 end

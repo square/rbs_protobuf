@@ -5,6 +5,8 @@ module RBSProtobuf
 
       attr_reader :input, :filters
 
+      attr_accessor :rbs_concat_level
+
       def initialize(input, filters = [])
         @input = input
         @filters = filters
@@ -35,9 +37,33 @@ module RBSProtobuf
 
         rbs_contents = {} #: Hash[Pathname, [String, Array[untyped]]]
 
-        rbs_decls.each do |path, (decls, file)|
-          content = format_rbs(decls: decls)
-          rbs_contents[path] = [content, [file]]
+        if (level = rbs_concat_level)&.nonzero?
+          groups = rbs_decls.each_key.group_by do |path|
+            path.sub_ext("").to_s.split(File::SEPARATOR).take(level).join(File::SEPARATOR)
+          end
+
+          groups.each do |prefix, paths|
+            path = Pathname(prefix).sub_ext(".rbs")
+
+            decls = [] #: Array[RBS::AST::Declarations::t]
+            files = [] #: Array[untyped]
+
+            paths.each do |path|
+              ds, file = rbs_decls.fetch(path)
+              decls.concat(ds)
+              files.push(file)
+            end
+
+            rbs_contents[path] = [
+              format_rbs(decls: decls),
+              files
+            ]
+          end
+        else
+          rbs_decls.each do |path, (decls, file)|
+            content = format_rbs(decls: decls)
+            rbs_contents[path] = [content, [file]]
+          end
         end
 
         rbs_contents.each do |path, (content, files)|
