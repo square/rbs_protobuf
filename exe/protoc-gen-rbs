@@ -58,6 +58,9 @@ translator = case backend
                raise NotImplementedError
              end
 
+if level = ENV["RBS_PROTOBUF_CONCAT_LEVEL"]
+  translator.rbs_concat_level = level.to_i
+end
 translator.generate_rbs!
 
 response = translator.response
