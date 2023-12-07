@@ -309,6 +309,7 @@ class ProtobufGemTest < Minitest::Test
         attr_accessor m1(): ::Message?
 
         def m1=: [M < ::Message::_ToProto] (M?) -> M?
+               | (::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                | ...
 
         def m1!: () -> ::Message?
@@ -321,6 +322,7 @@ class ProtobufGemTest < Minitest::Test
 
         def []=: (:m1, ::Message?) -> ::Message?
                | [M < ::Message::_ToProto] (:m1, M?) -> M?
+               | (:m1, ::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                | (::Symbol, untyped) -> untyped
 
         interface _ToProto
@@ -390,6 +392,7 @@ class ProtobufGemTest < Minitest::Test
         attr_accessor m1(): ::Message
 
         def m1=: [M < ::Message::_ToProto] (M) -> M
+               | (::Hash[::Symbol, untyped]) -> ::Hash[::Symbol, untyped]
                | ...
 
         def m1!: () -> ::Message?
@@ -402,6 +405,7 @@ class ProtobufGemTest < Minitest::Test
 
         def []=: (:m1, ::Message) -> ::Message
                | [M < ::Message::_ToProto] (:m1, M) -> M
+               | (:m1, ::Hash[::Symbol, untyped]) -> ::Hash[::Symbol, untyped]
                | (::Symbol, untyped) -> untyped
 
         interface _ToProto
@@ -927,6 +931,7 @@ class ProtobufGemTest < Minitest::Test
             attr_accessor replyTo(): ::Foo::Ba_r::Message?
 
             def replyTo=: [M < ::Foo::Ba_r::Message::_ToProto] (M?) -> M?
+                        | (::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                         | ...
 
             def replyTo!: () -> ::Foo::Ba_r::Message?
@@ -941,6 +946,7 @@ class ProtobufGemTest < Minitest::Test
             def []=: (:name, ::String) -> ::String
                    | (:replyTo, ::Foo::Ba_r::Message?) -> ::Foo::Ba_r::Message?
                    | [M < ::Foo::Ba_r::Message::_ToProto] (:replyTo, M?) -> M?
+                   | (:replyTo, ::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                    | (::Symbol, untyped) -> untyped
 
             interface _ToProto
@@ -1365,6 +1371,7 @@ class ProtobufGemTest < Minitest::Test
         attr_accessor m(): ::M1::M2?
 
         def m=: [M < ::M1::M2::_ToProto] (M?) -> M?
+              | (::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
               | ...
 
         def m!: () -> ::M1::M2?
@@ -1377,6 +1384,7 @@ class ProtobufGemTest < Minitest::Test
 
         def []=: (:m, ::M1::M2?) -> ::M1::M2?
                | [M < ::M1::M2::_ToProto] (:m, M?) -> M?
+               | (:m, ::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                | (::Symbol, untyped) -> untyped
 
         interface _ToProto
@@ -1674,6 +1682,7 @@ class ProtobufGemTest < Minitest::Test
         attr_accessor parent(): ::Test::M1?
 
         def parent=: [M < ::Test::M1::_ToProto] (M?) -> M?
+                   | (::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                    | ...
 
         def parent!: () -> ::Test::M1?
@@ -1683,6 +1692,7 @@ class ProtobufGemTest < Minitest::Test
 
         def []=: (:parent, ::Test::M1?) -> ::Test::M1?
                | [M < ::Test::M1::_ToProto] (:parent, M?) -> M?
+               | (:parent, ::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                | ...
       end
     RBS
@@ -2039,6 +2049,7 @@ class ProtobufGemTest < Minitest::Test
 
         def m1=: (::Message?) -> ::Message?
                | [M < ::Message::_ToProto] (M?) -> M?
+               | (::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                | ...
 
         def m1!: () -> ::Message?
@@ -2052,6 +2063,7 @@ class ProtobufGemTest < Minitest::Test
         def []=: (:m1, ::Message) -> ::Message
                | (:m1, ::Message?) -> ::Message?
                | [M < ::Message::_ToProto] (:m1, M?) -> M?
+               | (:m1, ::Hash[::Symbol, untyped]?) -> ::Hash[::Symbol, untyped]?
                | (::Symbol, untyped) -> untyped
 
         interface _ToProto

@@ -514,7 +514,8 @@ module RBSProtobuf
                 [
                   factory.optional_type(type),
                   [
-                    factory.optional_type(message_to_proto_type(type))
+                    factory.optional_type(message_to_proto_type(type)),
+                    factory.optional_type(factory.opts_type)
                   ],
                   factory.optional_type(message_init_type(type))
                 ]
@@ -529,7 +530,7 @@ module RBSProtobuf
               else
                 [
                   type,
-                  [message_to_proto_type(type)],
+                  [message_to_proto_type(type), factory.opts_type],
                   message_init_type(type)
                 ]
               end

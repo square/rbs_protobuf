@@ -32,6 +32,9 @@ module RBSProtobuf
 
     def optional_type: (RBS::Types::t, ?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Optional
 
+    # Type of *options hash* (`Hash[Symbol, untyped]`)
+    def opts_type: () -> RBS::Types::ClassInstance
+
     def type_var: (Symbol name, ?location: RBS::Location[untyped, untyped]?) -> RBS::Types::Variable
 
     def module_type_params: (*Symbol params) -> Array[RBS::AST::TypeParam]

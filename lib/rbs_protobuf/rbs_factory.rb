@@ -129,6 +129,13 @@ module RBSProtobuf
       end
     end
 
+    def opts_type
+      RBS::BuiltinNames::Hash.instance_type(
+        RBS::BuiltinNames::Symbol.instance_type,
+        RBS::Types::Bases::Any.new(location: nil)
+      )
+    end
+
     def type_var(name, location: nil)
       Types::Variable.new(
         name: name,
