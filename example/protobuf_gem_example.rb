@@ -1,6 +1,7 @@
 require "protobuf"
 require_relative "protobuf-gem/a.pb.rb"
 require_relative "protobuf-gem/b.pb.rb"
+require_relative "protobuf-gem/d.pb.rb"
 
 request = Rbs_protobuf::Example::SearchRequest.decode("")
 request.corpus = :VIDEO
@@ -30,3 +31,11 @@ project.projects["sub project 1"] = Rbs_protobuf::Example::Project.new
 project = Rbs_protobuf::Example::Project.new
 s = project.new_name
 project.new_name = "Hello world"
+
+Rbs_protobuf::Example::Project.new(new_name: "Hello World")
+opts = { new_name: "Hello World" }
+Rbs_protobuf::Example::Project.new(opts)
+
+bar = Bar.new
+bar.foo = Foo.new
+bar.foo = {}
