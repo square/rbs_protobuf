@@ -202,7 +202,12 @@ module RBSProtobuf
                 RBS::AST::Members::MethodDefinition::Overload.new(
                   method_type: factory.method_type(
                     type: factory.function().update(
-                      required_positionals: [factory.param(factory.alias_type("record"))]
+                      required_positionals: [
+                        factory.param(
+                          RBS::BuiltinNames::Hash.instance_type(RBS::BuiltinNames::Symbol.instance_type, factory.untyped),
+                          name: :attributes
+                        )
+                      ]
                     )
                   ),
                   annotations: []
@@ -362,8 +367,7 @@ module RBSProtobuf
             type_params: [],
             type: factory.union_type(
               class_instance_type,
-              TO_PROTO[],
-              field_types.empty? ? nil : factory.alias_type("record")
+              TO_PROTO[]
             ),
             annotations: [],
             comment: RBS::AST::Comment.new(string: "The type of `#initialize` parameter.", location: nil),
@@ -414,18 +418,6 @@ module RBSProtobuf
             annotations: [],
             comment: nil,
             location: nil
-          )
-
-          class_decl.members << RBS::AST::Declarations::TypeAlias.new(
-            name: TypeName("record"),
-            type_params: [],
-            type: RBS::Types::Record.new(
-              fields: field_types.transform_values {|_, _, type| optional_type(type) },
-              location: nil
-              ),
-            annotations: [],
-            location: nil,
-            comment: nil
           )
         end
       end
