@@ -1,0 +1,90 @@
+module RBSProtobuf
+  module Translator
+    class GoogleProtobufGem < Base
+      MESSAGE: Name::Class
+
+      FIELD_ARRAY: Name::Class
+
+      FIELD_HASH: Name::Class
+
+      ENUM_DESCRIPTOR: Name::Class
+
+      GENERIC_SERVICE: Name::Class
+
+      SINGLE_REQ_VIEW: Name::Class
+
+      MULTI_REQ_VIEW: Name::Class
+
+      CLIENT_STUB: Name::Class
+
+      # TODO: Hash[String, Google::Protobuf::FieldDescriptorProto::Type]
+      WRAPPER_BASE_TYPES: Hash[String, untyped]
+
+      attr_reader stderr: IO
+
+      def initialize: (
+          untyped input,
+          ?Array[Base::filter] filters,
+          nested_namespace: bool,
+          ?stderr: IO,
+        ) -> void
+
+      @nested_namespace: bool
+
+      def nested_namespace?: () -> bool
+
+      @message_mapping: Hash[String, RBS::TypeName]
+
+      # TODO: (Google::Protobuf::FileDescriptorProto file)
+      def preprocess_file: (untyped file) -> void
+
+      # TODO: (Google::Protobuf::DescriptorProto message)
+      def preprocess_message: (untyped message, ruby_path: Array[Symbol], proto_path: String) -> void
+
+      # TODO: (Google::Protobuf::EnumDescriptorProto message)
+      def preprocess_enum: (untyped enum, ruby_path: Array[Symbol], proto_path: String) -> void
+
+      # TODO: (Google::Protobuf::FileDescriptorProto file)
+      def rbs_content: (untyped file) -> Array[RBS::AST::Declarations::t]
+
+      # TODO: (Google::Protobuf::FileDescriptorProto file)
+      def ruby_path_for: (untyped file) -> Array[Symbol]
+
+      # TODO: (Google::Protobuf::FileDescriptorProto file)
+      def proto_path_for: (untyped file) -> String
+
+      # TODO: (Google::Protobuf::DescriptorProto message, file: Google::Protobuf::FileDescriptorProto, source_code_info: Google::Protobuf::SourceCodeInfo)
+      def message_to_decl: (untyped message, prefix: RBS::Namespace, proto_path: String, file: untyped, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Class
+
+      def message_init_type: (RBS::Types::ClassInstance type) -> RBS::Types::t
+      def enum_read_type: (RBS::Types::ClassInstance type) -> RBS::Types::t
+      def enum_init_type: (RBS::Types::ClassInstance type) -> RBS::Types::t
+
+      # TODO: (Google::Protobuf::FieldDescriptorProto::Type type)
+      def base_write_type: (untyped type) -> RBS::Types::t?
+
+      def ruby_type_for: (String proto_path) -> RBS::Types::ClassInstance
+
+      # TODO: (Google::Protobuf::FieldDescriptorProto field)
+      def field_scalar_type: (untyped field, Hash[String, [untyped, untyped]] maps) -> [RBS::Types::t, RBS::Types::t?, RBS::Types::t?]
+
+      # TODO: (Google::Protobuf::FieldDescriptorProto field)
+      def field_type: (untyped field, Hash[String, [untyped, untyped]] maps) -> [RBS::Types::t, RBS::Types::t?, RBS::Types::t?]
+
+      # TODO: (Google::Protobuf::FieldDescriptorProto field, file: Google::Protobuf::FileDescriptorProto)
+      def has_presence?: (untyped field, file: untyped) -> bool
+
+      # TODO: (field: Google::Protobuf::FieldDescriptorProto, file: Google::Protobuf::FileDescriptorProto)
+      def add_field: (Array[RBS::AST::Declarations::Class::member] members, name: Symbol, read_type: RBS::Types::t, write_type: RBS::Types::t?, comment: RBS::AST::Comment?, field: untyped, file: untyped) -> void
+
+      # TODO: (Google::Protobuf::OneofDescriptorProto oneof_decl, fields: Array[Google::Protobuf::FieldDescriptorProto])
+      def add_oneof: (Array[RBS::AST::Declarations::Class::member] members, untyped oneof_decl, fields: Array[untyped], maps: Hash[String, [untyped, untyped]], comment: RBS::AST::Comment?) -> void
+
+      # TODO: (Google::Protobuf::EnumDescriptorProto enum, source_code_info: Google::Protobuf::SourceCodeInfo)
+      def enum_type_to_decl: (untyped enum_type, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Module
+
+      # TODO: (Google::Protobuf::ServiceDescriptorProto service, source_code_info: Google::Protobuf::SourceCodeInfo)
+      def service_to_decl: (untyped service, prefix: RBS::Namespace, source_code_info: untyped, path: Array[Integer]) -> RBS::AST::Declarations::Module
+    end
+  end
+end
