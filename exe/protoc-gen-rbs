@@ -55,7 +55,12 @@ translator = case backend
                  accept_nil_writer: accept_nil_writer
                )
              when "google-protobuf"
-               raise NotImplementedError
+               no_nested_namespace = ENV.key?("RBS_PROTOBUF_NO_NESTED_NAMESPACE")
+               RBSProtobuf::Translator::GoogleProtobufGem.new(
+                 input,
+                 filters,
+                 nested_namespace: !no_nested_namespace,
+               )
              end
 
 if level = ENV["RBS_PROTOBUF_CONCAT_LEVEL"]
